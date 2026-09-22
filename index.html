@@ -600,8 +600,12 @@ a{color:inherit}
 .cert:hover{background:var(--bg-soft)}
 .cert input{width:19px;height:19px;margin-top:2px;accent-color:var(--navy-500);flex:none;cursor:pointer}
 .cert__main{flex:1;min-width:0}
-.cert__code{font-weight:700;font-size:15px;color:var(--text)}
-.cert__sub{font-size:12.5px;color:var(--text-3);margin-top:3px;word-break:break-all}
+.cert__code{display:block;font-weight:700;font-size:15px;color:var(--text);line-height:1.35}
+.cert__sub{display:block;font-size:12.5px;color:var(--text-3);margin-top:4px;line-height:1.5;word-break:break-word}
+.cert__sub a{color:var(--navy-500);text-decoration:underline;text-underline-offset:2px}
+.cert__main{display:flex;flex-direction:column;gap:0}
+.cert__nom{align-self:center}
+.plafon div{min-width:120px}
 .cert__nom{font-weight:700;font-size:15px;color:var(--navy-700);white-space:nowrap}
 .cert.is-off{opacity:.55;cursor:not-allowed}
 .cert.is-off:hover{background:transparent}
@@ -965,7 +969,7 @@ const DEMO = {
     sudah_diklaim:2000000, sudah_diklaim_format:rp(2000000),
     alokasi_s2:0, alokasi_s2_format:rp(0),
     sisa_plafon_s2:5000000, sisa_plafon_s2_format:rp(5000000),
-    sisa_plafon:5000000, sisa_plafon_format:rp(5000000),
+    sisa_plafon:5000000,
     total_nilai_format:rp(9500000),
     sertifikat:[
       {no_sertifikat:"SRT-DEMO0001",no_beasiswa:"BEA-2026-001",nominal:3500000,nominal_format:rp(3500000),kegiatan:"PCC Berbasis AI di Kab. Grobogan",tanggal:"2026-06-11",link_sertifikat:"",status_klaim:"tersedia",bisa_dipilih:true},
@@ -1064,8 +1068,7 @@ function render(){
         info.push(esc(k.replace(/_/g," "))+": "+esc(c.tambahan[k]));
       });
       const tautan=[];
-      if(c.link_sertifikat) tautan.push('<a href="'+esc(c.link_sertifikat)+'" target="_blank" rel="noopener">sertifikat beasiswa</a>');
-      if(c.link_pelatihan)  tautan.push('<a href="'+esc(c.link_pelatihan)+'" target="_blank" rel="noopener">sertifikat pelatihan</a>');
+      if(c.link_sertifikat) tautan.push('<a href="'+esc(c.link_sertifikat)+'" target="_blank" rel="noopener">Lihat sertifikat</a>');
       return '<label class="cert'+(off?' is-off':'')+'">'
         + '<input type="checkbox" data-pid="'+esc(o.id_person)+'" data-sid="'+esc(c.no_sertifikat)+'"'+(off?' disabled':'')+(on?' checked':'')+'>'
         + '<span class="cert__main"><span class="cert__code">'+esc(c.no_beasiswa||c.no_sertifikat)+'</span>'
@@ -1074,15 +1077,13 @@ function render(){
         + tag+'</span>'
         + '<span class="cert__nom">'+esc(c.nominal_format||rp(c.nominal))+'</span></label>';
     }).join("");
-    const habis = Number(o.sisa_plafon)<=0;
     return '<div class="pcard'+(active?' is-active':'')+'">'
       + '<div class="pcard__head"><div class="pcard__id"><h3>'+esc(o.nama)+'</h3>'
-      + '<span>'+(o.sekolah?esc(o.sekolah)+' · ':'')+esc(o.no_wa_tersamar||"-")+' · '+esc(o.email_tersamar||"-")
-      + ' · '+o.jumlah_sertifikat+' sertifikat</span></div>'
+      + '<span>'+[o.sekolah,o.no_wa_tersamar,o.email_tersamar,o.jumlah_sertifikat+' sertifikat']
+                   .filter(Boolean).map(esc).join(' · ')+'</span></div>'
       + '<div class="plafon">'
       + '<div>Nilai seluruh sertifikat<b>'+esc(o.total_nilai_format||rp(o.total_nilai))+'</b></div>'
-      + '<div>Sudah diklaim<b>'+esc(o.sudah_diklaim_format||rp(o.sudah_diklaim))+'</b></div>'
-      + '<div>Sisa plafon<b class="'+(habis?'warn':'ok')+'">'+esc(o.sisa_plafon_format||rp(o.sisa_plafon))+'</b></div>'
+      + '<div>Sudah diajukan<b>'+esc(o.sudah_diklaim_format||rp(o.sudah_diklaim))+'</b></div>'
       + '</div></div>' + certs + '</div>';
   }).join("");
 
@@ -1130,14 +1131,14 @@ function syncCart(){
   $("#cartTotal").textContent = rp(k.total);
   $("#cartTotal").classList.toggle("over", k.s2>0);
 
+  const statSisa = $("#cartSisa").parentElement;
   if(k.s2>0){
-    $("#cartSisaLabel").textContent = "Alokasi S2";
+    statSisa.hidden = false;
+    $("#cartSisaLabel").textContent = "Untuk studi S2";
     $("#cartSisa").textContent = rp(k.s2);
     $("#cartSisa").classList.add("over");
   }else{
-    $("#cartSisaLabel").textContent = "Sisa plafon";
-    $("#cartSisa").textContent = rp(k.sisa-k.s1);
-    $("#cartSisa").classList.remove("over");
+    statSisa.hidden = true;     // sisa plafon sengaja tidak ditampilkan
   }
 
   const warn=$("#cartWarn");
@@ -1149,8 +1150,8 @@ function syncCart(){
   }else if(k.s2>0){
     warn.hidden=false;
     warn.classList.add("cart__warn--info");
-    warn.textContent = rp(k.s1)+" masuk jatah S1 (plafon "+rp(S.plafon)+"), kelebihannya "+rp(k.s2)
-      +" dicatat sebagai alokasi beasiswa S2 dan menunggu persetujuan admin.";
+    warn.textContent = "Total melebihi plafon "+rp(S.plafon)+". Kelebihan "+rp(k.s2)
+      +" tetap tersimpan dan dapat digunakan untuk biaya studi S2 (plafon S2 "+rp(S.plafonS2)+").";
   }else{
     warn.hidden=true;
     warn.classList.remove("cart__warn--info");
@@ -1166,17 +1167,14 @@ function syncCart(){
 $("#cartGo").addEventListener("click",()=>{
   const o=currentPerson(), k=hitungKeranjang();
   if(!o||!k.items.length) return;
-  $("#ckSub").textContent = k.items.length+" sertifikat dipilih · sisa plafon "+rp(k.sisa);
+  $("#ckSub").textContent = k.items.length+" sertifikat dipilih · total "+rp(k.total);
   let rincian = k.items.map(c=>
       '<div class="ck-row"><span>'+esc(c.no_beasiswa||c.no_sertifikat)+'</span><b>'+esc(c.nominal_format||rp(c.nominal))+'</b></div>'
     ).join("")
     + '<div class="ck-row ck-total"><span>Total diajukan</span><b>'+rp(k.total)+'</b></div>';
   if(k.s2>0){
-    rincian += '<div class="ck-row"><span>Jatah S1 (dalam plafon)</span><b>'+rp(k.s1)+'</b></div>'
-             + '<div class="ck-row"><span>Alokasi beasiswa S2 — menunggu persetujuan</span><b>'+rp(k.s2)+'</b></div>'
-             + '<div class="ck-row"><span>Sisa kuota S2 setelah pengajuan</span><b>'+rp(k.sisaS2-k.s2)+'</b></div>';
-  }else{
-    rincian += '<div class="ck-row"><span>Sisa plafon setelah pengajuan</span><b>'+rp(k.sisa-k.s1)+'</b></div>';
+    rincian += '<div class="ck-row"><span>Jatah beasiswa S1 (dalam plafon)</span><b>'+rp(k.s1)+'</b></div>'
+             + '<div class="ck-row"><span>Untuk biaya studi S2 — menunggu persetujuan</span><b>'+rp(k.s2)+'</b></div>';
   }
   $("#ckList").innerHTML = rincian;
   $("#ckNama").value = o.nama;
@@ -1244,12 +1242,9 @@ $("#ckSubmit").addEventListener("click", async ()=>{
   let pesanSukses = "ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))
     +". Status sekarang "+(data.status_label||"Di Proses")+", menunggu verifikasi admin.";
   if(data.ada_s2){
-    pesanSukses += " Jatah S1 "+(data.nominal_s1_format||rp(data.nominal_s1))
+    pesanSukses += " Jatah beasiswa S1 "+(data.nominal_s1_format||rp(data.nominal_s1))
       +", dan kelebihan "+(data.nominal_s2_format||rp(data.nominal_s2))
-      +" tercatat sebagai alokasi beasiswa S2 dengan status "
-      +(data.status_s2_label||"Menunggu")+".";
-  }else{
-    pesanSukses += " Sisa plafonmu "+(data.sisa_plafon_format||rp(data.sisa_plafon))+".";
+      +" tersimpan untuk biaya studi S2 dengan status "+(data.status_s2_label||"Menunggu")+".";
   }
   $("#successMsg").textContent = pesanSukses;
   $("#startWa").href = data.link_wa || ("https://wa.me/"+WHATSAPP_NUMBER);
