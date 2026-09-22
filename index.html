@@ -618,6 +618,8 @@ a{color:inherit}
 .cart__stat b.over{color:#FFB4B7}
 .cart__spacer{flex:1}
 .cart__warn{width:100%;font-size:12.5px;color:#FFD3D5;margin-top:-4px}
+.cart__warn--info{color:#FFE3B8}
+.success__ring svg{display:block}
 @media(max-width:640px){.cart__inner{gap:12px}.cart__inner .btn{width:100%}}
 
 .ck-list{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px}
@@ -859,7 +861,7 @@ a{color:inherit}
     <div class="modal__body">
       <div class="success">
         <div class="success__ring">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.1-.7.2-.8 1-1 1.2-.4.2-.7 0a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4A3.5 3.5 0 0 0 5.6 9c0 1.5 1.1 3 1.2 3.2a12.2 12.2 0 0 0 4.7 4.1 12 12 0 0 0 1.6.6 3.8 3.8 0 0 0 1.7.1 2.9 2.9 0 0 0 1.9-1.3 2.3 2.3 0 0 0 .2-1.3zM12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z"/></svg>
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.02c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.16-1.35a9.93 9.93 0 0 0 4.88 1.27h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.9zm0 18.2h-.01a8.26 8.26 0 0 1-4.21-1.15l-.3-.18-3.13 1.02 1.02-3.05-.2-.31a8.22 8.22 0 0 1-1.27-4.4c0-4.56 3.72-8.28 8.3-8.28 2.21 0 4.29.87 5.85 2.44a8.22 8.22 0 0 1 2.42 5.85c0 4.57-3.72 8.28-8.29 8.28zm4.55-6.2c-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.13-.56.12-.17.25-.65.81-.79.98-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.24a7.5 7.5 0 0 1-1.39-1.72c-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08s.9 2.41 1.02 2.58c.13.16 1.76 2.69 4.27 3.77.6.26 1.06.41 1.42.53.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.19.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29z"/></svg>
         </div>
         <h2 id="successTitle">Pengajuan tersimpan</h2>
         <p id="successMsg">Data sudah masuk ke sistem. Lanjutkan ke WhatsApp admin untuk verifikasi dokumen.</p>
@@ -868,7 +870,7 @@ a{color:inherit}
     <div class="modal__foot" style="justify-content:center">
       <button class="btn btn-outline" data-close>Nanti Saja</button>
       <a class="btn btn-wa" id="startWa" href="#" target="_blank" rel="noopener">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.8-.9-2-1s-.5-.1-.7.2-.8 1-1 1.2-.4.2-.7 0a8.2 8.2 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.6l.5-.6.3-.5v-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4A3.5 3.5 0 0 0 5.6 9c0 1.5 1.1 3 1.2 3.2a12.2 12.2 0 0 0 4.7 4.1 12 12 0 0 0 1.6.6 3.8 3.8 0 0 0 1.7.1 2.9 2.9 0 0 0 1.9-1.3 2.3 2.3 0 0 0 .2-1.3z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.02c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.16-1.35a9.93 9.93 0 0 0 4.88 1.27h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04a9.9 9.9 0 0 0-7.05-2.9zm0 18.2h-.01a8.26 8.26 0 0 1-4.21-1.15l-.3-.18-3.13 1.02 1.02-3.05-.2-.31a8.22 8.22 0 0 1-1.27-4.4c0-4.56 3.72-8.28 8.3-8.28 2.21 0 4.29.87 5.85 2.44a8.22 8.22 0 0 1 2.42 5.85c0 4.57-3.72 8.28-8.29 8.28zm4.55-6.2c-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.13-.56.12-.17.25-.65.81-.79.98-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.24a7.5 7.5 0 0 1-1.39-1.72c-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08s.9 2.41 1.02 2.58c.13.16 1.76 2.69 4.27 3.77.6.26 1.06.41 1.42.53.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.19.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29z"/></svg>
         Lanjut ke WhatsApp
       </a>
     </div>
@@ -880,7 +882,7 @@ a{color:inherit}
   <div class="cart__inner">
     <div class="cart__stat">Dipilih<b id="cartCount">0 sertifikat</b></div>
     <div class="cart__stat">Total<b id="cartTotal">Rp0</b></div>
-    <div class="cart__stat">Sisa plafon<b id="cartSisa">Rp0</b></div>
+    <div class="cart__stat"><span id="cartSisaLabel">Sisa plafon</span><b id="cartSisa">Rp0</b></div>
     <div class="cart__spacer"></div>
     <button class="btn btn-primary" id="cartGo">Ajukan Sekarang</button>
     <div class="cart__warn" id="cartWarn" hidden></div>
@@ -955,14 +957,19 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeTop(); });
 const DEMO = {
   success:true, plafon:PLAFON_DEFAULT, plafon_format:rp(PLAFON_DEFAULT), jumlah_orang:1,
   orang:[{
-    id_person:"PSN-DEMO12345", nama:"Ahmad Fauzan Pratama",
+    id_person:"PSN-DEMO12345", nama:"Ahmad Fauzan Pratama", sekolah:"SMA PGRI Purwodadi",
     no_wa_tersamar:"6281****890", email_tersamar:"ah***@email.com",
-    jumlah_sertifikat:4, total_nilai:9500000, sudah_diklaim:2000000, sisa_plafon:5000000,
+    jumlah_sertifikat:4, total_nilai:9500000,
+    sudah_diklaim:2000000, sudah_diklaim_format:rp(2000000),
+    alokasi_s2:0, alokasi_s2_format:rp(0),
+    sisa_plafon_s2:5000000, sisa_plafon_s2_format:rp(5000000),
+    sisa_plafon:5000000, sisa_plafon_format:rp(5000000),
+    total_nilai_format:rp(9500000),
     sertifikat:[
-      {no_sertifikat:"SRT-DEMO0001",no_beasiswa:"BEA-2026-001",nominal:3500000,nominal_format:rp(3500000),link_sertifikat:"",status_klaim:"tersedia",bisa_dipilih:true},
-      {no_sertifikat:"SRT-DEMO0002",no_beasiswa:"BEA-2026-014",nominal:2500000,nominal_format:rp(2500000),link_sertifikat:"",status_klaim:"tersedia",bisa_dipilih:true},
-      {no_sertifikat:"SRT-DEMO0003",no_beasiswa:"BEA-2026-022",nominal:1500000,nominal_format:rp(1500000),link_sertifikat:"",status_klaim:"diproses",status_label:"Di Proses",bisa_dipilih:false},
-      {no_sertifikat:"SRT-DEMO0004",no_beasiswa:"BEA-2025-088",nominal:2000000,nominal_format:rp(2000000),link_sertifikat:"",status_klaim:"aktif",status_label:"Aktif",bisa_dipilih:false}
+      {no_sertifikat:"SRT-DEMO0001",no_beasiswa:"BEA-2026-001",nominal:3500000,nominal_format:rp(3500000),kegiatan:"PCC Berbasis AI di Kab. Grobogan",tanggal:"2026-06-11",link_sertifikat:"",status_klaim:"tersedia",bisa_dipilih:true},
+      {no_sertifikat:"SRT-DEMO0002",no_beasiswa:"BEA-2026-014",nominal:2500000,nominal_format:rp(2500000),kegiatan:"PCC Berbasis AI di Kab. Grobogan",tanggal:"2026-06-11",link_sertifikat:"",status_klaim:"tersedia",bisa_dipilih:true},
+      {no_sertifikat:"SRT-DEMO0003",no_beasiswa:"BEA-2026-022",nominal:1500000,nominal_format:rp(1500000),kegiatan:"PCC Berbasis AI di Kab. Kudus",tanggal:"2026-06-09",link_sertifikat:"",status_klaim:"diproses",status_label:"Di Proses",bisa_dipilih:false},
+      {no_sertifikat:"SRT-DEMO0004",no_beasiswa:"BEA-2025-088",nominal:2000000,nominal_format:rp(2000000),kegiatan:"PCC Berbasis AI di Kab. Pati",tanggal:"2025-10-10",link_sertifikat:"",status_klaim:"aktif",status_label:"Aktif",bisa_dipilih:false}
     ]
   }]
 };
@@ -970,7 +977,7 @@ const DEMO = {
 /* ============================================================
    STATE
    ============================================================ */
-const S = { plafon:PLAFON_DEFAULT, orang:[], person:null, picked:new Set(), sending:false };
+const S = { plafon:PLAFON_DEFAULT, plafonS2:5000000, orang:[], person:null, picked:new Set(), sending:false };
 
 /* Status: tersedia → diproses → diterima → diajukan (SmartCoin) → aktif; diproses → ditolak */
 const LABEL = {tersedia:"Tersedia",diproses:"Di Proses",diterima:"Diterima",ditolak:"Ditolak",diajukan:"Diajukan",aktif:"Aktif"};
@@ -1017,6 +1024,7 @@ async function cari(keyword, opts={}){
     return;
   }
   S.plafon = Number(data.plafon)||PLAFON_DEFAULT;
+  if(data.plafon_s2!=null) S.plafonS2 = Number(data.plafon_s2)||S.plafonS2;
   S.orang  = data.orang||[];
   $("#statPlafon") && ($("#statPlafon").textContent = rp(S.plafon));
   if(!S.orang.length){ S.person=null; S.picked.clear(); syncCart(); emptyState(kw); return; }
@@ -1035,17 +1043,25 @@ function render(){
       const off = !c.bisa_dipilih;
       const on  = S.picked.has(c.no_sertifikat);
       const tag = off ? '<span class="tag '+tagClass(c.status_klaim)+'">'+esc(c.status_label||LABEL[c.status_klaim]||c.status_klaim)+'</span>' : '';
-      const link = c.link_sertifikat ? ' · <a href="'+esc(c.link_sertifikat)+'" target="_blank" rel="noopener">lihat sertifikat</a>' : '';
+      const info=[];
+      if(c.kegiatan) info.push(esc(c.kegiatan));
+      if(c.tanggal)  info.push(esc(c.tanggal));
+      const tautan=[];
+      if(c.link_sertifikat) tautan.push('<a href="'+esc(c.link_sertifikat)+'" target="_blank" rel="noopener">sertifikat beasiswa</a>');
+      if(c.link_pelatihan)  tautan.push('<a href="'+esc(c.link_pelatihan)+'" target="_blank" rel="noopener">sertifikat pelatihan</a>');
       return '<label class="cert'+(off?' is-off':'')+'">'
         + '<input type="checkbox" data-pid="'+esc(o.id_person)+'" data-sid="'+esc(c.no_sertifikat)+'"'+(off?' disabled':'')+(on?' checked':'')+'>'
         + '<span class="cert__main"><span class="cert__code">'+esc(c.no_beasiswa||c.no_sertifikat)+'</span>'
-        + '<span class="cert__sub">'+esc(c.no_sertifikat)+link+'</span>'+tag+'</span>'
+        + (info.length?'<span class="cert__sub">'+info.join(' · ')+'</span>':'')
+        + (tautan.length?'<span class="cert__sub">'+tautan.join(' · ')+'</span>':'')
+        + tag+'</span>'
         + '<span class="cert__nom">'+esc(c.nominal_format||rp(c.nominal))+'</span></label>';
     }).join("");
     const habis = Number(o.sisa_plafon)<=0;
     return '<div class="pcard'+(active?' is-active':'')+'">'
       + '<div class="pcard__head"><div class="pcard__id"><h3>'+esc(o.nama)+'</h3>'
-      + '<span>'+esc(o.no_wa_tersamar||"-")+' · '+esc(o.email_tersamar||"-")+' · '+o.jumlah_sertifikat+' sertifikat</span></div>'
+      + '<span>'+(o.sekolah?esc(o.sekolah)+' · ':'')+esc(o.no_wa_tersamar||"-")+' · '+esc(o.email_tersamar||"-")
+      + ' · '+o.jumlah_sertifikat+' sertifikat</span></div>'
       + '<div class="plafon">'
       + '<div>Nilai seluruh sertifikat<b>'+esc(o.total_nilai_format||rp(o.total_nilai))+'</b></div>'
       + '<div>Sudah diklaim<b>'+esc(o.sudah_diklaim_format||rp(o.sudah_diklaim))+'</b></div>'
@@ -1079,36 +1095,73 @@ function pickedItems(){
   return (o.sertifikat||[]).filter(c=>S.picked.has(c.no_sertifikat));
 }
 
-function syncCart(){
-  const cart=$("#cart"), items=pickedItems();
+/* Plafon tidak memblokir: nilai di atas sisa plafon otomatis jadi alokasi S2. */
+function hitungKeranjang(){
+  const items=pickedItems();
   const total=items.reduce((a,c)=>a+Number(c.nominal||0),0);
   const o=currentPerson();
-  const sisa=o?Number(o.sisa_plafon||0):S.plafon;
-  const over=total>sisa;
-  $("#cartCount").textContent = items.length+" sertifikat";
-  $("#cartTotal").textContent = rp(total);
-  $("#cartTotal").classList.toggle("over",over);
-  $("#cartSisa").textContent  = rp(sisa);
+  const sisa   = o?Number(o.sisa_plafon||0):S.plafon;
+  const sisaS2 = o?Number(o.sisa_plafon_s2!=null?o.sisa_plafon_s2:S.plafonS2):S.plafonS2;
+  const s1=Math.min(total,sisa);
+  const s2=Math.min(total-s1,sisaS2);
+  return {items,total,sisa,sisaS2,s1,s2,lebih:Math.max(0,total-s1-s2),kapasitas:sisa+sisaS2};
+}
+
+function syncCart(){
+  const cart=$("#cart"), k=hitungKeranjang();
+  $("#cartCount").textContent = k.items.length+" sertifikat";
+  $("#cartTotal").textContent = rp(k.total);
+  $("#cartTotal").classList.toggle("over", k.s2>0);
+
+  if(k.s2>0){
+    $("#cartSisaLabel").textContent = "Alokasi S2";
+    $("#cartSisa").textContent = rp(k.s2);
+    $("#cartSisa").classList.add("over");
+  }else{
+    $("#cartSisaLabel").textContent = "Sisa plafon";
+    $("#cartSisa").textContent = rp(k.sisa-k.s1);
+    $("#cartSisa").classList.remove("over");
+  }
+
   const warn=$("#cartWarn");
-  if(over){ warn.hidden=false; warn.textContent="Total pilihan melebihi sisa plafon "+rp(sisa)+". Kurangi centangan — sisanya bisa diajukan periode berikutnya."; }
-  else warn.hidden=true;
-  $("#cartGo").disabled = over || !items.length;
-  cart.classList.toggle("is-open", items.length>0);
+  if(k.lebih>0){
+    warn.hidden=false;
+    warn.classList.remove("cart__warn--info");
+    warn.textContent = "Melebihi kuota. Sisa plafon S1 "+rp(k.sisa)+" + sisa kuota S2 "+rp(k.sisaS2)
+      +" = "+rp(k.kapasitas)+". Kurangi "+rp(k.lebih)+" dari pilihanmu.";
+  }else if(k.s2>0){
+    warn.hidden=false;
+    warn.classList.add("cart__warn--info");
+    warn.textContent = rp(k.s1)+" masuk jatah S1 (plafon "+rp(S.plafon)+"), kelebihannya "+rp(k.s2)
+      +" dicatat sebagai alokasi beasiswa S2 dan menunggu persetujuan admin.";
+  }else{
+    warn.hidden=true;
+    warn.classList.remove("cart__warn--info");
+  }
+
+  $("#cartGo").disabled = !k.items.length || k.lebih>0;
+  cart.classList.toggle("is-open", k.items.length>0);
 }
 
 /* ============================================================
    CHECKOUT
    ============================================================ */
 $("#cartGo").addEventListener("click",()=>{
-  const o=currentPerson(), items=pickedItems();
-  if(!o||!items.length) return;
-  const total=items.reduce((a,c)=>a+Number(c.nominal||0),0);
-  $("#ckSub").textContent = items.length+" sertifikat dipilih · sisa plafon "+rp(o.sisa_plafon);
-  $("#ckList").innerHTML = items.map(c=>
+  const o=currentPerson(), k=hitungKeranjang();
+  if(!o||!k.items.length) return;
+  $("#ckSub").textContent = k.items.length+" sertifikat dipilih · sisa plafon "+rp(k.sisa);
+  let rincian = k.items.map(c=>
       '<div class="ck-row"><span>'+esc(c.no_beasiswa||c.no_sertifikat)+'</span><b>'+esc(c.nominal_format||rp(c.nominal))+'</b></div>'
     ).join("")
-    + '<div class="ck-row ck-total"><span>Total diajukan</span><b>'+rp(total)+'</b></div>'
-    + '<div class="ck-row"><span>Sisa plafon setelah pengajuan</span><b>'+rp(Math.max(0,Number(o.sisa_plafon)-total))+'</b></div>';
+    + '<div class="ck-row ck-total"><span>Total diajukan</span><b>'+rp(k.total)+'</b></div>';
+  if(k.s2>0){
+    rincian += '<div class="ck-row"><span>Jatah S1 (dalam plafon)</span><b>'+rp(k.s1)+'</b></div>'
+             + '<div class="ck-row"><span>Alokasi beasiswa S2 — menunggu persetujuan</span><b>'+rp(k.s2)+'</b></div>'
+             + '<div class="ck-row"><span>Sisa kuota S2 setelah pengajuan</span><b>'+rp(k.sisaS2-k.s2)+'</b></div>';
+  }else{
+    rincian += '<div class="ck-row"><span>Sisa plafon setelah pengajuan</span><b>'+rp(k.sisa-k.s1)+'</b></div>';
+  }
+  $("#ckList").innerHTML = rincian;
   $("#ckNama").value = o.nama;
   clearErr();
   openModal("mCheckout");
@@ -1146,14 +1199,18 @@ $("#ckSubmit").addEventListener("click", async ()=>{
       data=await res.json();
     }else{
       await new Promise(r=>setTimeout(r,650));
-      const total=items.reduce((a,c)=>a+Number(c.nominal||0),0);
-      const o=currentPerson();
+      const k=hitungKeranjang(), o=currentPerson();
       const pesan="Halo Admin Beasiswa Universitas STEKOM,\nSaya mengajukan klaim beasiswa dengan rincian berikut:\n\n"
         +"ID Pengajuan: PGJ-DEMO\nNama: "+o.nama+"\nNo. WhatsApp: "+wa+"\n\n"
-        +items.map((c,i)=>(i+1)+". "+c.no_beasiswa+" — "+rp(c.nominal)).join("\n")
-        +"\n\nTOTAL: "+rp(total);
-      data={success:true,id_pengajuan:"PGJ-DEMO",total:total,total_format:rp(total),
-            sisa_plafon:Math.max(0,Number(o.sisa_plafon)-total),
+        +k.items.map((c,i)=>(i+1)+". "+c.no_beasiswa+" — "+rp(c.nominal)).join("\n")
+        +"\n\nTOTAL: "+rp(k.total)
+        +(k.s2>0 ? "\nJatah S1: "+rp(k.s1)+"\nAlokasi S2: "+rp(k.s2) : "");
+      data={success:true,id_pengajuan:"PGJ-DEMO",status_label:"Di Proses",
+            total:k.total,total_format:rp(k.total),
+            nominal_s1:k.s1,nominal_s1_format:rp(k.s1),
+            nominal_s2:k.s2,nominal_s2_format:rp(k.s2),ada_s2:k.s2>0,
+            status_s2_label:k.s2>0?"Menunggu":"Tidak ada",
+            sisa_plafon:Math.max(0,k.sisa-k.s1),sisa_plafon_format:rp(Math.max(0,k.sisa-k.s1)),
             link_wa:"https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(pesan)};
     }
   }catch(err){
@@ -1167,9 +1224,17 @@ $("#ckSubmit").addEventListener("click", async ()=>{
   }
 
   closeModal("mCheckout");
-  $("#successMsg").textContent = "ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))
-    +". Status sekarang "+(data.status_label||"Di Proses")+", menunggu verifikasi admin. Sisa plafonmu "
-    +(data.sisa_plafon_format||rp(data.sisa_plafon))+".";
+  let pesanSukses = "ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))
+    +". Status sekarang "+(data.status_label||"Di Proses")+", menunggu verifikasi admin.";
+  if(data.ada_s2){
+    pesanSukses += " Jatah S1 "+(data.nominal_s1_format||rp(data.nominal_s1))
+      +", dan kelebihan "+(data.nominal_s2_format||rp(data.nominal_s2))
+      +" tercatat sebagai alokasi beasiswa S2 dengan status "
+      +(data.status_s2_label||"Menunggu")+".";
+  }else{
+    pesanSukses += " Sisa plafonmu "+(data.sisa_plafon_format||rp(data.sisa_plafon))+".";
+  }
+  $("#successMsg").textContent = pesanSukses;
   $("#startWa").href = data.link_wa || ("https://wa.me/"+WHATSAPP_NUMBER);
   openModal("mSuccess");
 
@@ -1187,7 +1252,8 @@ $("#ckSubmit").addEventListener("click", async ()=>{
    (teks halaman, plafon, nomor WA, langkah, FAQ, label status)
    ============================================================ */
 const CFG_FALLBACK = {
-  plafon:7000000, plafon_format:"Rp7.000.000", wa_admin:"628888999920", sumber_terkunci:null,
+  plafon:7000000, plafon_format:"Rp7.000.000", plafon_s2:5000000,
+  wa_admin:"628888999920", sumber_terkunci:null,
   teks:{
     tagline:"Cari sertifikat beasiswa atas namamu, centang yang ingin diajukan, lalu kirim ke admin.",
     judul_cari:"Cari sertifikat",
@@ -1240,6 +1306,7 @@ function terapkanKonfigurasi(cfg){
   PLAFON_DEFAULT  = Number(cfg.plafon)||PLAFON_DEFAULT;
   WHATSAPP_NUMBER = cfg.wa_admin || WHATSAPP_NUMBER;
   S.plafon        = PLAFON_DEFAULT;
+  if(cfg.plafon_s2!=null) S.plafonS2 = Number(cfg.plafon_s2)||S.plafonS2;
   if(cfg.label_status) Object.assign(LABEL, cfg.label_status);
 
   const set=(sel,val)=>{ const el=$(sel); if(el&&val) el.textContent=val; };
