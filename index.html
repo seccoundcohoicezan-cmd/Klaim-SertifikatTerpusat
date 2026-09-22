@@ -1011,15 +1011,26 @@ async function cari(keyword, opts={}){
   let data;
   try{
     if(API_URL){
-      const res = await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw));
-      data = await res.json();
+      // batas 40 detik supaya tidak memutar selamanya kalau server tersendat
+      const kontrol = new AbortController();
+      const jam = setTimeout(()=>kontrol.abort(), 40000);
+      try{
+        const res = await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw),{signal:kontrol.signal});
+        data = await res.json();
+      } finally { clearTimeout(jam); }
     }else{
       await new Promise(r=>setTimeout(r,450));
       data = JSON.parse(JSON.stringify(DEMO));
     }
   }catch(err){
-    results.innerHTML='<div class="state-box"><h3>Gagal menghubungi server</h3><p>Periksa koneksi internet, lalu coba lagi.</p></div>';
-    toast("Gagal memuat","Server tidak merespons.","err"); return;
+    const habis = err && err.name === "AbortError";
+    results.innerHTML='<div class="state-box"><h3>'
+      +(habis?'Server terlalu lama merespons':'Gagal menghubungi server')+'</h3><p>'
+      +(habis?'Permintaan dihentikan setelah 40 detik. Coba lagi, atau hubungi admin bila terus berulang.'
+             :'Periksa koneksi internet, lalu coba lagi.')
+      +'</p></div>';
+    toast(habis?"Waktu habis":"Gagal memuat", habis?"Pencarian dibatalkan setelah 40 detik.":"Server tidak merespons.","err");
+    return;
   }
   if(!data || data.success===false){
     results.innerHTML='<div class="state-box"><h3>Pencarian gagal</h3><p>'+esc((data&&data.error)||"Terjadi kesalahan.")+'</p></div>';
