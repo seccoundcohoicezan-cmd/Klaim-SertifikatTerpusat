@@ -631,6 +631,7 @@ a{color:inherit}
 .ck-row:last-child{border-bottom:none}
 .ck-row b{white-space:nowrap}
 .ck-total{background:var(--bg-tint);font-weight:700}
+.pcard__note{padding:12px 20px;background:var(--warn-bg);border-bottom:1px solid var(--warn-bd);color:var(--warn-fg);font-size:13.5px;font-weight:500}
 
 </style>
 </head>
@@ -676,21 +677,21 @@ a{color:inherit}
       <h1>Raih Kesempatan,<span class="line2">Wujudkan Prestasi</span></h1>
       <p class="hero__sub" id="heroSub">Cari sertifikat beasiswa atas namamu, centang yang ingin diajukan, lalu kirim ke admin.</p>
       <div class="hero__stats">
-        <div class="hero__stat"><b id="statPlafon">Rp7.000.000</b><span>Plafon per mahasiswa</span></div>
+        <div class="hero__stat"><b id="statPlafon">Rp7.000.000</b><span>Plafon S1 per mahasiswa</span></div>
         <div class="hero__stat"><b>Pilih sendiri</b><span>Centang seperti keranjang</span></div>
-        <div class="hero__stat"><b>Sisa tersimpan</b><span>Bisa diajukan periode berikutnya</span></div>
+        <div class="hero__stat"><b id="statPlafonS2">Rp5.000.000</b><span>Kelebihan dialihkan ke S2</span></div>
       </div>
     </div>
 
     <div class="searchcard">
       <h2 id="scTitle">Cari sertifikat</h2>
-      <p class="hint" id="scHint">Masukkan No. Sertifikat, No. Beasiswa, atau nama lengkapmu.</p>
+      <p class="hint" id="scHint">Masukkan nama lengkap, No. Sertifikat, atau No. Beasiswa.</p>
       <div class="searchrow">
         <div class="field">
           <span class="field__icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           </span>
-          <input type="search" id="heroSearch" class="input has-icon" placeholder="Contoh: SRT-A1B2C3D4E5, BEA-2026-001, atau Ahmad Fauzan" aria-label="Cari beasiswa">
+          <input type="search" id="heroSearch" class="input has-icon" placeholder="Contoh: Ahmad Fauzan, SRT-A1B2C3D4E5, atau BEA-2026-0001" aria-label="Cari nama atau nomor sertifikat">
         </div>
         <button class="btn btn-primary" id="heroSearchBtn">Cari</button>
       </div>
@@ -716,7 +717,7 @@ a{color:inherit}
         <span class="field__icon">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </span>
-        <input type="search" id="fSearch" class="input has-icon" placeholder="No. Sertifikat, No. Beasiswa, atau nama">
+        <input type="search" id="fSearch" class="input has-icon" placeholder="Nama lengkap atau nomor sertifikat">
       </div>
       <button class="btn btn-primary" id="fSearchBtn">Cari</button>
       <button class="btn btn-outline" id="fRefresh" title="Tarik ulang status terbaru dari spreadsheet">Perbarui status</button>
@@ -774,7 +775,7 @@ a{color:inherit}
           <li><a href="#beasiswa">Daftar beasiswa</a></li>
           <li><a href="#cara">Cara pengajuan</a></li>
           <li><a href="#faq">Pertanyaan umum</a></li>
-          <li><a href="#" id="footerTerms">Ketentuan pengajuan</a></li>
+          <li><a href="#faq" id="footerTerms">Ketentuan pengajuan</a></li>
         </ul>
       </div>
       <div>
@@ -1048,6 +1049,7 @@ async function cari(keyword, opts={}){
   if(!opts.keepPick){ S.picked.clear(); S.person=null; }
   render();
   if(!opts.silent) $("#beasiswa").scrollIntoView({behavior:"smooth",block:"start"});
+  return true;
 }
 
 function render(){
@@ -1084,7 +1086,10 @@ function render(){
       + '<div class="plafon">'
       + '<div>Nilai seluruh sertifikat<b>'+esc(o.total_nilai_format||rp(o.total_nilai))+'</b></div>'
       + '<div>Sudah diajukan<b>'+esc(o.sudah_diklaim_format||rp(o.sudah_diklaim))+'</b></div>'
-      + '</div></div>' + certs + '</div>';
+      + (Number(o.alokasi_s2)>0 ? '<div>Alokasi S2<b class="warn">'+esc(o.alokasi_s2_format||rp(o.alokasi_s2))+'</b></div>' : '')
+      + '</div></div>'
+      + (o.perlu_verifikasi ? '<div class="pcard__note">'+esc(o.pesan_verifikasi||'Identitasmu sedang dipastikan admin. Sertifikat bisa diajukan setelah itu.')+'</div>' : '')
+      + certs + '</div>';
   }).join("");
 
   $$('input[type="checkbox"][data-sid]',results).forEach(cb=>{
@@ -1269,21 +1274,22 @@ const CFG_FALLBACK = {
   teks:{
     tagline:"Cari sertifikat beasiswa atas namamu, centang yang ingin diajukan, lalu kirim ke admin.",
     judul_cari:"Cari sertifikat",
-    hint_cari:"Masukkan No. Sertifikat, No. Beasiswa, atau nama lengkapmu.",
-    placeholder:"Contoh: SRT-A1B2C3D4E5, BEA-2026-001, atau nama lengkap",
+    hint_cari:"Masukkan nama lengkap, No. Sertifikat, atau No. Beasiswa.",
+    placeholder:"Contoh: Ahmad Fauzan, SRT-A1B2C3D4E5, atau BEA-2026-0001",
     catatan_cari:"Sistem akan menampilkan seluruh sertifikat yang tercatat atas namamu.",
     judul_seksi:"Sertifikat Beasiswa Kamu",
     sub_seksi:"Centang sertifikat berstatus Tersedia. Yang sudah Di Proses atau lebih tidak bisa diajukan lagi."
   },
   langkah:[
     ["Cari Sertifikat","Masukkan No. Sertifikat atau namamu. Sistem menampilkan seluruh sertifikat atas nama yang sama."],
-    ["Centang Pilihan","Pilih sertifikat yang ingin diajukan, dibatasi sisa plafon per mahasiswa."],
+    ["Centang Pilihan","Nilai sampai Rp7.000.000 masuk beasiswa S1; kelebihannya dialihkan ke alokasi S2 maksimal Rp5.000.000."],
     ["Isi Kontak","Lengkapi nomor WhatsApp aktif dan centang pernyataan. Pengajuan tersimpan berstatus Di Proses."],
     ["Lanjut ke WhatsApp","Ringkasan diteruskan ke admin lewat WhatsApp untuk verifikasi dokumen."]
   ],
   faq:[
     ["Apa arti status pada setiap sertifikat?","Tersedia = belum pernah diajukan. Di Proses = sedang diverifikasi admin. Diterima = data valid. Ditolak = data tidak valid. Diajukan = sedang diproses SmartCoin. Aktif = beasiswa berjalan."],
     ["Kenapa ada sertifikat yang tidak bisa dicentang?","Hanya sertifikat berstatus Tersedia yang bisa diajukan. Setelah diajukan, statusnya otomatis menjadi Di Proses dan terkunci sampai admin selesai memverifikasi."],
+    ["Sertifikat saya Ditolak. Bisa diajukan lagi?","Bisa, setelah admin membukanya ulang. Hubungi admin lewat WhatsApp."],
     ["Sertifikat saya tidak muncul, kenapa?","Data ditarik dari spreadsheet resmi kampus yang dikunci di sistem. Bila sertifikat baru diterbitkan, tunggu sinkronisasi harian atau hubungi admin."]
   ]
 };
@@ -1325,6 +1331,7 @@ function terapkanKonfigurasi(cfg){
   set("#heroSub",t.tagline); set("#scTitle",t.judul_cari); set("#scHint",t.hint_cari);
   set("#scNote",t.catatan_cari); set("#secTitle",t.judul_seksi); set("#secSub",t.sub_seksi);
   set("#statPlafon", cfg.plafon_format || rp(PLAFON_DEFAULT));
+  set("#statPlafonS2", cfg.plafon_s2_format || rp(S.plafonS2));
   if(t.placeholder){
     $("#heroSearch") && ($("#heroSearch").placeholder=t.placeholder);
     $("#fSearch").placeholder=t.placeholder;
@@ -1391,11 +1398,11 @@ $("#heroSearchBtn") && $("#heroSearchBtn").addEventListener("click",()=>{
 $("#heroSearch") && $("#heroSearch").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#heroSearchBtn").click(); });
 $("#fSearchBtn").addEventListener("click",()=>cari($("#fSearch").value.trim()));
 $("#fSearch").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#fSearchBtn").click(); });
-$("#fRefresh").addEventListener("click",()=>{
+$("#fRefresh").addEventListener("click",async ()=>{
   const kw=$("#fSearch").value.trim();
   if(kw.length<3){ toast("Cari dulu","Masukkan kata kunci lalu tekan Cari.","warn"); return; }
-  cari(kw,{keepPick:true});
-  toast("Status diperbarui","Data ditarik ulang dari spreadsheet.","ok",2600);
+  const ok = await cari(kw,{keepPick:true});
+  if(ok) toast("Status diperbarui","Data terbaru sudah ditampilkan.","ok",2600);
 });
 // status ikut ter-update begitu tab dibuka lagi
 window.addEventListener("focus",()=>{
