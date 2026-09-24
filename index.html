@@ -25,7 +25,12 @@
 <meta name="twitter:description" content="Rp7.000.000 untuk S1, langsung cair. Cari sertifikat kegiatanmu bersama Universitas STEKOM.">
 <meta name="twitter:image" content="https://klaim-sertifikat-terpusat.vercel.app/assets/og-skala.jpg?v=1">
 <link rel="preload" as="image" href="assets/gedung-1920.webp?v=2" imagesrcset="assets/gedung-960.webp?v=2 960w, assets/gedung-1920.webp?v=2 1920w" imagesizes="100vw" fetchpriority="high">
-<link rel="icon" type="image/png" href="assets/logo-stekom.png?v=2">
+<link rel="icon" href="favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=1">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png?v=1">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
+<link rel="preconnect" href="https://challenges.cloudflare.com">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +53,7 @@
   --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hh) + 12px + env(safe-area-inset-top,0px));-webkit-text-size-adjust:100%}
 body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.6;font-size:16px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img{max-width:100%;display:block}
@@ -56,6 +62,24 @@ button{font:inherit;cursor:pointer}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
 :focus-visible{outline:3px solid var(--gold-500);outline-offset:2px;border-radius:6px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------------- Gerbang verifikasi keamanan ---------------- */
+.gerbang{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px;background:#061a38;transition:opacity .45s ease,visibility .45s}
+.gerbang::before{content:"";position:absolute;inset:-40px;background:url("assets/gedung-960.webp?v=2") center/cover;filter:blur(22px) saturate(1.2);opacity:.35}
+.gerbang::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 70% at 50% 40%,rgba(6,26,56,.35),rgba(6,26,56,.92))}
+.gerbang.is-selesai{opacity:0;visibility:hidden;pointer-events:none}
+.gerbang__kartu{position:relative;z-index:1;width:100%;max-width:420px;background:#fff;border-radius:24px;padding:28px 26px 24px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45);animation:masuk .5s cubic-bezier(.2,.7,.2,1) both}
+.gerbang__logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px}
+.gerbang__logo img{height:52px;width:52px;object-fit:contain}
+.gerbang__logo b{font-size:22px;letter-spacing:.06em;color:var(--navy-800)}
+.gerbang__ikon{width:58px;height:58px;margin:0 auto 12px;border-radius:18px;display:grid;place-items:center;background:var(--navy-100);color:var(--navy-800);font-size:28px}
+.gerbang h2{font-size:20px;color:var(--navy-900)}
+.gerbang p{font-size:14.5px;color:var(--text-2);margin-top:6px}
+.gerbang__widget{min-height:70px;display:grid;place-items:center;margin:18px 0 6px}
+.gerbang__status{font-size:13.5px;color:var(--text-3);min-height:20px}
+.gerbang__status.err{color:var(--err);font-weight:600}
+.gerbang__ulang{margin-top:12px}
+body.gerbang-buka{overflow:hidden}
 
 /* ---------------- Tombol ---------------- */
 .btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -82,7 +106,7 @@ button{font:inherit;cursor:pointer}
 .header.is-stuck{box-shadow:0 1px 0 var(--border),var(--sh-2)}
 .header__bar{height:var(--hh);display:flex;align-items:center;gap:24px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy-900)}
-.brand img{height:40px;width:auto}
+.brand img{height:44px;width:44px;object-fit:contain}
 .brand__sep{width:1px;height:32px;background:var(--border-2)}
 .brand__name{display:flex;flex-direction:column;line-height:1.05}
 .brand__name b{font-size:21px;font-weight:800;letter-spacing:.06em;color:var(--navy-800)}
@@ -392,6 +416,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 .callout{display:flex;gap:10px;margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn-fg);font-size:14px}
 .callout svg{flex:none;margin-top:2px}
 .callout--pmb{background:#FDECEC;color:#8A1C1C}
+.callout--periode{background:var(--navy-100);color:var(--navy-900);margin-top:14px}
 .callout a,.field-note a{color:inherit;font-weight:700}
 .field-note{display:block;margin-top:6px;font-size:13px;color:var(--text-3)}
 .field-note a{color:var(--navy-500)}
@@ -467,7 +492,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   body{font-size:15.5px}
   .header__bar{gap:10px}
   .brand{min-width:0;gap:9px}
-  .brand img{height:30px}
+  .brand img{height:38px;width:38px}
   .brand__sep{height:26px}
   .brand__name b{font-size:18px}
   .hero{min-height:auto;display:block}
@@ -537,11 +562,24 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   </defs>
 </svg>
 
+<!-- ============================ VERIFIKASI KEAMANAN ============================ -->
+<div class="gerbang is-selesai" id="gerbang" role="dialog" aria-modal="true" aria-labelledby="gerbangJudul">
+  <div class="gerbang__kartu">
+    <div class="gerbang__logo"><img src="assets/logo-stekom-bulat.png?v=1" alt="Logo Universitas STEKOM" width="52" height="52"><b>SKALA</b></div>
+    <div class="gerbang__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+    <h2 id="gerbangJudul">Verifikasi keamanan</h2>
+    <p>Sebentar, kami memastikan kamu bukan robot untuk melindungi data sertifikat peserta.</p>
+    <div class="gerbang__widget" id="tsWidget"></div>
+    <div class="gerbang__status" id="gerbangStatus" aria-live="polite">Memuat verifikasi…</div>
+    <button class="btn btn-outline gerbang__ulang" id="gerbangUlang" type="button" hidden>Coba lagi</button>
+  </div>
+</div>
+
 <!-- ============================ HEADER ============================ -->
 <header class="header" id="header">
   <div class="wrap header__bar">
     <a href="#beranda" class="brand" aria-label="SKALA Universitas STEKOM — Beranda">
-      <img src="assets/logo-stekom.png?v=2" alt="Logo Universitas STEKOM" width="110" height="40">
+      <img src="assets/logo-stekom-bulat.png?v=1" alt="Logo Universitas STEKOM" width="44" height="44">
       <span class="brand__sep" aria-hidden="true"></span>
       <span class="brand__name"><b>SKALA</b><small>Sistem Klaim Beasiswa</small></span>
     </a>
@@ -789,6 +827,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <label class="check"><input type="checkbox" id="ckAgree"><span>Saya menyatakan bahwa data dan sertifikat yang saya ajukan adalah benar milik saya.</span></label>
         <span class="error-msg">Pernyataan wajib dicentang.</span>
       </div>
+      <div class="callout callout--periode" id="ckPeriode"></div>
       <div class="callout callout--pmb">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
         <span><b>Wajib terdaftar PMB &amp; memiliki NIM</b> agar pengajuan dapat dilanjutkan ke tahap Diterima.
@@ -904,6 +943,61 @@ document.addEventListener("pointerdown",e=>{
   b.appendChild(s); setTimeout(()=>s.remove(),650);
 });
 
+/* ============================================================ VERIFIKASI KEAMANAN (Cloudflare Turnstile)
+   Lolos verifikasi → server memberi tiket sesi (60 menit) yang wajib dibawa saat mencari & mengajukan. */
+const Gerbang = (()=>{
+  const KUNCI="skala_sesi_v1", el=()=>$("#gerbang");
+  let siteKey="", widgetId=null, aktif=null, menunggu=null;
+  const status=(t,err)=>{ const s=$("#gerbangStatus"); s.textContent=t||""; s.classList.toggle("err",!!err); $("#gerbangUlang").hidden=!err; };
+  const tiket=()=>{ try{ const x=JSON.parse(sessionStorage.getItem(KUNCI)||"null"); if(x&&x.exp>Date.now()+60000) return x.t; }catch(e){} return ""; };
+  const simpan=(t,menit)=>{ try{ sessionStorage.setItem(KUNCI,JSON.stringify({t:t,exp:Date.now()+(menit||60)*60000})); }catch(e){} };
+  const tutup=()=>{ el().classList.add("is-selesai"); document.body.classList.remove("gerbang-buka");
+                    if(menunggu){ const f=menunggu; menunggu=null; f(); } };
+  const buka=()=>{ el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
+  async function kirimToken(token){
+    status("Memeriksa…");
+    try{
+      const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({aksi:"verifikasi",token:token})});
+      const d=await res.json();
+      if(d&&d.success&&d.sesi){ simpan(d.sesi,d.berlaku_menit); status("Terverifikasi"); setTimeout(tutup,350); return; }
+      status((d&&d.error)||"Verifikasi gagal.",true);
+    }catch(e){ status("Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi.",true); }
+    try{ window.turnstile&&widgetId!==null&&window.turnstile.reset(widgetId); }catch(e){}
+  }
+  function pasangWidget(){
+    if(!siteKey){ status("Memuat verifikasi…"); return; }
+    let coba=0;
+    (function tunggu(){
+      if(window.turnstile && window.turnstile.render){
+        if(widgetId!==null){ try{ window.turnstile.reset(widgetId); }catch(e){} return; }
+        status("");
+        widgetId=window.turnstile.render("#tsWidget",{ sitekey:siteKey, language:"id", theme:"light",
+          callback:kirimToken,
+          "error-callback":()=>status("Verifikasi gagal dimuat. Coba lagi.",true),
+          "expired-callback":()=>{ try{ window.turnstile.reset(widgetId); }catch(e){} } });
+        return;
+      }
+      if(++coba>60){ status("Layanan verifikasi tidak dapat dimuat. Periksa koneksi internet.",true); return; }
+      setTimeout(tunggu,200);
+    })();
+  }
+  $("#gerbangUlang").addEventListener("click",()=>{ status("Memuat verifikasi…"); if(widgetId===null) pasangWidget(); else { try{ window.turnstile.reset(widgetId); }catch(e){} status(""); } });
+  return {
+    tiket,
+    mulai(){ if(API_URL && !tiket()) buka(); },
+    /* dipanggil setiap konfigurasi dari server/cache diterapkan */
+    konfigurasi(c){
+      if(!c) return; aktif=!!c.aktif; siteKey=c.site_key||"";
+      if(!aktif){ tutup(); return; }
+      if(!tiket() && API_URL){ buka(); pasangWidget(); }
+    },
+    /* server menolak karena tiket habis → minta verifikasi ulang, lalu jalankan ulang aksinya */
+    ulangi(aksi){ try{ sessionStorage.removeItem(KUNCI); }catch(e){} menunggu=aksi||null; buka(); pasangWidget(); },
+    gagalMuat(){ if(!siteKey && API_URL && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.",true); }
+  };
+})();
+$("#gerbangUlang").addEventListener("click",()=>{ if(!document.querySelector("#tsWidget iframe") && !window.turnstile) location.reload(); });
+
 /* ============================================================ MODAL */
 let modalStack=[];
 function openModal(id){ const el=$("#"+id); if(!el) return; el.classList.add("is-open"); document.body.style.overflow="hidden"; modalStack.push(id); }
@@ -953,7 +1047,7 @@ const DEMO = {
 };
 
 /* ============================================================ STATE */
-const S = { emailWajibCom:true, plafon:PLAFON_DEFAULT, plafonS2:5000000, orang:[], person:null, picked:new Set(), sending:false };
+const S = { batasPeriode:25, emailWajibCom:true, plafon:PLAFON_DEFAULT, plafonS2:5000000, orang:[], person:null, picked:new Set(), sending:false };
 const LABEL = {tersedia:"Tersedia",diproses:"Di Proses",diterima:"Diterima",ditolak:"Ditolak",diajukan:"Diajukan",aktif:"Aktif",verifikasi:"Verifikasi Identitas",ditahan:"Belum Dibuka"};
 const TAG = {tersedia:"tag--tersedia",diproses:"tag--proses",verifikasi:"tag--proses",diterima:"tag--terima",diajukan:"tag--ajukan",aktif:"tag--aktif",ditolak:"tag--tolak",ditahan:"tag--tahan"};
 const tagClass = st => TAG[st] || "tag--proses";
@@ -981,7 +1075,7 @@ async function cari(keyword, opts={}){
   try{
     if(API_URL){
       const kontrol=new AbortController(); const jam=setTimeout(()=>kontrol.abort(),40000);
-      try{ const res=await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw),{signal:kontrol.signal}); data=await res.json(); }
+      try{ const res=await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw)+"&sesi="+encodeURIComponent(Gerbang.tiket()),{signal:kontrol.signal}); data=await res.json(); }
       finally{ clearTimeout(jam); }
     }else{
       await new Promise(r=>setTimeout(r,450));
@@ -995,6 +1089,7 @@ async function cari(keyword, opts={}){
       +(habis?'Coba lagi sebentar lagi.':'Periksa koneksi internet, lalu coba lagi.')+'</p></div>';
     return false;
   }
+  if(data&&data.perlu_verifikasi){ firstState(); Gerbang.ulangi(()=>cari(kw,opts)); return false; }
   if(!data||data.success===false){ results.innerHTML='<div class="state-box"><h3>Pencarian gagal</h3><p>'+esc((data&&data.error)||"Terjadi kesalahan.")+'</p></div>'; return false; }
   S.plafon=Number(data.plafon)||PLAFON_DEFAULT;
   if(data.plafon_s2!=null) S.plafonS2=Number(data.plafon_s2)||S.plafonS2;
@@ -1094,6 +1189,15 @@ function syncCart(){
   $("#cart").classList.toggle("is-open",buka); document.body.classList.toggle("cart-open",buka);
 }
 
+/* ============================================================ PERIODE PROSES BULANAN
+   Diajukan tgl 1–25 → diproses bulan itu; setelah tgl 25 → periode bulan berikutnya. */
+const BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+function periodeHariIni(){
+  const d=new Date(); let th=d.getFullYear(), bl=d.getMonth();
+  if(d.getDate()>S.batasPeriode){ bl++; if(bl>11){ bl=0; th++; } }
+  return BULAN[bl]+" "+th;
+}
+
 /* ============================================================ CHECKOUT */
 $("#cartGo").addEventListener("click",()=>{
   const o=currentPerson(), k=hitungKeranjang(); if(!o||!k.items.length) return;
@@ -1102,6 +1206,9 @@ $("#cartGo").addEventListener("click",()=>{
     +'<div class="ck-row ck-total"><span>Total diajukan</span><b>'+rp(k.total)+'</b></div>';
   if(k.s2>0) rincian+='<div class="ck-row"><span>Beasiswa S1</span><b>'+rp(k.s1)+'</b></div><div class="ck-row"><span>Dialihkan ke S2 (menunggu persetujuan)</span><b>'+rp(k.s2)+'</b></div>';
   $("#ckList").innerHTML=rincian; $("#ckNama").value=o.nama;
+  $("#ckPeriode").innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>'
+    +'<span><b>Periode proses: '+esc(periodeHariIni())+'</b><br>Pengajuan tanggal 1–'+S.batasPeriode+' diproses bulan itu; setelah tanggal '+S.batasPeriode
+    +' diikutkan periode berikutnya. Setelah disetujui, beasiswa masuk <b>SmartCoin LMS (SIAKAD)</b> dan bisa dipakai membayar uang kuliah, remedial, dan kebutuhan lain.</span>';
   $$("#mCheckout .field").forEach(f=>f.classList.remove("is-invalid"));
   openModal("mCheckout"); setTimeout(()=>$("#ckWa").focus(),250);
 });
@@ -1122,7 +1229,7 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   if(bad){ toast("Periksa isian","Ada data yang belum benar.","warn"); return; }
 
   const items=pickedItems();
-  const payload={aksi:"submitPengajuan",sertifikat:items.map(c=>c.no_sertifikat),noWA:wa,email:email,nim:$("#ckNim").value.trim(),pernyataan:true};
+  const payload={aksi:"submitPengajuan",sertifikat:items.map(c=>c.no_sertifikat),noWA:wa,email:email,nim:$("#ckNim").value.trim(),pernyataan:true,sesi:Gerbang.tiket()};
   S.sending=true; const btn=$("#ckSubmit"), label=btn.textContent; btn.textContent="Mengirim…"; btn.disabled=true;
   Proses.mulai();
   let data;
@@ -1140,12 +1247,14 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   S.sending=false; btn.textContent=label; btn.disabled=false;
   const berhasil=!!(data&&data.success!==false);
   await Proses.selesai(berhasil);
+  if(data&&data.perlu_verifikasi){ toast("Verifikasi ulang","Selesaikan verifikasi keamanan, lalu tekan Kirim Pengajuan lagi.","warn",6000); Gerbang.ulangi(); return; }
   if(!berhasil){ toast("Pengajuan ditolak",(data&&data.error)||"Terjadi kesalahan.","err",7000); return; }
   const orangIni=currentPerson();
   S.bukti={data:data, items:items.slice(), nama:data.nama||(orangIni&&orangIni.nama)||"", wa:wa, email:email, nim:$("#ckNim").value.trim(), waktu:new Date()};
 
   closeModal("mCheckout");
   let pesan="ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))+". Status: "+(data.status_label||"Di Proses")+".";
+  pesan+=" Periode proses: "+(data.periode_label||periodeHariIni())+".";
   if(data.email_terkirim) pesan+=" Salinan status juga dikirim ke "+email+".";
   if(data.ada_s2) pesan+=" Beasiswa S1 "+(data.nominal_s1_format||rp(data.nominal_s1))+", kelebihan "+(data.nominal_s2_format||rp(data.nominal_s2))+" dialihkan untuk S2.";
   $("#successMsg").textContent=pesan;
@@ -1185,7 +1294,7 @@ async function gambarBukti(){
   const F='"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif';
   const d=b.data, items=b.items, W=1080, P=72, baris=86;
   // [label, nilai, lebar penuh?]
-  const kv=[["ID Pengajuan",d.id_pengajuan||"-"],["No. WhatsApp",samarWa(b.wa)],["Nama",b.nama||"-",1],["Waktu pengajuan",tglIndo(b.waktu),1]];
+  const kv=[["ID Pengajuan",d.id_pengajuan||"-"],["Periode proses",d.periode_label||periodeHariIni()],["Nama",b.nama||"-",1],["Waktu pengajuan",tglIndo(b.waktu),1],["No. WhatsApp",samarWa(b.wa)]];
   kv.push(["Email",b.email||"-",1]);
   kv.push(["NIM",b.nim||"Belum ada"]);
   let barisKv=0, kol=0; kv.forEach(r=>{ if(r[2]){ if(kol) barisKv++; barisKv++; kol=0; } else { kol++; if(kol===2){ barisKv++; kol=0; } } }); if(kol) barisKv++;
@@ -1199,11 +1308,12 @@ async function gambarBukti(){
   const g=x.createLinearGradient(0,32,W,262); g.addColorStop(0,"#061a38"); g.addColorStop(1,"#123F7E"); x.fillStyle=g; x.fillRect(32,32,W-64,230);
   x.fillStyle="#F2B505"; x.fillRect(32,256,W-64,6); x.restore();
   const logo=$(".brand img");
-  kotakBulat(x,P,78,250,96,18); x.fillStyle="#fff"; x.fill();
-  if(logo&&logo.complete&&logo.naturalWidth){ const lw=214, lh=lw*logo.naturalHeight/logo.naturalWidth; x.drawImage(logo,P+18,78+(96-lh)/2,lw,lh); }
-  x.fillStyle="#fff"; x.font="800 50px "+F; x.fillText("SKALA",P+290,128);
-  x.fillStyle="#C9D8EE"; x.font="600 25px "+F; x.fillText("Bukti Pengajuan Klaim Beasiswa",P+290,168);
-  x.fillStyle="#FFD966"; x.font="700 21px "+F; x.fillText("Universitas STEKOM",P+290,204);
+  x.beginPath(); x.arc(P+64,128,62,0,7); x.fillStyle="#fff"; x.fill();
+  if(logo&&logo.complete&&logo.naturalWidth){ const r=Math.min(104/logo.naturalWidth,104/logo.naturalHeight), lw=logo.naturalWidth*r, lh=logo.naturalHeight*r;
+    x.drawImage(logo,P+64-lw/2,128-lh/2,lw,lh); }
+  x.fillStyle="#fff"; x.font="800 50px "+F; x.fillText("SKALA",P+160,128);
+  x.fillStyle="#C9D8EE"; x.font="600 25px "+F; x.fillText("Bukti Pengajuan Klaim Beasiswa",P+160,168);
+  x.fillStyle="#FFD966"; x.font="700 21px "+F; x.fillText("Universitas STEKOM",P+160,204);
 
   // judul & status
   let y=338;
@@ -1303,6 +1413,7 @@ const CFG_FALLBACK = {
     ["Apa arti warna kartu sertifikat?","Putih = Rp1–2 juta, Silver = Rp3–4 juta, Gold = Rp5–7 juta."],
     ["Apakah sisa beasiswa hangus?","Tidak. Setelah Rp7.000.000 untuk S1 terpenuhi, kelebihannya dialihkan untuk biaya studi S2 hingga Rp5.000.000."],
     ["Kenapa sertifikat saya berstatus Belum Dibuka?","Sertifikat dari kegiatan tersebut belum dibuka admin untuk pengajuan. Silakan hubungi admin lewat WhatsApp."],
+    ["Kapan beasiswa saya diproses?","Pengajuan tanggal 1–25 diproses pada bulan itu juga; setelah tanggal 25 diikutkan periode bulan berikutnya. Setelah disetujui, beasiswa masuk SmartCoin di LMS (SIAKAD) dan bisa dipakai membayar uang kuliah, remedial, dan kebutuhan akademik lainnya."],
     ["Apakah saya harus sudah terdaftar sebagai mahasiswa?","Ya. Kamu wajib mendaftar PMB dan memiliki NIM agar pengajuan dapat dilanjutkan. Daftar di pmb.stekom.ac.id/5000."],
     ["Sertifikat saya Ditolak. Bisa diajukan lagi?","Bisa, setelah admin membukanya ulang. Hubungi admin lewat WhatsApp."]
   ]
@@ -1332,6 +1443,8 @@ function terapkanKonfigurasi(cfg){
   if(cfg.plafon_s2!=null) S.plafonS2=Number(cfg.plafon_s2)||S.plafonS2;
   if(cfg.wa_admin) WHATSAPP_NUMBER=normWa(cfg.wa_admin);
   if(typeof cfg.email_wajib_com==="boolean") S.emailWajibCom=cfg.email_wajib_com;
+  if(Number(cfg.batas_tanggal_periode)>0) S.batasPeriode=Number(cfg.batas_tanggal_periode);
+  if(cfg.captcha) Gerbang.konfigurasi(cfg.captcha);
   if(cfg.label_status) Object.assign(LABEL,cfg.label_status);
   const set=(sel,val)=>{ const el=$(sel); if(el&&val) el.textContent=val; };
   set("#heroSub",t.tagline); set("#scHint",t.hint_cari);
@@ -1370,7 +1483,7 @@ async function muatKonfigurasi(){
        if(simpan && simpan.cfg && Date.now()-simpan.t < 7*86400000) terapkanKonfigurasi(simpan.cfg); }catch(e){}
   try{ const res=await fetch(API_URL+"?aksi=konfigurasi"); const cfg=await res.json();
        if(cfg&&cfg.success!==false){ terapkanKonfigurasi(cfg); try{ localStorage.setItem(KUNCI_CFG,JSON.stringify({t:Date.now(),cfg:cfg})); }catch(e){} } }
-  catch(err){ /* tetap memakai teks cadangan / tersimpan */ }
+  catch(err){ Gerbang.gagalMuat(); /* tetap memakai teks cadangan / tersimpan */ }
 }
 const DEMO_STAT=[{nilai:8420,label:"sertifikat beasiswa terdaftar"},{nilai:12,label:"kategori sertifikat kegiatan"},{nilai:1240,label:"mahasiswa telah mengajukan"},{nilai:615,label:"sertifikat telah dicairkan"}];
 
@@ -1420,7 +1533,7 @@ $("#fRefresh").addEventListener("click",async ()=>{
 window.addEventListener("focus",()=>{ const kw=$("#fSearch").value.trim(); if(kw && S.orang.length && !S.sending) cari(kw,{silent:true,keepPick:true}); });
 
 window.addEventListener("load",()=>{ $(".hero").classList.add("is-ready"); hitungNaik(); });
-firstState(); amatiReveal(); muatKonfigurasi();
+Gerbang.mulai(); firstState(); amatiReveal(); muatKonfigurasi();
 if(!API_URL) toast("Mode demo","Coba cari: ahmad fauzan pratama","info",6000);
 </script>
 </body>
