@@ -114,6 +114,28 @@ button{font:inherit;cursor:pointer}
 .gerbang__status.err{color:var(--err);font-weight:600}
 .gerbang__ulang{margin-top:12px}
 body.gerbang-buka{overflow:hidden}
+/* verifikasi: ramah HP */
+.gerbang{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.gerbang__kartu{margin:auto;max-width:420px}
+.gerbang__widget{width:100%;overflow:hidden}
+.gerbang__widget > div,.gerbang__widget iframe{max-width:100%}
+.gerbang__muat{display:flex;align-items:center;justify-content:center;gap:10px;height:65px;width:100%;border-radius:10px;background:var(--bg-soft);color:var(--text-3);font-size:13.5px}
+.gerbang__muat::before{content:"";width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border-2);border-top-color:var(--navy-500);animation:spin .8s linear infinite}
+.gerbang__aman{display:block;text-align:center;line-height:1.5;margin-top:14px;font-size:12px;color:var(--text-3)}
+.gerbang__aman .ico{margin-right:4px;vertical-align:-2px}
+@media (max-width:420px){
+  .gerbang__kartu{padding:22px 14px 18px;border-radius:20px}
+  .gerbang__logo{margin-bottom:12px}
+  .gerbang__logo img{height:44px;width:44px}
+  .gerbang__ikon{width:50px;height:50px;font-size:24px;margin-bottom:10px}
+  .gerbang h2{font-size:18.5px}
+  .gerbang p{font-size:14px}
+  .gerbang__widget{margin:14px 0 4px}
+}
+@media (max-height:560px){ .gerbang{place-items:start center} .gerbang__ikon{display:none} }
+/* sentuhan: tanpa jeda ketuk, tanpa kilat biru */
+a,button,.btn,input,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
 
 /* pita pemeliharaan */
 .maint-bar{position:fixed;left:0;right:0;top:calc(var(--hh) + env(safe-area-inset-top,0px));z-index:49;background:#B31B22;color:#fff;font-size:14px;box-shadow:0 6px 16px rgba(179,27,34,.3)}

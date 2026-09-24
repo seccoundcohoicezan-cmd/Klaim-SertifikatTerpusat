@@ -82,7 +82,8 @@
         if (window.turnstile && window.turnstile.render) {
           if (widgetId !== null) { try { window.turnstile.reset(widgetId); } catch (e) {} return; }
           status("");
-          widgetId = window.turnstile.render("#tsWidget", { sitekey: siteKey, language: "id", theme: "light", callback: kirim,
+          $("#tsWidget").innerHTML = "";
+          widgetId = window.turnstile.render("#tsWidget", { size:(document.querySelector("#tsWidget").clientWidth>=300?"flexible":"compact"), sitekey: siteKey, language: "id", theme: "light", callback: kirim,
             "error-callback": () => status("Verifikasi gagal dimuat. Coba lagi.", true),
             "expired-callback": () => { try { window.turnstile.reset(widgetId); } catch (e) {} } });
           return;
