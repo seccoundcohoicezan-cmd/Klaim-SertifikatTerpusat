@@ -116,7 +116,8 @@ button{font:inherit;cursor:pointer}
 body.gerbang-buka{overflow:hidden}
 /* verifikasi: ramah HP */
 .gerbang{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
-.gerbang__kartu{margin:auto;max-width:420px}
+.gerbang{grid-template-columns:minmax(0,420px);justify-content:center}
+.gerbang__kartu{margin:auto;max-width:420px;width:100%;min-width:0;box-sizing:border-box}
 .gerbang__widget{width:100%;overflow:hidden}
 .gerbang__widget > div,.gerbang__widget iframe{max-width:100%}
 .gerbang__muat{display:flex;align-items:center;justify-content:center;gap:10px;height:65px;width:100%;border-radius:10px;background:var(--bg-soft);color:var(--text-3);font-size:13.5px}
