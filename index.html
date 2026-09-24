@@ -80,6 +80,29 @@ button{font:inherit;cursor:pointer}
 .gerbang__status.err{color:var(--err);font-weight:600}
 .gerbang__ulang{margin-top:12px}
 body.gerbang-buka{overflow:hidden}
+/* verifikasi: ramah HP */
+.gerbang{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.gerbang{grid-template-columns:minmax(0,420px);justify-content:center}
+.gerbang__kartu{margin:auto;max-width:420px;width:100%;min-width:0;box-sizing:border-box}
+.gerbang__widget{width:100%;overflow:hidden}
+.gerbang__widget > div,.gerbang__widget iframe{max-width:100%}
+.gerbang__muat{display:flex;align-items:center;justify-content:center;gap:10px;height:65px;width:100%;border-radius:10px;background:var(--bg-soft);color:var(--text-3);font-size:13.5px}
+.gerbang__muat::before{content:"";width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border-2);border-top-color:var(--navy-500);animation:spin .8s linear infinite}
+.gerbang__aman{display:block;text-align:center;line-height:1.5;margin-top:14px;font-size:12px;color:var(--text-3)}
+.gerbang__aman .ico{margin-right:4px;vertical-align:-2px}
+@media (max-width:420px){
+  .gerbang__kartu{padding:22px 14px 18px;border-radius:20px}
+  .gerbang__logo{margin-bottom:12px}
+  .gerbang__logo img{height:44px;width:44px}
+  .gerbang__ikon{width:50px;height:50px;font-size:24px;margin-bottom:10px}
+  .gerbang h2{font-size:18.5px}
+  .gerbang p{font-size:14px}
+  .gerbang__widget{margin:14px 0 4px}
+}
+@media (max-height:560px){ .gerbang{place-items:start center} .gerbang__ikon{display:none} }
+/* sentuhan: tanpa jeda ketuk, tanpa kilat biru */
+a,button,.btn,input,label{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
 
 /* ---------------- Mode pemeliharaan ---------------- */
 .maint-bar{position:fixed;left:0;right:0;top:calc(var(--hh) + env(safe-area-inset-top,0px));z-index:49;background:#B31B22;color:#fff;
@@ -223,12 +246,13 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .layanan__isi span{display:block;font-size:14px;color:var(--text-2);margin-top:3px;line-height:1.45}
 .layanan__panah{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--bg-soft);color:var(--navy-800);font-size:18px;transition:transform .25s,background .25s,color .25s}
 .layanan__kartu:hover .layanan__panah{transform:translateX(4px);background:var(--red-600);color:#fff}
-.searchcard--utama{grid-template-columns:1fr auto;box-shadow:var(--sh-3);border-radius:24px;padding:26px}
-.cari-hasil{grid-column:1/-1;margin-top:10px;padding-top:20px;border-top:1px solid var(--border);scroll-margin-top:calc(var(--hh) + 16px)}
+.searchcard--utama{grid-template-columns:minmax(0,1fr) auto;box-shadow:var(--sh-3);border-radius:24px;padding:26px}
+.cari-hasil{grid-column:1/-1;min-width:0;margin-top:10px;padding-top:20px;border-top:1px solid var(--border);scroll-margin-top:calc(var(--hh) + 16px)}
 .cari-hasil .state-box{border-style:dashed;background:var(--bg-soft)}
 .cari-hasil .pcard{box-shadow:none;margin-bottom:16px}
 .cari-hasil .pcard:last-child{margin-bottom:0}
 .searchcard__aksi{display:flex;gap:10px}
+.searchcard__aksi .btn[hidden] + .btn,.searchcard__aksi .btn:only-child{flex:1}
 .searchcard__aksi .btn{height:52px}
 .searchcard{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-3);padding:22px;display:grid;grid-template-columns:1fr auto;gap:12px 14px;align-items:center;border:1px solid var(--border)}
 .searchcard h2{font-size:18px;grid-column:1/-1}
@@ -239,8 +263,19 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .input.has-icon{padding-left:44px}
 .input:focus{outline:none;border-color:var(--navy-500);box-shadow:0 0 0 4px rgba(42,99,174,.15)}
 .searchcard .btn{height:52px;padding:0 28px}
-.searchrules{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.cari-tips{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-2);line-height:1.45}
+.cari-tips > .ico{flex:none;color:var(--navy-500)}
+.cari-tips b{color:var(--navy-900)}
+.cari-tips__btn{flex:none;margin-left:auto;border:1px solid var(--border-2);background:#fff;color:var(--navy-500);font-weight:700;font-size:12.5px;padding:5px 11px;border-radius:var(--pill)}
+.cari-tips__btn[aria-expanded="true"]{background:var(--navy-100);border-color:var(--navy-500)}
+.cari-contoh{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;animation:masuk .25s ease}
+.cari-contoh span{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:var(--pill)}
+.cari-contoh__catatan{flex-basis:100%;font-size:12px;color:var(--text-3);margin-top:2px}
+.cari-contoh .ok{background:#E4F5EB;color:#0B6B3D}
+.cari-contoh .no{background:#FDECEC;color:#9B1C1C;text-decoration:line-through;text-decoration-color:rgba(155,28,28,.35)}
+.searchrules{grid-column:1/-1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .searchrules__label{font-size:13px;font-weight:700;color:var(--text-3);margin-right:2px}
+.searchrules__chips{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
 .searchrules__note{flex-basis:100%;display:flex;gap:8px;align-items:flex-start;margin-top:4px;font-size:13.5px;color:var(--text-2)}
 .searchrules__note .ico{margin-top:3px;color:var(--navy-500)}
 .searchrules__note b{color:var(--navy-900)}
@@ -413,7 +448,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 .fab__btn{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:var(--pill);background:var(--navy-800);color:#fff;text-decoration:none;font-weight:700;font-size:14px;
   box-shadow:var(--sh-3);animation:denyut 2.2s ease-in-out infinite;border:2px solid var(--gold-500)}
 .fab__btn i{width:34px;height:34px;border-radius:50%;background:var(--gold-500);color:var(--navy-900);display:grid;place-items:center;font-style:normal;font-size:18px}
-.fab__close{position:absolute;top:-8px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#fff;color:var(--text-2);box-shadow:var(--sh-2);font-size:13px;line-height:22px;padding:0}
+.fab__close{position:absolute;top:-10px;right:-8px;width:30px;height:30px;border-radius:50%;border:0;background:#fff;color:var(--text-2);box-shadow:var(--sh-2);font-size:17px;line-height:1;padding:0;display:grid;place-items:center}
 
 /* ---------------- Keranjang ---------------- */
 .cart{position:fixed;left:0;right:0;bottom:0;z-index:45;transform:translateY(110%);transition:transform .35s cubic-bezier(.2,.7,.2,1);padding:0 12px calc(12px + env(safe-area-inset-bottom,0px))}
@@ -540,7 +575,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .help-card{position:static}
   .footer__grid{grid-template-columns:1fr 1fr}
   .pmb{grid-template-columns:1fr;padding:30px}
-  .pmb__cta{justify-self:start}
+  .pmb__cta{justify-self:stretch;width:100%}
+  .btn-pmb{width:100%;white-space:normal;text-align:center;padding:15px 18px;font-size:16px}
 }
 @media (max-width:640px){
   :root{--hh:64px}
@@ -566,17 +602,32 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .hero__sub{font-size:15.5px}
   .value{padding:14px 14px 14px 58px}
   .value__ico{left:12px;top:14px}
-  .searchcard{grid-template-columns:1fr;padding:18px}
+  .searchcard{grid-template-columns:minmax(0,1fr);padding:18px}
   .searchcard .btn{width:100%}
-  .searchcard--utama{padding:18px;border-radius:20px}
+  .searchcard--utama{padding:18px;border-radius:20px;gap:12px}
+  .searchcard--utama .hint{display:none}
+  .cari-tips{font-size:13px}
+  .cari-hasil .state-box{padding:18px 14px}
+  .cari-hasil .state-box .state-ico{display:none}
+  .cari-hasil .state-box h3{font-size:15.5px}
+  .cari-hasil .state-box p{display:none}
+  .cari-hasil .state-box{padding:14px}
   .cari-hasil{padding-top:16px}
   .cari-hasil .certs{padding:14px 12px 16px}
   .cari-hasil .pcard__head{padding:14px 12px}
-  .searchcard__aksi{display:grid;grid-template-columns:1fr 1fr}
+  .searchcard__aksi{display:flex}
+  .searchcard__aksi .btn{flex:1}
   .layanan{grid-template-columns:1fr;gap:12px}
   .layanan__kartu{padding:16px}
   .layanan__ikon{width:46px;height:46px;font-size:22px}
   .chip{font-size:12px;padding:5px 9px}
+  .searchrules{gap:6px}
+  .searchrules__label{flex-basis:100%}
+  .searchrules__chips{flex:1 1 100%;min-width:0;max-width:calc(100% + 36px);flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;margin:0 -18px;padding:2px 18px 6px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent)}
+  .searchrules__chips::-webkit-scrollbar{display:none}
+  .searchrules__chips .chip{flex:none;scroll-snap-align:start}
+  .chip--desk{display:inline-flex}
   .chip--desk{display:none}
   .searchrules__label{flex-basis:100%}
   .section{padding:60px 0}
@@ -634,9 +685,10 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     <div class="gerbang__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
     <h2 id="gerbangJudul">Verifikasi keamanan</h2>
     <p>Sebentar, kami memastikan kamu bukan robot untuk melindungi data sertifikat peserta.</p>
-    <div class="gerbang__widget" id="tsWidget"></div>
+    <div class="gerbang__widget" id="tsWidget"><div class="gerbang__muat">Menyiapkan verifikasi…</div></div>
     <div class="gerbang__status" id="gerbangStatus" aria-live="polite">Memuat verifikasi…</div>
     <button class="btn btn-outline gerbang__ulang" id="gerbangUlang" type="button" hidden>Coba lagi</button>
+    <p class="gerbang__aman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Cukup sekali setiap 60 menit · dilindungi Cloudflare</p>
   </div>
 </div>
 
@@ -749,17 +801,19 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     </div>
     <div class="searchcard__aksi">
       <button class="btn btn-primary" id="fSearchBtn">Cari</button>
-      <button class="btn btn-outline" id="fRefresh" title="Tarik ulang status terbaru">Perbarui status</button>
+      <button class="btn btn-outline" id="fRefresh" title="Tarik ulang status terbaru" hidden>Perbarui status</button>
     </div>
-    <div class="searchrules" aria-label="Contoh penulisan">
-      <span class="searchrules__label">Contoh penulisan:</span>
-      <span class="chip ok"><svg class="ico"><use href="#i-cek"/></svg>rina maharani putri</span>
-      <span class="chip ok"><svg class="ico"><use href="#i-cek"/></svg>RINA MAHARANI PUTRI</span>
-      <span class="chip ok chip--desk"><svg class="ico"><use href="#i-cek"/></svg>Rina Maharani Putri</span>
-      <span class="chip ok"><svg class="ico"><use href="#i-cek"/></svg>BEA-2026-0123</span>
-      <span class="chip no"><svg class="ico"><use href="#i-silang"/></svg>rina (sebagian)</span>
-      <span class="chip no"><svg class="ico"><use href="#i-silang"/></svg>rina maharani putry (salah eja)</span>
-      <p class="searchrules__note"><svg class="ico"><use href="#i-info"/></svg><span><b>Huruf besar dan kecil dihitung sama.</b> Yang penting nama ditulis lengkap dan ejaannya sesuai sertifikat.</span></p>
+    <div class="cari-tips">
+      <svg class="ico"><use href="#i-info"/></svg>
+      <span>Tulis <b>nama lengkap</b> atau <b>kode BEA-…</b> sesuai sertifikat.</span>
+      <button type="button" class="cari-tips__btn" id="tipsBtn" aria-expanded="false" aria-controls="cariContoh">Contoh</button>
+    </div>
+    <div class="cari-contoh" id="cariContoh" hidden>
+      <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>rina maharani putri</span>
+      <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>BEA-2026-0123</span>
+      <span class="no"><svg class="ico"><use href="#i-silang"/></svg>rina (sebagian)</span>
+      <span class="no"><svg class="ico"><use href="#i-silang"/></svg>rina maharani putry</span>
+      <small class="cari-contoh__catatan">Huruf besar/kecil dihitung sama · nama sebagian atau salah eja tidak ditampilkan demi privasi.</small>
     </div>
     <div id="results" class="cari-hasil"></div>
     </div>
@@ -1048,7 +1102,8 @@ const Gerbang = (()=>{
       if(window.turnstile && window.turnstile.render){
         if(widgetId!==null){ try{ window.turnstile.reset(widgetId); }catch(e){} return; }
         status("");
-        widgetId=window.turnstile.render("#tsWidget",{ sitekey:siteKey, language:"id", theme:"light",
+        $("#tsWidget").innerHTML="";
+        widgetId=window.turnstile.render("#tsWidget",{ size:(document.querySelector("#tsWidget").clientWidth>=300?"flexible":"compact"), sitekey:siteKey, language:"id", theme:"light",
           callback:kirimToken,
           "error-callback":()=>status("Verifikasi gagal dimuat. Coba lagi.",true),
           "expired-callback":()=>{ try{ window.turnstile.reset(widgetId); }catch(e){} } });
@@ -1205,6 +1260,7 @@ async function cari(keyword, opts={}){
   S.plafon=Number(data.plafon)||PLAFON_DEFAULT;
   if(data.plafon_s2!=null) S.plafonS2=Number(data.plafon_s2)||S.plafonS2;
   S.orang=data.orang||[];
+  $("#fRefresh").hidden=!S.orang.length;
   if(!S.orang.length){ S.person=null; S.picked.clear(); syncCart(); emptyState(kw); return true; }
   if(!opts.keepPick){ S.picked.clear(); S.person=null; }
   render();
@@ -1235,7 +1291,8 @@ function render(){
   S.orang.forEach(o=>(o.sertifikat||[]).forEach(c=>{ if(!c.bisa_dipilih) S.picked.delete(c.no_sertifikat); }));
   if(!S.picked.size) S.person=null;
   results.innerHTML=S.orang.map(o=>{
-    const meta=[o.sekolah,o.no_wa_tersamar,o.jumlah_sertifikat+' sertifikat'].filter(Boolean).map(esc).join(' · ');
+    const jml=Number(o.jumlah_sertifikat)||((o.sertifikat||[]).length);
+    const meta=[o.sekolah,o.no_wa_tersamar,jml?jml+' sertifikat':''].filter(Boolean).map(esc).join(' · ');
     return '<div class="pcard'+(S.person===o.id_person?' is-active':'')+'">'
       +'<div class="pcard__head"><div class="pcard__id"><span class="avatar">'+esc(inisial(o.nama))+'</span><div><h3>'+esc(o.nama)+'</h3><span class="pcard__meta">'+meta+'</span></div></div>'
       +'<div class="plafon"><div>Nilai seluruh sertifikat<b>'+esc(o.total_nilai_format||rp(o.total_nilai))+'</b></div>'
@@ -1291,7 +1348,7 @@ function syncCart(){
   statS2.hidden=!(k.s2>0); $("#cartSisa").textContent=rp(k.s2); $("#cartSisa").classList.add("over");
   const warn=$("#cartWarn");
   if(k.lebih>0){ warn.hidden=false; warn.classList.remove("cart__warn--info");
-    warn.textContent="Melebihi kuota. Sisa S1 "+rp(k.sisa)+" + sisa S2 "+rp(k.sisaS2)+" = "+rp(k.kapasitas)+". Kurangi "+rp(k.lebih)+"."; }
+    warn.textContent="Melebihi kuota yang tersisa ("+rp(k.kapasitas)+"). Kurangi "+rp(k.lebih)+"."; }
   else if(k.s2>0){ warn.hidden=false; warn.classList.add("cart__warn--info");
     warn.textContent="S1 penuh "+rp(S.plafon)+" · kelebihan "+rp(k.s2)+" dialihkan ke S2, tidak hangus."; }
   else warn.hidden=true;
@@ -1366,7 +1423,7 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   S.bukti={data:data, items:items.slice(), nama:data.nama||(orangIni&&orangIni.nama)||"", wa:wa, email:email, nim:$("#ckNim").value.trim(), waktu:new Date()};
 
   closeModal("mCheckout");
-  let pesan="ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))+". Status: "+(data.status_label||"Di Proses")+".";
+  let pesan="Total "+(data.total_format||rp(data.total))+" · status "+(data.status_label||"Di Proses")+".";
   pesan+=" Periode proses: "+(data.periode_label||periodeHariIni())+".";
   if(data.email_terkirim) pesan+=" Salinan status juga dikirim ke "+email+".";
   if(data.ada_s2) pesan+=" Beasiswa S1 "+(data.nominal_s1_format||rp(data.nominal_s1))+", kelebihan "+(data.nominal_s2_format||rp(data.nominal_s2))+" dialihkan untuk S2.";
@@ -1528,7 +1585,7 @@ const CFG_FALLBACK = {
   faq:[
     ["Sertifikat saya tidak muncul, kenapa?","Tulis nama lengkap dengan ejaan yang sama persis seperti di sertifikat. Huruf besar/kecil tidak masalah, tetapi nama sebagian atau salah eja tidak ditampilkan demi privasi."],
     ["Apa arti warna kartu sertifikat?","Putih = Rp1–2 juta, Silver = Rp3–4 juta, Gold = Rp5–7 juta."],
-    ["Apakah sisa beasiswa hangus?","Tidak. Setelah Rp7.000.000 untuk S1 terpenuhi, kelebihannya dialihkan untuk biaya studi S2 hingga Rp5.000.000."],
+    ["Apakah sisa beasiswa hangus?","Tidak. Setelah Rp7.000.000 untuk S1 terpenuhi, kelebihannya dialihkan untuk biaya studi S2."],
     ["Kenapa sertifikat saya berstatus Belum Dibuka?","Sertifikat dari kegiatan tersebut belum dibuka admin untuk pengajuan. Silakan hubungi admin lewat WhatsApp."],
     ["Kapan beasiswa saya diproses?","Pengajuan tanggal 1–25 diproses pada bulan itu juga; setelah tanggal 25 diikutkan periode bulan berikutnya. Setelah disetujui, beasiswa masuk SmartCoin di LMS (SIAKAD) dan bisa dipakai membayar uang kuliah, remedial, dan kebutuhan akademik lainnya."],
     ["Apakah saya harus sudah terdaftar sebagai mahasiswa?","Ya. Kamu wajib mendaftar PMB dan memiliki NIM agar pengajuan dapat dilanjutkan. Daftar di pmb.stekom.ac.id/5000."],
@@ -1641,6 +1698,7 @@ try{ if(sessionStorage.getItem("fabTutup")) $("#fab").remove(); }catch(e){}
 
 /* ============================================================ BINDING */
 $("#fSearchBtn").addEventListener("click",()=>{ cari($("#fSearch").value.trim()); });
+$("#tipsBtn").addEventListener("click",()=>{ const b=$("#tipsBtn"), c=$("#cariContoh"), buka=c.hidden; c.hidden=!buka; b.setAttribute("aria-expanded",String(buka)); b.textContent=buka?"Tutup":"Contoh"; });
 $("#fSearch").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#fSearchBtn").click(); $("#fSearch").blur(); } });
 $("#fRefresh").addEventListener("click",async ()=>{
   const kw=$("#fSearch").value.trim();
