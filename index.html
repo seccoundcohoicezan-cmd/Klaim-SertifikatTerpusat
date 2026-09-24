@@ -191,7 +191,7 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 @keyframes kilapStiker{to{background-position:-40% 0}}
 
 /* angka pencapaian */
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,150px));gap:14px 24px;margin-top:28px}
+.stats{display:grid;grid-template-columns:repeat(var(--kolom,4),minmax(0,150px));gap:14px 24px;margin-top:28px}
 .stat{position:relative;padding-left:16px}
 .stat::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:3px;background:var(--gold-500)}
 .stat b{display:block;font-size:30px;font-weight:800;line-height:1.05;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
@@ -223,7 +223,11 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .layanan__isi span{display:block;font-size:14px;color:var(--text-2);margin-top:3px;line-height:1.45}
 .layanan__panah{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--bg-soft);color:var(--navy-800);font-size:18px;transition:transform .25s,background .25s,color .25s}
 .layanan__kartu:hover .layanan__panah{transform:translateX(4px);background:var(--red-600);color:#fff}
-.searchcard--utama{grid-template-columns:1fr auto;margin-bottom:24px;box-shadow:var(--sh-2)}
+.searchcard--utama{grid-template-columns:1fr auto;box-shadow:var(--sh-3);border-radius:24px;padding:26px}
+.cari-hasil{grid-column:1/-1;margin-top:10px;padding-top:20px;border-top:1px solid var(--border);scroll-margin-top:calc(var(--hh) + 16px)}
+.cari-hasil .state-box{border-style:dashed;background:var(--bg-soft)}
+.cari-hasil .pcard{box-shadow:none;margin-bottom:16px}
+.cari-hasil .pcard:last-child{margin-bottom:0}
 .searchcard__aksi{display:flex;gap:10px}
 .searchcard__aksi .btn{height:52px}
 .searchcard{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-3);padding:22px;display:grid;grid-template-columns:1fr auto;gap:12px 14px;align-items:center;border:1px solid var(--border)}
@@ -480,6 +484,11 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 @keyframes muncul{from{transform:scale(.3);opacity:0}}
 .success h2{font-size:22px;color:var(--navy-900)}
 .success p{color:var(--text-2);margin-top:8px;font-size:15px}
+.lacak-info{margin-top:12px;font-size:14px;color:var(--text-2)}
+.lacak-info b{color:var(--navy-900);font-size:15px}
+.lacak-info a{display:inline-block;margin-top:4px;color:var(--navy-500);font-weight:700;text-decoration:none}
+.lacak-info a:hover{text-decoration:underline}
+.salin-id{border:1px solid var(--border-2);background:#fff;color:var(--navy-500);font-weight:700;font-size:12px;padding:3px 9px;border-radius:8px;margin-left:4px}
 .wajib{display:flex;gap:10px;text-align:left;margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-fg);font-size:14px}
 .wajib .ico{flex:none;margin-top:3px;font-size:17px}
 .btn-konfirmasi{height:52px;font-size:16px;animation:denyutHijau 2s ease-in-out infinite}
@@ -547,18 +556,22 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .hero__photo img{object-position:40% 45%}
   .hero__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,26,56,0) 55%,var(--navy-900) 100%)}
     .hero__inner{padding-top:8px;padding-bottom:58px}
-  /* HP: satu kolom, angka & keterangan sejajar rapi */
-  .stats{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:24px}
-  .stat{display:flex;align-items:center;gap:14px;padding:6px 0 6px 12px}
-  .stat::before{top:4px;bottom:4px}
-  .stat b{flex:none;width:92px;font-size:24px}
-  .stat span{margin-top:0;font-size:13.5px;line-height:1.35}
+  /* HP: angka sejajar horizontal dalam satu baris */
+  .stats{grid-template-columns:repeat(var(--kolom,3),minmax(0,1fr));gap:10px;margin-top:24px}
+  .stat{display:block;padding:2px 0 2px 10px}
+  .stat::before{top:3px;bottom:3px}
+  .stat b{font-size:clamp(19px,5.6vw,23px)}
+  .stat span{margin-top:4px;font-size:11.5px;line-height:1.35}
   .hero__actions .btn{flex:1 1 100%}
   .hero__sub{font-size:15.5px}
   .value{padding:14px 14px 14px 58px}
   .value__ico{left:12px;top:14px}
   .searchcard{grid-template-columns:1fr;padding:18px}
   .searchcard .btn{width:100%}
+  .searchcard--utama{padding:18px;border-radius:20px}
+  .cari-hasil{padding-top:16px}
+  .cari-hasil .certs{padding:14px 12px 16px}
+  .cari-hasil .pcard__head{padding:14px 12px}
   .searchcard__aksi{display:grid;grid-template-columns:1fr 1fr}
   .layanan{grid-template-columns:1fr;gap:12px}
   .layanan__kartu{padding:16px}
@@ -639,8 +652,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
       <a href="#beranda" class="is-active" data-nav>Beranda</a>
       <a href="#beasiswa" data-nav>Beasiswa</a>
       <a href="#cara" data-nav>Cara Pengajuan</a>
-      <a href="/lacak">Lacak Pengajuan</a>
-      <a href="/testimoni">Testimoni</a>
+      <a href="/lacak.html">Lacak Pengajuan</a>
+      <a href="/testimoni.html">Testimoni</a>
       <a href="#faq" data-nav>FAQ</a>
     </nav>
     <a class="btn btn-primary header__cta" href="#cari">Cari Sertifikatku</a>
@@ -650,8 +663,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     <a href="#beranda" data-nav-m>Beranda</a>
     <a href="#beasiswa" data-nav-m>Beasiswa</a>
     <a href="#cara" data-nav-m>Cara Pengajuan</a>
-    <a href="/lacak" data-nav-m>Lacak Pengajuan</a>
-    <a href="/testimoni" data-nav-m>Testimoni Penerima</a>
+    <a href="/lacak.html" data-nav-m>Lacak Pengajuan</a>
+    <a href="/testimoni.html" data-nav-m>Testimoni Penerima</a>
     <a href="#faq" data-nav-m>FAQ</a>
     <a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener" data-nav-m>Daftar Kuliah (PMB) <svg class="ico"><use href="#i-luar"/></svg></a>
     <a class="btn btn-primary btn-block" href="#cari" data-nav-m style="color:#fff">Cari Sertifikatku</a>
@@ -705,12 +718,12 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 <!-- ============================ CARI ============================ -->
 <div class="wrap searchdock" id="layanan">
   <div class="layanan">
-    <a class="layanan__kartu reveal" href="/lacak">
+    <a class="layanan__kartu reveal" href="/lacak.html">
       <span class="layanan__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5"/><path d="M14 3v5h5"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="m21 21-2-2"/></svg></span>
-      <span class="layanan__isi"><b>Cek Progres Pengajuan</b><span>Sudah mengajukan? Lihat sampai mana prosesnya dengan No. Beasiswa &amp; 4 digit akhir WhatsApp.</span></span>
+      <span class="layanan__isi"><b>Cek Progres Pengajuan</b><span>Sudah mengajukan? Lihat sampai mana prosesnya dengan Nomor Pengajuan &amp; 4 digit akhir WhatsApp.</span></span>
       <span class="layanan__panah"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>
-    <a class="layanan__kartu layanan__kartu--emas reveal" href="/testimoni">
+    <a class="layanan__kartu layanan__kartu--emas reveal" href="/testimoni.html">
       <span class="layanan__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span>
       <span class="layanan__isi"><b>Testimoni Penerima Beasiswa</b><span>Cerita mahasiswa yang sudah merasakan manfaat beasiswa SKALA.</span></span>
       <span class="layanan__panah"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
@@ -748,9 +761,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
       <span class="chip no"><svg class="ico"><use href="#i-silang"/></svg>rina maharani putry (salah eja)</span>
       <p class="searchrules__note"><svg class="ico"><use href="#i-info"/></svg><span><b>Huruf besar dan kecil dihitung sama.</b> Yang penting nama ditulis lengkap dan ejaannya sesuai sertifikat.</span></p>
     </div>
+    <div id="results" class="cari-hasil"></div>
     </div>
-
-    <div id="results"></div>
   </div>
 </section>
 
@@ -818,8 +830,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <ul>
           <li><a href="#beasiswa">Sertifikat beasiswa</a></li>
           <li><a href="#cara">Cara pengajuan</a></li>
-          <li><a href="/lacak">Cek progres pengajuan</a></li>
-          <li><a href="/testimoni">Testimoni penerima</a></li>
+          <li><a href="/lacak.html">Cek progres pengajuan</a></li>
+          <li><a href="/testimoni.html">Testimoni penerima</a></li>
           <li><a href="#faq">Pertanyaan umum</a></li>
           <li><a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener">Pendaftaran mahasiswa baru <svg class="ico"><use href="#i-luar"/></svg></a></li>
         </ul>
@@ -933,6 +945,8 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <div class="success__ring"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
         <h2 id="successTitle">Pengajuan tersimpan</h2>
         <p id="successMsg">Data sudah masuk ke sistem.</p>
+        <p class="lacak-info">Nomor Pengajuan: <b id="successId">-</b> <button class="salin-id" id="salinId" type="button">Salin</button><br>
+          <a id="successLacak" href="/lacak.html">Cek progres pengajuan kapan saja →</a></p>
         <div class="wajib"><svg class="ico"><use href="#i-info"/></svg><span><b>Satu langkah lagi (wajib):</b> tekan <b>Konfirmasi Pengajuan</b> untuk mengirim ringkasan ke admin lewat WhatsApp. Pengajuan baru diverifikasi setelah dikonfirmasi.</span></div>
       </div>
     </div>
@@ -1359,11 +1373,15 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   $("#successMsg").textContent=pesan;
   $("#startWa").href=data.link_wa||waLink();
   $("#startWa").dataset.id=data.id_pengajuan||"";
+  $("#successId").textContent=data.id_pengajuan||"-";
+  $("#successLacak").href="/lacak.html?id="+encodeURIComponent(data.id_pengajuan||"");
   $("#startWa").classList.add("btn-konfirmasi"); $("#startWa").innerHTML='<svg class="ico"><use href="#i-wa"/></svg>Konfirmasi Pengajuan';
   openModal("mSuccess");
   S.picked.clear(); S.person=null;
   const kw=$("#fSearch").value; if(kw) cari(kw,{silent:true});
 });
+
+$("#salinId").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText($("#successId").textContent); toast("Nomor Pengajuan disalin","Simpan untuk cek progres nanti.","ok",2600); }catch(e){} });
 
 /* tombol Konfirmasi Pengajuan: catat konfirmasi di sheet, lalu WhatsApp terbuka */
 $("#startWa").addEventListener("click",()=>{
@@ -1472,7 +1490,7 @@ async function gambarBukti(){
 
   // kaki
   x.fillStyle="#8A97AB"; x.font="500 19px "+F; x.textAlign="center";
-  x.fillText("Dibuat otomatis oleh SKALA — Sistem Klaim Beasiswa Universitas STEKOM",W/2,H-66); x.textAlign="left";
+  x.fillText("Cek progres: skala.stekom.ac.id/lacak  ·  Dibuat otomatis oleh SKALA Universitas STEKOM",W/2,H-66); x.textAlign="left";
   return cv;
 }
 
@@ -1564,6 +1582,7 @@ function renderStatistik(list){
   if(!isi.length){ box.hidden=true; return; }
   const sidik=JSON.stringify(isi); if(box.dataset.sidik===sidik) return;
   box.dataset.sidik=sidik;
+  box.style.setProperty("--kolom",isi.length);
   box.innerHTML=isi.map(x=>'<div class="stat"><b data-count="'+Number(x.nilai)+'"'+(x.rupiah?' data-rp="1"':'')+'>0</b><span>'+esc(x.label)+'</span></div>').join("");
   box.hidden=false;
   $$("b[data-count]",box).forEach(el=>{
