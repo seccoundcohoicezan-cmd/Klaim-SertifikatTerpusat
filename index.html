@@ -6,6 +6,24 @@
 <meta name="theme-color" content="#0A2C5E">
 <title>SKALA — Sistem Klaim Beasiswa Universitas STEKOM</title>
 <meta name="description" content="SKALA (Sistem Klaim Beasiswa) Universitas STEKOM — ubah sertifikat kegiatanmu menjadi beasiswa kuliah. Rp7.000.000 untuk S1, sisa beasiswa bisa digunakan untuk S2.">
+<!-- Pratinjau saat link dibagikan (WhatsApp, Facebook, Telegram, X).
+     Ganti DOMAIN di 3 baris og:url / og:image / twitter:image bila nanti memakai domain kampus. -->
+<link rel="canonical" href="https://klaim-sertifikat-terpusat.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
+<meta property="og:site_name" content="SKALA — Universitas STEKOM">
+<meta property="og:title" content="SKALA — Cairkan Sertifikat Beasiswamu Sekarang">
+<meta property="og:description" content="Sertifikat dari berbagai kegiatan bersama Universitas STEKOM bisa dicairkan jadi beasiswa kuliah. Rp7.000.000 untuk S1, langsung cair.">
+<meta property="og:url" content="https://klaim-sertifikat-terpusat.vercel.app/">
+<meta property="og:image" content="https://klaim-sertifikat-terpusat.vercel.app/assets/og-skala.jpg?v=1">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SKALA — Cairkan Sertifikat Beasiswamu Sekarang. Beasiswa S1 Rp7.000.000 langsung cair.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SKALA — Cairkan Sertifikat Beasiswamu Sekarang">
+<meta name="twitter:description" content="Rp7.000.000 untuk S1, langsung cair. Cari sertifikat kegiatanmu bersama Universitas STEKOM.">
+<meta name="twitter:image" content="https://klaim-sertifikat-terpusat.vercel.app/assets/og-skala.jpg?v=1">
 <link rel="preload" as="image" href="assets/gedung-1920.webp?v=2" imagesrcset="assets/gedung-960.webp?v=2 960w, assets/gedung-1920.webp?v=2 1920w" imagesizes="100vw" fetchpriority="high">
 <link rel="icon" type="image/png" href="assets/logo-stekom.png?v=2">
 <link rel="preconnect" href="https://script.google.com">
@@ -105,8 +123,6 @@ button{font:inherit;cursor:pointer}
 .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .btn-ghost:hover{background:rgba(255,255,255,.22)}
 
-.hero__caption{position:absolute;right:20px;bottom:58px;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#fff;
-  background:rgba(6,26,56,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6px 11px;border-radius:var(--pill)}
 
 /* Stiker nominal — kartu emas dengan selotip, ditempel sekali lalu hanya mengapung halus.
    Desktop lebar: melayang di kanan atas. Tablet & ponsel: ikut alur teks (tidak menutupi judul). */
@@ -333,9 +349,6 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 .fab__btn{display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:var(--pill);background:var(--navy-800);color:#fff;text-decoration:none;font-weight:700;font-size:14px;
   box-shadow:var(--sh-3);animation:denyut 2.2s ease-in-out infinite;border:2px solid var(--gold-500)}
 .fab__btn i{width:34px;height:34px;border-radius:50%;background:var(--gold-500);color:var(--navy-900);display:grid;place-items:center;font-style:normal;font-size:18px}
-.fab__hint{background:#fff;color:var(--navy-900);font-size:13px;font-weight:700;padding:7px 12px;border-radius:var(--pill);box-shadow:var(--sh-2);display:flex;gap:6px;align-items:center;animation:geser 1.3s ease-in-out infinite}
-@keyframes geser{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
-.fab__hint .ico{font-size:17px;color:var(--gold-600)}
 .fab__close{position:absolute;top:-8px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#fff;color:var(--text-2);box-shadow:var(--sh-2);font-size:13px;line-height:22px;padding:0}
 
 /* ---------------- Keranjang ---------------- */
@@ -378,6 +391,10 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 .check input{width:20px;height:20px;margin-top:2px;accent-color:var(--navy-800);flex:none}
 .callout{display:flex;gap:10px;margin-top:16px;padding:12px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn-fg);font-size:14px}
 .callout svg{flex:none;margin-top:2px}
+.callout--pmb{background:#FDECEC;color:#8A1C1C}
+.callout a,.field-note a{color:inherit;font-weight:700}
+.field-note{display:block;margin-top:6px;font-size:13px;color:var(--text-3)}
+.field-note a{color:var(--navy-500)}
 .success{text-align:center}
 .proses{width:100%;max-width:400px;background:#fff;border-radius:24px;box-shadow:var(--sh-3);padding:30px 28px 26px;text-align:center;transform:translateY(20px) scale(.97);transition:transform .3s}
 .overlay.is-open .proses{transform:none}
@@ -458,8 +475,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .hero__photo{position:relative;height:clamp(220px,58vw,300px)}
   .hero__photo img{object-position:40% 45%}
   .hero__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,26,56,0) 55%,var(--navy-900) 100%)}
-  .hero__caption{right:12px;bottom:12px;font-size:11.5px;top:auto;z-index:1}
-  .hero__inner{padding-top:8px;padding-bottom:58px}
+    .hero__inner{padding-top:8px;padding-bottom:58px}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 14px}
   .stat{padding-left:11px}
   .stat b{font-size:22px}
@@ -494,8 +510,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .cart__spacer{display:none}
   #cartGo{grid-column:1/-1;height:46px}
   .cart__warn{grid-column:1/-1;order:-1;font-size:12.5px;padding:7px 10px}
-  .fab__hint{display:none}
-  .fab__btn span{max-width:120px;white-space:normal;line-height:1.2}
+    .fab__btn span{max-width:120px;white-space:normal;line-height:1.2}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -544,7 +559,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     <a href="#beasiswa" data-nav-m>Beasiswa</a>
     <a href="#cara" data-nav-m>Cara Pengajuan</a>
     <a href="#faq" data-nav-m>FAQ</a>
-    <a href="https://pmb.stekom.ac.id/" target="_blank" rel="noopener" data-nav-m>Daftar Kuliah (PMB) <svg class="ico"><use href="#i-luar"/></svg></a>
+    <a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener" data-nav-m>Daftar Kuliah (PMB) <svg class="ico"><use href="#i-luar"/></svg></a>
     <a class="btn btn-primary btn-block" href="#cari" data-nav-m style="color:#fff">Cari Sertifikatku</a>
   </div>
 </header>
@@ -554,7 +569,6 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   <div class="hero__photo">
     <img src="assets/gedung-1920.webp?v=2" srcset="assets/gedung-960.webp?v=2 960w, assets/gedung-1920.webp?v=2 1920w" sizes="100vw"
          alt="Gedung Universitas STEKOM, Jl. Majapahit Semarang" width="1920" height="864" fetchpriority="high" decoding="async">
-    <span class="hero__caption"><svg class="ico"><use href="#i-lokasi"/></svg>Kampus Majapahit, Semarang</span>
   </div>
   <div class="wrap hero__inner">
     <div class="hero__copy">
@@ -662,7 +676,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <p>Beasiswa dari sertifikatmu dipakai untuk biaya kuliah di Universitas STEKOM. Daftar dulu lewat portal Penerimaan Mahasiswa Baru, lalu klaim beasiswanya di sini.</p>
       </div>
       <div class="pmb__cta">
-        <a class="btn btn-pmb" href="https://pmb.stekom.ac.id/" target="_blank" rel="noopener" data-pmb>
+        <a class="btn btn-pmb" href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener" data-pmb>
           Daftar di PMB STEKOM
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
         </a>
@@ -706,7 +720,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
           <li><a href="#beasiswa">Sertifikat beasiswa</a></li>
           <li><a href="#cara">Cara pengajuan</a></li>
           <li><a href="#faq">Pertanyaan umum</a></li>
-          <li><a href="https://pmb.stekom.ac.id/" target="_blank" rel="noopener">Pendaftaran mahasiswa baru <svg class="ico"><use href="#i-luar"/></svg></a></li>
+          <li><a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener">Pendaftaran mahasiswa baru <svg class="ico"><use href="#i-luar"/></svg></a></li>
         </ul>
       </div>
       <div>
@@ -736,10 +750,9 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 <!-- ============================ TOMBOL MELAYANG PMB ============================ -->
 <div class="fab" id="fab">
   <button class="fab__close" id="fabClose" aria-label="Sembunyikan tombol PMB">×</button>
-  <a class="fab__btn" href="https://pmb.stekom.ac.id/" target="_blank" rel="noopener" data-pmb>
+  <a class="fab__btn" href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener" data-pmb>
     <i><svg class="ico"><use href="#i-toga"/></svg></i><span>Daftar Kuliah PMB</span>
   </a>
-  <span class="fab__hint" aria-hidden="true">Klik di sini <svg class="ico"><use href="#i-tunjuk"/></svg></span>
 </div>
 
 <!-- ============================ MODAL: CHECKOUT ============================ -->
@@ -762,22 +775,24 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
           <span class="error-msg">Masukkan nomor WhatsApp yang valid.</span>
         </div>
         <div class="field">
-          <label class="label" for="ckEmail">Email <span style="font-weight:500;color:var(--text-3)">(opsional)</span></label>
-          <input type="email" id="ckEmail" class="input" placeholder="nama@email.com" autocomplete="email">
-          <span class="error-msg">Format email belum benar.</span>
+          <label class="label" for="ckEmail">Email aktif <span class="req">*</span></label>
+          <input type="email" id="ckEmail" class="input" placeholder="nama@gmail.com" autocomplete="email" inputmode="email" required>
+          <span class="error-msg" id="ckEmailErr">Email wajib diisi dengan alamat yang valid.</span>
         </div>
         <div class="field">
-          <label class="label" for="ckNim">NIM <span style="font-weight:500;color:var(--text-3)">(opsional)</span></label>
+          <label class="label" for="ckNim">NIM <span style="font-weight:500;color:var(--text-3)">(isi bila sudah punya)</span></label>
           <input type="text" id="ckNim" class="input" placeholder="Contoh: 2026010123" inputmode="numeric">
+          <span class="field-note">Belum punya NIM? <a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener">Daftar PMB dulu</a></span>
         </div>
       </div>
       <div class="field" id="ckAgreeField" style="margin-top:14px">
         <label class="check"><input type="checkbox" id="ckAgree"><span>Saya menyatakan bahwa data dan sertifikat yang saya ajukan adalah benar milik saya.</span></label>
         <span class="error-msg">Pernyataan wajib dicentang.</span>
       </div>
-      <div class="callout">
+      <div class="callout callout--pmb">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
-        <span>Pengajuan disimpan di sistem lebih dulu, baru diteruskan ke WhatsApp admin.</span>
+        <span><b>Wajib terdaftar PMB &amp; memiliki NIM</b> agar pengajuan dapat dilanjutkan ke tahap Diterima.
+        Belum daftar? <a href="https://pmb.stekom.ac.id/5000" target="_blank" rel="noopener">pmb.stekom.ac.id/5000</a></span>
       </div>
     </div>
     <div class="modal__foot">
@@ -850,7 +865,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxnw083hvsjFYWRQALxDWk8
 
 let WHATSAPP_NUMBER = "628888999920";   // +62 888-8999-920 (bisa ditimpa dari Apps Script)
 let PLAFON_DEFAULT  = 7000000;
-const PMB_URL = "https://pmb.stekom.ac.id/";
+const PMB_URL = "https://pmb.stekom.ac.id/5000";
 
 /* ============================================================ UTIL */
 const $  = (s,c=document)=>c.querySelector(s);
@@ -938,7 +953,7 @@ const DEMO = {
 };
 
 /* ============================================================ STATE */
-const S = { plafon:PLAFON_DEFAULT, plafonS2:5000000, orang:[], person:null, picked:new Set(), sending:false };
+const S = { emailWajibCom:true, plafon:PLAFON_DEFAULT, plafonS2:5000000, orang:[], person:null, picked:new Set(), sending:false };
 const LABEL = {tersedia:"Tersedia",diproses:"Di Proses",diterima:"Diterima",ditolak:"Ditolak",diajukan:"Diajukan",aktif:"Aktif",verifikasi:"Verifikasi Identitas",ditahan:"Belum Dibuka"};
 const TAG = {tersedia:"tag--tersedia",diproses:"tag--proses",verifikasi:"tag--proses",diterima:"tag--terima",diajukan:"tag--ajukan",aktif:"tag--aktif",ditolak:"tag--tolak",ditahan:"tag--tahan"};
 const tagClass = st => TAG[st] || "tag--proses";
@@ -1098,7 +1113,11 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   const wa=normWa($("#ckWa").value), email=$("#ckEmail").value.trim().toLowerCase();
   let bad=false;
   if(!/^62\d{8,13}$/.test(wa)){ invalid("#ckWa"); bad=true; }
-  if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ invalid("#ckEmail"); bad=true; }
+  const formatOk=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), comOk=!S.emailWajibCom || /\.com$/.test(email);
+  if(!email||!formatOk||!comOk){
+    $("#ckEmailErr").textContent = !email ? "Email wajib diisi — status pengajuan dikirim otomatis ke email ini."
+      : (!formatOk ? "Format email belum benar (contoh: nama@gmail.com)." : "Email harus berakhiran .com (contoh: nama@gmail.com).");
+    invalid("#ckEmail"); bad=true; }
   if(!$("#ckAgree").checked){ $("#ckAgreeField").classList.add("is-invalid"); bad=true; }
   if(bad){ toast("Periksa isian","Ada data yang belum benar.","warn"); return; }
 
@@ -1127,6 +1146,7 @@ $("#ckSubmit").addEventListener("click",async ()=>{
 
   closeModal("mCheckout");
   let pesan="ID pengajuan "+(data.id_pengajuan||"-")+" · total "+(data.total_format||rp(data.total))+". Status: "+(data.status_label||"Di Proses")+".";
+  if(data.email_terkirim) pesan+=" Salinan status juga dikirim ke "+email+".";
   if(data.ada_s2) pesan+=" Beasiswa S1 "+(data.nominal_s1_format||rp(data.nominal_s1))+", kelebihan "+(data.nominal_s2_format||rp(data.nominal_s2))+" dialihkan untuk S2.";
   $("#successMsg").textContent=pesan;
   $("#startWa").href=data.link_wa||waLink();
@@ -1166,9 +1186,10 @@ async function gambarBukti(){
   const d=b.data, items=b.items, W=1080, P=72, baris=86;
   // [label, nilai, lebar penuh?]
   const kv=[["ID Pengajuan",d.id_pengajuan||"-"],["No. WhatsApp",samarWa(b.wa)],["Nama",b.nama||"-",1],["Waktu pengajuan",tglIndo(b.waktu),1]];
-  if(b.nim) kv.push(["NIM",b.nim]);
+  kv.push(["Email",b.email||"-",1]);
+  kv.push(["NIM",b.nim||"Belum ada"]);
   let barisKv=0, kol=0; kv.forEach(r=>{ if(r[2]){ if(kol) barisKv++; barisKv++; kol=0; } else { kol++; if(kol===2){ barisKv++; kol=0; } } }); if(kol) barisKv++;
-  const H=900+barisKv*84+items.length*baris+(d.ada_s2?118:0);
+  const H=900+barisKv*84+items.length*baris+(d.ada_s2?118:0)+132;
   const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const x=cv.getContext("2d");
   x.fillStyle="#EDF3FB"; x.fillRect(0,0,W,H);
   kotakBulat(x,32,32,W-64,H-64,34); x.fillStyle="#fff"; x.fill();
@@ -1232,6 +1253,14 @@ async function gambarBukti(){
   x.font="700 22px "+F; x.fillText("Admin Beasiswa "+formatWa(WHATSAPP_NUMBER),P+28,y+88);
   x.font="500 21px "+F; x.fillText("Simpan bukti ini untuk pencocokan data saat verifikasi.",P+28,y+124);
 
+  // syarat PMB
+  y+=156+22; const adaNim=!!b.nim;
+  kotakBulat(x,P,y,W-2*P,112,20); x.fillStyle=adaNim?"#E6F4EA":"#FDECEC"; x.fill(); x.strokeStyle=adaNim?"#BEE7D0":"#F6C9CB"; x.stroke();
+  x.fillStyle=adaNim?"#0B6B3D":"#8A1C1C"; x.font="800 23px "+F;
+  x.fillText(adaNim?"NIM tercatat: "+b.nim:"Wajib daftar PMB & memiliki NIM",P+28,y+46);
+  x.font="600 21px "+F;
+  x.fillText(adaNim?"Syarat terdaftar PMB terpenuhi.":"Daftar di pmb.stekom.ac.id/5000 agar pengajuan dapat dilanjutkan.",P+28,y+84);
+
   // kaki
   x.fillStyle="#8A97AB"; x.font="500 19px "+F; x.textAlign="center";
   x.fillText("Dibuat otomatis oleh SKALA — Sistem Klaim Beasiswa Universitas STEKOM",W/2,H-66); x.textAlign="left";
@@ -1274,6 +1303,7 @@ const CFG_FALLBACK = {
     ["Apa arti warna kartu sertifikat?","Putih = Rp1–2 juta, Silver = Rp3–4 juta, Gold = Rp5–7 juta."],
     ["Apakah sisa beasiswa hangus?","Tidak. Setelah Rp7.000.000 untuk S1 terpenuhi, kelebihannya dialihkan untuk biaya studi S2 hingga Rp5.000.000."],
     ["Kenapa sertifikat saya berstatus Belum Dibuka?","Sertifikat dari kegiatan tersebut belum dibuka admin untuk pengajuan. Silakan hubungi admin lewat WhatsApp."],
+    ["Apakah saya harus sudah terdaftar sebagai mahasiswa?","Ya. Kamu wajib mendaftar PMB dan memiliki NIM agar pengajuan dapat dilanjutkan. Daftar di pmb.stekom.ac.id/5000."],
     ["Sertifikat saya Ditolak. Bisa diajukan lagi?","Bisa, setelah admin membukanya ulang. Hubungi admin lewat WhatsApp."]
   ]
 };
@@ -1301,6 +1331,7 @@ function terapkanKonfigurasi(cfg){
   PLAFON_DEFAULT=Number(cfg.plafon)||PLAFON_DEFAULT; S.plafon=PLAFON_DEFAULT;
   if(cfg.plafon_s2!=null) S.plafonS2=Number(cfg.plafon_s2)||S.plafonS2;
   if(cfg.wa_admin) WHATSAPP_NUMBER=normWa(cfg.wa_admin);
+  if(typeof cfg.email_wajib_com==="boolean") S.emailWajibCom=cfg.email_wajib_com;
   if(cfg.label_status) Object.assign(LABEL,cfg.label_status);
   const set=(sel,val)=>{ const el=$(sel); if(el&&val) el.textContent=val; };
   set("#heroSub",t.tagline); set("#scHint",t.hint_cari);
