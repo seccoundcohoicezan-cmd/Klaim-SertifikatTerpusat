@@ -14,7 +14,7 @@
   --ok-fg:#0B7A45; --ok-bg:#E4F5EB; --warn-fg:#8A5200; --warn-bg:#FDF2DC; --warn-bd:#F4DEAD; --err:#C81E24;
   --r-md:14px; --r-lg:20px; --pill:999px;
   --sh-1:0 1px 2px rgba(10,44,94,.06); --sh-2:0 6px 20px rgba(10,44,94,.08); --sh-3:0 24px 60px rgba(6,26,56,.18);
-  --wrap:1180px; --hh:72px;
+  --wrap:1180px; --hh:100px;   /* 28px pita periode + 72px navbar */
   --font:"Plus Jakarta Sans","PJS Cadangan",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0}
@@ -171,7 +171,7 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
   .mobile-nav a.is-active{background:var(--navy-100)}
 }
 @media (max-width:640px){
-  :root{--hh:64px}
+  :root{--hh:90px}   /* 26px pita periode + 64px navbar */
   body{font-size:15.5px}
   .header__bar{gap:10px}
   .brand{gap:9px}
@@ -221,3 +221,24 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
 .gerbang__kartu{position:relative}
 
 .footer__privasi{flex-basis:100%;font-size:12px;opacity:.7;line-height:1.5}
+
+/* ---- pita periode: satu baris tipis di atas navbar (komponen bersama semua halaman) ---- */
+:root{--pita:28px}
+.pita-periode{height:var(--pita);background:var(--bg-soft);border-bottom:1px solid var(--border);color:var(--text-2);font-size:12.5px;line-height:1}
+.pita-periode__isi{height:100%;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;overflow:hidden}
+.pita-periode__ikon{flex:none;color:var(--navy-500)}
+.pita-periode__teks{overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pita-periode__teks b{font-weight:700;color:var(--navy-900)}
+.pita-periode__sisa{flex:none;font-weight:700;color:var(--navy-500);font-variant-numeric:tabular-nums;min-width:10ch}
+.pita-periode__sisa:not(:empty)::before{content:"· ";font-weight:400;color:var(--text-3)}
+.pita-periode__sisa:empty{display:none}
+.pita-periode.is-mepet .pita-periode__ikon,.pita-periode.is-mepet .pita-periode__sisa{color:var(--red-700)}
+.pita-periode .pendek{display:none}
+.header__bar{height:calc(var(--hh) - var(--pita))}
+@media (max-width:640px){
+  :root{--pita:26px}
+  .pita-periode{font-size:12px}
+  .pita-periode .panjang{display:none}
+  .pita-periode .pendek{display:inline}
+  .pita-periode__sisa{min-width:7ch}
+}

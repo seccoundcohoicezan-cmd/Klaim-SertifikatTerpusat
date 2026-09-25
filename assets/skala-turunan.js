@@ -177,6 +177,7 @@
       if (bar) { bar.hidden = !tutup; if (tutup) { $("#maintBarTeks").textContent = cfg.sistem.buka_lagi ? "Perkiraan dibuka kembali: " + cfg.sistem.buka_lagi + "." : "";
         document.body.style.setProperty("--maint-h", (bar.offsetHeight || 44) + "px"); } }
     }
+    if (Number(cfg.batas_tanggal_periode) > 0) PitaPeriode.aturBatas(cfg.batas_tanggal_periode);
     if ("banner" in cfg) pasangPromo($("#promo"), cfg.banner, API_URL);
     if (cfg.analitik) Analitik.pasang(cfg.analitik);
     if (cfg.mode_uji && !$(".pita-uji")) document.body.insertAdjacentHTML("beforeend", '<div class="pita-uji" role="status">🧪 LINGKUNGAN UJI</div>');
@@ -246,6 +247,45 @@
     }));
     mulai();
   }
+  
+  /* ---- pita periode: hitung mundur batas pengajuan (WIB), diperbarui tiap menit ----
+     Pengajuan tgl 1–batas masuk periode bulan itu; setelahnya masuk periode bulan berikutnya. */
+  const PitaPeriode=(()=>{
+    const BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    let batas=25, jam=null;
+    function info(){
+      const kini=Date.now(), wib=new Date(kini+7*3600e3), y=wib.getUTCFullYear(), m=wib.getUTCMonth(), d=wib.getUTCDate();
+      const tutup=(th,bl)=>Date.UTC(th,bl,batas,23,59,59)-7*3600e3;
+      if(d<=batas) return {buka:true,bl:m,sisa:tutup(y,m)-kini};
+      const m2=(m+1)%12; return {buka:false,blLalu:m,bl:m2,sisa:tutup(m===11?y+1:y,m2)-kini};
+    }
+    function sisa(ms,pendek){
+      const h=Math.floor(ms/864e5), j=Math.floor(ms%864e5/36e5), mn=Math.max(0,Math.floor(ms%36e5/6e4));
+      if(pendek) return h>=1 ? h+"h "+j+"j lagi" : (j>=1 ? j+"j "+mn+"m lagi" : Math.max(1,mn)+"m lagi");
+      return h>=1 ? h+" hari "+j+" jam lagi" : (j>=1 ? j+" jam "+mn+" menit lagi" : Math.max(1,mn)+" menit lagi");
+    }
+    function gambar(){
+      const el=document.getElementById("pitaPeriode"); if(!el) return;
+      const p=info(), nama=BULAN[p.bl], sing=nama.slice(0,3);
+      const teks=document.getElementById("pitaTeks"), sis=document.getElementById("pitaSisa");
+      if(p.buka){
+        teks.innerHTML='<span class="panjang">Pengajuan periode <b>'+nama+'</b> ditutup '+batas+' '+sing+', 23.59 WIB</span>'
+                      +'<span class="pendek">Ditutup '+batas+' '+sing+' 23.59</span>';
+        sis.innerHTML='<span class="panjang">'+sisa(p.sisa,false)+'</span><span class="pendek">'+sisa(p.sisa,true)+'</span>';
+      } else {
+        teks.innerHTML='<span class="panjang">Periode '+BULAN[p.blLalu]+' ditutup · pengajuan kini masuk periode <b>'+nama+'</b> (ditutup '+batas+' '+sing+')</span>'
+                      +'<span class="pendek">Kini periode <b>'+nama+'</b> · ditutup '+batas+' '+sing+'</span>';
+        sis.innerHTML="";
+      }
+      el.classList.toggle("is-mepet",p.buka&&p.sisa<3*864e5);
+      el.setAttribute("aria-label",teks.textContent.replace(/\s+/g," ")+" "+(sis.querySelector(".panjang")||{textContent:""}).textContent);
+    }
+    return {
+      mulai(){ gambar(); if(!jam) jam=setInterval(gambar,60000); },
+      aturBatas(b){ b=Number(b); if(b>0&&b<=28&&b!==batas){ batas=b; gambar(); } }
+    };
+  })();
+  PitaPeriode.mulai();
   
   window.SKALA = { catat: Analitik.catat, API_URL, $, $$, esc, rp, toast, waLink, formatWa, hitungNaik, amatiReveal, Gerbang, kurangiGerak,
     padaKonfigurasi: f => pendengar.push(f),
