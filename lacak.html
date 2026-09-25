@@ -4,24 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A2C5E">
-<title>Cek Progres Pengajuan — SKALA Universitas STEKOM</title>
-<meta name="description" content="Cek sampai mana proses pengajuan beasiswa sertifikatmu di SKALA Universitas STEKOM. Cukup Nomor Pengajuan dan 4 digit terakhir WhatsApp.">
+<title>Cek Progres Pengajuan Beasiswa STEKOM | SKALA</title>
+<meta name="description" content="Lacak status pengajuan beasiswa sertifikatmu di Universitas STEKOM: Di Proses, Diterima, Diajukan, sampai Aktif. Cukup Nomor Pengajuan dan 4 digit WA.">
 <link rel="canonical" href="https://skala.stekom.ac.id/lacak">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://skala.stekom.ac.id/"}, {"@type": "ListItem", "position": 2, "name": "Cek Progres Pengajuan", "item": "https://skala.stekom.ac.id/lacak"}]}</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="id_ID">
 <meta property="og:site_name" content="SKALA — Universitas STEKOM">
 <meta property="og:title" content="Cek Progres Pengajuan Beasiswa — SKALA">
 <meta property="og:description" content="Lihat status pengajuan beasiswa sertifikatmu: Di Proses, Diterima, Diajukan, sampai Aktif.">
 <meta property="og:url" content="https://skala.stekom.ac.id/lacak">
-<meta property="og:image" content="https://skala.stekom.ac.id/assets/og-skala.jpg?v=2">
+<meta property="og:image" content="https://skala.stekom.ac.id/assets/og-lacak.jpg?v=1">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://skala.stekom.ac.id/assets/og-lacak.jpg?v=1">
 <link rel="icon" href="/favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=1">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=4">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=5">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -243,7 +246,7 @@
 <div class="wrap"><div class="promo promo--tunggu" id="promo" aria-hidden="true"></div></div>
 
 <!-- ============================ HASIL ============================ -->
-<section class="hasil" id="hasil" hidden>
+<section class="hasil" id="hasil" data-clarity-mask="True" hidden>
   <div class="wrap" id="hasilIsi"></div>
 </section>
 
@@ -254,11 +257,11 @@
       <div class="footer__brand"><img src="/assets/logo-stekom-bulat.png?v=1" alt="" width="46" height="46" loading="lazy"><div><b>SKALA</b><small>Sistem Klaim Beasiswa · Universitas STEKOM</small></div></div>
       <nav class="footer__nav"><a href="/">Beranda</a><a href="/lacak.html">Lacak Pengajuan</a><a href="/testimoni.html">Testimoni</a><a href="/#faq">FAQ</a><a href="#" data-wa>WhatsApp Admin <span data-wa-text>+62 888-8999-920</span></a></nav>
     </div>
-    <div class="footer__bawah"><span>© 2026 SKALA — Universitas STEKOM</span><span>Kuliahnya Menyenangkan!</span></div>
+    <div class="footer__bawah"><span>© 2026 SKALA — Universitas STEKOM</span><span>Kuliahnya Menyenangkan!</span><span class="footer__privasi">Situs ini memakai analitik anonim (Umami &amp; Microsoft Clarity). Nama, nomor WA, email, dan NIM disamarkan dan tidak ikut terekam.</span></div>
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=4"></script>
+<script src="/assets/skala-turunan.js?v=5"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
@@ -306,7 +309,8 @@
     catch(e){ d={success:false,error:"Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi."}; }
     sibuk(false);
     if(d&&d.perlu_verifikasi){ hasil.hidden=true; Gerbang.ulangi(lacak); return; }
-    if(!d||!d.success){ hasil.hidden=true; tampilGalat((d&&d.error)||"Terjadi kesalahan."); return; }
+    if(!d||!d.success){ SKALA.catat("lacak",{hasil:"gagal"}); hasil.hidden=true; tampilGalat((d&&d.error)||"Terjadi kesalahan."); return; }
+    SKALA.catat("lacak",{hasil:"ditemukan",status:d.status});
     try{ sessionStorage.setItem("skala_lacak_kode",k); }catch(e){}
     render(d);
   }

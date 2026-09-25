@@ -4,24 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A2C5E">
-<title>Testimoni Penerima Beasiswa — SKALA Universitas STEKOM</title>
-<meta name="description" content="Cerita mahasiswa penerima beasiswa sertifikat SKALA Universitas STEKOM, beserta statistik penerima dan dana beasiswa yang sudah digunakan.">
+<title>Testimoni Penerima Beasiswa Universitas STEKOM | SKALA</title>
+<meta name="description" content="Cerita mahasiswa penerima beasiswa sertifikat Universitas STEKOM, lengkap dengan jumlah penerima dan dana beasiswa yang sudah digunakan bulan ini.">
 <link rel="canonical" href="https://skala.stekom.ac.id/testimoni">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Beranda", "item": "https://skala.stekom.ac.id/"}, {"@type": "ListItem", "position": 2, "name": "Testimoni Penerima", "item": "https://skala.stekom.ac.id/testimoni"}]}</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="id_ID">
 <meta property="og:site_name" content="SKALA — Universitas STEKOM">
 <meta property="og:title" content="Testimoni Penerima Beasiswa — SKALA">
 <meta property="og:description" content="Beasiswa bukan hanya tentang dana, tapi tentang kesempatan. Dengarkan cerita para penerima beasiswa SKALA.">
 <meta property="og:url" content="https://skala.stekom.ac.id/testimoni">
-<meta property="og:image" content="https://skala.stekom.ac.id/assets/og-skala.jpg?v=2">
+<meta property="og:image" content="https://skala.stekom.ac.id/assets/og-testimoni.jpg?v=1">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://skala.stekom.ac.id/assets/og-testimoni.jpg?v=1">
 <link rel="icon" href="/favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=1">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=4">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=5">
 <style>
 .tst-grid-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px 40px;align-items:center}
 .ilustrasi{position:relative;justify-self:center;width:min(100%,400px);aspect-ratio:1/0.8}
@@ -224,11 +227,11 @@
       <div class="footer__brand"><img src="/assets/logo-stekom-bulat.png?v=1" alt="" width="46" height="46" loading="lazy"><div><b>SKALA</b><small>Sistem Klaim Beasiswa · Universitas STEKOM</small></div></div>
       <nav class="footer__nav"><a href="/">Beranda</a><a href="/lacak.html">Lacak Pengajuan</a><a href="/testimoni.html">Testimoni</a><a href="/#faq">FAQ</a><a href="#" data-wa>WhatsApp Admin <span data-wa-text>+62 888-8999-920</span></a></nav>
     </div>
-    <div class="footer__bawah"><span>© 2026 SKALA — Universitas STEKOM</span><span>Kuliahnya Menyenangkan!</span></div>
+    <div class="footer__bawah"><span>© 2026 SKALA — Universitas STEKOM</span><span>Kuliahnya Menyenangkan!</span><span class="footer__privasi">Situs ini memakai analitik anonim (Umami &amp; Microsoft Clarity). Nama, nomor WA, email, dan NIM disamarkan dan tidak ikut terekam.</span></div>
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=4"></script>
+<script src="/assets/skala-turunan.js?v=5"></script>
 <script>
 (function(){
   const {API_URL,$,$$,esc,hitungNaik,amatiReveal}=SKALA;
@@ -244,7 +247,7 @@
     const opsi=[["semua","Semua"],["S1","S1"],["S2","S2"]].concat((kategori||[]).map(k=>[k,k]));
     $("#filter").innerHTML=opsi.map(o=>'<button type="button" data-f="'+esc(o[0])+'" aria-pressed="'+(o[0]===saringan)+'">'+esc(o[1])+'</button>').join("");
     $$("#filter button").forEach(b=>b.addEventListener("click",()=>{ saringan=b.dataset.f; tampil=PER_HALAMAN;
-      $$("#filter button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); renderKartu(); }));
+      $$("#filter button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); renderKartu(); SKALA.catat("filter_testimoni",{filter:saringan}); }));
   }
 
   function renderKartu(){
@@ -264,7 +267,7 @@
         +'<div class="tkartu__tag">Beasiswa '+esc(k.jenjang)+(k.kategori?' · '+esc(k.kategori):'')+'</div></div></div></article>').join("");
     $("#lebih").hidden=daftar.length<=tampil;
   }
-  $("#tombolLebih").addEventListener("click",()=>{ tampil+=PER_HALAMAN; renderKartu(); });
+  $("#tombolLebih").addEventListener("click",()=>{ tampil+=PER_HALAMAN; renderKartu(); SKALA.catat("lihat_lebih_testimoni"); });
 
   function isiStatistik(st,fmt){
     if(statDiisi) return; statDiisi=true;
