@@ -69,7 +69,8 @@
     let siteKey = "", widgetId = null, menunggu = null, aktif = false;
     const status = (t, err) => { const s = $("#gerbangStatus"); if (!s) return; s.textContent = t || ""; s.classList.toggle("err", !!err); $("#gerbangUlang").hidden = !err; };
     const tiket = () => { try { const x = JSON.parse(sessionStorage.getItem(KUNCI) || "null"); if (x && x.exp > Date.now() + 60000) return x.t; } catch (e) {} return ""; };
-    const simpan = (t, m) => { try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} };
+    let kabar = () => {};
+    const simpan = (t, m) => { try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} setTimeout(() => kabar(), 0); };
     const tutup = () => { if (!el()) return; el().classList.add("is-selesai"); document.body.classList.remove("gerbang-buka"); if (menunggu) { const f = menunggu; menunggu = null; f(); } };
     const buka = () => { if (!el()) return; el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
     async function kirim(token) {
@@ -105,6 +106,8 @@
         const b = $("#gerbangBatal"); if (b) b.addEventListener("click", () => { menunggu = null; tutup(); }); },
       konfigurasi(c) { if (!el() || !c) return; siteKey = c.site_key || ""; aktif = !!c.aktif; if (!aktif) { tutup(); return; } if (!el().classList.contains("is-selesai")) pasang(); },
       perlu() { return !!(el() && aktif && siteKey && !tiket()); },
+      captchaAktif() { return !!(el() && aktif); },
+      padaBerubah(f) { kabar = f; },
       ulangi(aksi) { try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
       gagalMuat() { if (el() && !siteKey && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.", true); }
     };
@@ -195,6 +198,7 @@
   
   window.SKALA = { API_URL, $, $$, esc, rp, toast, waLink, formatWa, hitungNaik, amatiReveal, Gerbang, kurangiGerak,
     padaKonfigurasi: f => pendengar.push(f),
+    padaVerifikasi: f => Gerbang.padaBerubah(f),
     mulai(opsi = {}) { pasangHeader(); if (opsi.captcha) Gerbang.mulai(); amatiReveal(); muatKonfigurasi();
       if ("serviceWorker" in navigator && location.protocol === "https:") window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {})); } };
 })();
