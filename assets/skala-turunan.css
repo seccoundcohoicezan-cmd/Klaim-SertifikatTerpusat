@@ -1,3 +1,6 @@
+@font-face{font-family:"Plus Jakarta Sans";src:url("/assets/font/plus-jakarta-sans-var.woff2") format("woff2");font-weight:200 800;font-style:normal;font-display:swap}
+/* font cadangan yang ukurannya disamakan dengan Plus Jakarta Sans → teks tidak melompat saat font asli selesai dimuat */
+@font-face{font-family:"PJS Cadangan";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:108.9%;ascent-override:95.3%;descent-override:20.4%;line-gap-override:0%}
 /* ============================================================================
    SKALA — gaya bersama halaman turunan (lacak.html, testimoni.html)
    ============================================================================ */
@@ -12,7 +15,7 @@
   --r-md:14px; --r-lg:20px; --pill:999px;
   --sh-1:0 1px 2px rgba(10,44,94,.06); --sh-2:0 6px 20px rgba(10,44,94,.08); --sh-3:0 24px 60px rgba(6,26,56,.18);
   --wrap:1180px; --hh:72px;
-  --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --font:"Plus Jakarta Sans","PJS Cadangan",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0}
 [hidden]{display:none!important}
@@ -148,7 +151,7 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
 .toast{background:#fff;border-radius:14px;box-shadow:var(--sh-3);padding:13px 16px;border-left:5px solid var(--navy-500);font-size:14px;animation:tmasuk .3s ease}
 .toast b{display:block;color:var(--navy-900)}
 .toast--ok{border-color:var(--wa)}.toast--warn{border-color:var(--gold-500)}.toast--err{border-color:var(--err)}
-.toast.out{opacity:0;transform:translateX(20px);transition:all .25s}
+.toast.out{opacity:0;transform:translateX(20px);transition:opacity .25s,transform .25s}
 @keyframes tmasuk{from{opacity:0;transform:translateX(24px)}}
 
 /* animasi umum */
@@ -186,6 +189,10 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
 }
 
 /* banner promosi bergilir */
+.promo--tunggu{background:#E8EEF7}
+.promo--tunggu::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:kerangkaPromo 1.3s ease-in-out infinite}
+@keyframes kerangkaPromo{to{transform:translateX(100%)}}
+
 .promo{position:relative;display:block;border-radius:20px;overflow:hidden;aspect-ratio:16/5;background:var(--navy-100);box-shadow:var(--sh-3);animation:masuk .5s ease}
 .promo__rel{position:absolute;inset:0}
 .promo__slide{position:absolute;inset:0;display:block;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s}
@@ -197,9 +204,9 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
   display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.18);opacity:0;transition:opacity .2s;cursor:pointer}
 .promo__nav--kiri{left:12px}.promo__nav--kanan{right:12px}
 .promo:hover .promo__nav,.promo:focus-within .promo__nav{opacity:1}
-.promo__titik{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px}
-.promo__titik button{width:8px;height:8px;padding:0;border-radius:99px;border:0;background:rgba(255,255,255,.6);box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer;transition:width .3s,background .3s}
-.promo__titik button[aria-selected="true"]{width:22px;background:#fff}
+.promo__titik{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:0}
+.promo__titik button{width:22px;height:8px;padding:0;border-radius:99px;border:0;background:#fff;opacity:.6;box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer;transform:scaleX(.36);transition:transform .3s,opacity .3s}
+.promo__titik button[aria-selected="true"]{transform:scaleX(1);opacity:1}
 .pita-uji{position:fixed;left:12px;bottom:12px;z-index:90;padding:6px 12px;border-radius:999px;background:#F2B505;color:#061a38;font-size:12px;font-weight:800;letter-spacing:.04em;box-shadow:0 6px 18px rgba(0,0,0,.2)}
 @media (max-width:640px){
   .promo{border-radius:16px}
@@ -212,3 +219,5 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
 
 .gerbang__batal{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:12px;border:0;background:var(--bg-soft);color:var(--text-2);font-size:22px;line-height:1;cursor:pointer}
 .gerbang__kartu{position:relative}
+
+.footer__privasi{flex-basis:100%;font-size:12px;opacity:.7;line-height:1.5}

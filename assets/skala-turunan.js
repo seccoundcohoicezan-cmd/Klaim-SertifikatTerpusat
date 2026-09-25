@@ -8,6 +8,55 @@
   const API_URL_UJI = "";
   const API_URL = (API_URL_UJI && location.hostname !== "skala.stekom.ac.id") ? API_URL_UJI : API_URL_PRODUKSI;
 
+/* ============================================================ ANALITIK
+     Umami (kunjungan & funnel) + Microsoft Clarity (peta panas & rekaman sesi).
+     ID diatur dari spreadsheet (⚙️ SKALA → 📊 Analitik) dan dikirim lewat konfigurasi.
+     Hanya aktif di domain resmi, dan TIDAK mengirim nama / nomor WA / email / NIM. */
+    const DOMAIN_RESMI="skala.stekom.ac.id";
+  const Analitik=(()=>{
+    let siap=false, dipasang=false; const antre=[];
+    const aktifDiSini=()=>location.hostname===DOMAIN_RESMI;
+    function kirim(nama,data){
+      try{ if(window.umami&&typeof umami.track==="function") umami.track(nama,data||{}); }catch(e){}
+      try{ if(typeof window.clarity==="function") window.clarity("event",nama); }catch(e){}
+    }
+    function catat(nama,data){
+      if(!aktifDiSini()) return;
+      if(siap) kirim(nama,data); else { antre.push([nama,data]); if(antre.length>60) antre.shift(); }
+    }
+    function pasang(a){
+      if(dipasang||!a||!aktifDiSini()) return; dipasang=true;
+      if(a.clarity_id){
+        (function(c,l,k,r,i){ c[k]=c[k]||function(){(c[k].q=c[k].q||[]).push(arguments)};
+          const t=l.createElement(r); t.async=1; t.src="https://www.clarity.ms/tag/"+i; l.head.appendChild(t); })(window,document,"clarity","script",a.clarity_id);
+      }
+      if(a.umami_id){
+        const s=document.createElement("script"); s.defer=true; s.src=a.umami_src||"https://cloud.umami.is/script.js";
+        s.setAttribute("data-website-id",a.umami_id); s.setAttribute("data-domains",DOMAIN_RESMI);
+        s.onload=()=>{ siap=true; antre.splice(0).forEach(x=>kirim(x[0],x[1])); };
+        document.head.appendChild(s);
+      } else { siap=true; antre.splice(0).forEach(x=>kirim(x[0],x[1])); }
+    }
+    /* seberapa jauh halaman digulir: 25 / 50 / 75 / 100 % (sekali per halaman) */
+    const tanda={};
+    addEventListener("scroll",()=>{
+      const h=document.documentElement, p=Math.round((scrollY+innerHeight)/Math.max(1,h.scrollHeight)*100);
+      [25,50,75,100].forEach(t=>{ if(p>=t&&!tanda[t]){ tanda[t]=1; catat("gulir_"+t); } });
+    },{passive:true});
+    /* klik yang ditangkap otomatis di seluruh halaman */
+    document.addEventListener("click",ev=>{
+      const a=ev.target.closest("a,button"); if(!a) return;
+      const href=a.getAttribute("href")||"", bagian=(a.closest("section,header,footer,[id]")||{}).id||"";
+      if(/pmb\.stekom\.ac\.id/.test(href)) catat("klik_pmb",{lokasi:bagian||"lain"});
+      else if(/wa\.me\//.test(href)&&a.id!=="startWa") catat("klik_wa_admin",{lokasi:bagian||"lain"});
+      else if(/\/lacak(\.html)?(\?|$)/.test(href)) catat("klik_ke_lacak",{lokasi:bagian||"lain"});
+      else if(/\/testimoni(\.html)?(\?|$)/.test(href)) catat("klik_ke_testimoni",{lokasi:bagian||"lain"});
+      else if(a.matches(".faq__q, .faq__q *")||a.closest(".faq__q")) catat("buka_faq");
+    },{capture:true,passive:true});
+    return {pasang,catat};
+  })();
+  window.skalaCatat=Analitik.catat;
+  
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
   const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -70,7 +119,7 @@
     const status = (t, err) => { const s = $("#gerbangStatus"); if (!s) return; s.textContent = t || ""; s.classList.toggle("err", !!err); $("#gerbangUlang").hidden = !err; };
     const tiket = () => { try { const x = JSON.parse(sessionStorage.getItem(KUNCI) || "null"); if (x && x.exp > Date.now() + 60000) return x.t; } catch (e) {} return ""; };
     let kabar = () => {};
-    const simpan = (t, m) => { try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} setTimeout(() => kabar(), 0); };
+    const simpan = (t, m) => { Analitik.catat("verifikasi_lolos"); try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} setTimeout(() => kabar(), 0); };
     const tutup = () => { if (!el()) return; el().classList.add("is-selesai"); document.body.classList.remove("gerbang-buka"); if (menunggu) { const f = menunggu; menunggu = null; f(); } };
     const buka = () => { if (!el()) return; el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
     async function kirim(token) {
@@ -108,7 +157,7 @@
       perlu() { return !!(el() && aktif && siteKey && !tiket()); },
       captchaAktif() { return !!(el() && aktif); },
       padaBerubah(f) { kabar = f; },
-      ulangi(aksi) { try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
+      ulangi(aksi) { Analitik.catat("verifikasi_muncul"); try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
       gagalMuat() { if (el() && !siteKey && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.", true); }
     };
   })();
@@ -129,6 +178,7 @@
         document.body.style.setProperty("--maint-h", (bar.offsetHeight || 44) + "px"); } }
     }
     if ("banner" in cfg) pasangPromo($("#promo"), cfg.banner, API_URL);
+    if (cfg.analitik) Analitik.pasang(cfg.analitik);
     if (cfg.mode_uji && !$(".pita-uji")) document.body.insertAdjacentHTML("beforeend", '<div class="pita-uji" role="status">🧪 LINGKUNGAN UJI</div>');
     pendengar.forEach(f => { try { f(cfg); } catch (e) {} });
   }
@@ -146,7 +196,7 @@
   function pasangPromo(wadah, data, apiUrl){
     if(!wadah) return;
     const items=(data&&data.items)||[];
-    if(!items.length){ wadah.hidden=true; wadah.innerHTML=""; return; }
+    if(!items.length){ wadah.classList.remove("promo--tunggu"); wadah.hidden=true; wadah.innerHTML=""; return; }
     const sidik=JSON.stringify(data); if(wadah.dataset.sidik===sidik) return; wadah.dataset.sidik=sidik;
     const e=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
     const semuaHp=items.every(x=>x.gambar_hp);
@@ -158,7 +208,7 @@
         +(x.label?'<span class="promo__label">'+e(x.label)+'</span>':'')+'</a>').join("")+'</div>'
       +(items.length>1?'<button class="promo__nav promo__nav--kiri" type="button" aria-label="Banner sebelumnya">‹</button><button class="promo__nav promo__nav--kanan" type="button" aria-label="Banner berikutnya">›</button>'
         +'<div class="promo__titik" role="tablist">'+items.map((x,i)=>'<button type="button" role="tab" aria-label="Banner '+(i+1)+'"'+(i===0?' aria-selected="true"':'')+'></button>').join("")+'</div>':'');
-    wadah.hidden=false;
+    wadah.classList.remove("promo--tunggu"); wadah.removeAttribute("aria-hidden"); wadah.hidden=false;
     let slides=[...wadah.querySelectorAll(".promo__slide")], idx=0, jam=null, jeda=false;
     const kurangi=matchMedia("(prefers-reduced-motion: reduce)").matches, lama=Math.max(3,Number(data.interval)||6)*1000;
     const titik=()=>[...wadah.querySelectorAll(".promo__titik button")];
@@ -190,15 +240,17 @@
     wadah.addEventListener("touchend",ev=>{ if(x0!==null&&geser){ const dx=ev.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ ke(idx+(dx<0?1:-1)); mulai(); } } x0=null; setTimeout(()=>jeda=false,2500); });
     slides.forEach(s=>s.addEventListener("click",ev=>{
       if(geser){ ev.preventDefault(); geser=false; return; }
+      if(window.skalaCatat) skalaCatat("klik_banner",{id:s.dataset.id});
       if(apiUrl){ const body=JSON.stringify({aksi:"klikBanner",id:s.dataset.id});
         try{ navigator.sendBeacon ? navigator.sendBeacon(apiUrl,new Blob([body],{type:"text/plain;charset=utf-8"})) : fetch(apiUrl,{method:"POST",body,keepalive:true}); }catch(x){} }
     }));
     mulai();
   }
   
-  window.SKALA = { API_URL, $, $$, esc, rp, toast, waLink, formatWa, hitungNaik, amatiReveal, Gerbang, kurangiGerak,
+  window.SKALA = { catat: Analitik.catat, API_URL, $, $$, esc, rp, toast, waLink, formatWa, hitungNaik, amatiReveal, Gerbang, kurangiGerak,
     padaKonfigurasi: f => pendengar.push(f),
     padaVerifikasi: f => Gerbang.padaBerubah(f),
     mulai(opsi = {}) { pasangHeader(); if (opsi.captcha) Gerbang.mulai(); amatiReveal(); muatKonfigurasi();
+      setTimeout(() => { const p = $("#promo"); if (p && p.classList.contains("promo--tunggu")) { p.classList.remove("promo--tunggu"); p.hidden = true; } }, 10000);
       if ("serviceWorker" in navigator && location.protocol === "https:") window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {})); } };
 })();
