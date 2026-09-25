@@ -184,3 +184,28 @@ body.mode-maint{padding-top:calc(var(--hh) + var(--maint-h,44px) + env(safe-area
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .reveal{opacity:1;transform:none}
 }
+
+/* banner promosi bergilir */
+.promo{position:relative;display:block;border-radius:20px;overflow:hidden;aspect-ratio:16/5;background:var(--navy-100);box-shadow:var(--sh-3);animation:masuk .5s ease}
+.promo__rel{position:absolute;inset:0}
+.promo__slide{position:absolute;inset:0;display:block;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s}
+.promo__slide.is-on{opacity:1;visibility:visible}
+.promo__slide img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.promo:hover .promo__slide.is-on img{transform:scale(1.015)}
+.promo__label{position:absolute;left:14px;top:14px;padding:4px 11px;border-radius:999px;background:rgba(6,26,56,.72);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.02em}
+.promo__nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#0A2C5E;font-size:24px;line-height:1;
+  display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.18);opacity:0;transition:opacity .2s;cursor:pointer}
+.promo__nav--kiri{left:12px}.promo__nav--kanan{right:12px}
+.promo:hover .promo__nav,.promo:focus-within .promo__nav{opacity:1}
+.promo__titik{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px}
+.promo__titik button{width:8px;height:8px;padding:0;border-radius:99px;border:0;background:rgba(255,255,255,.6);box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer;transition:width .3s,background .3s}
+.promo__titik button[aria-selected="true"]{width:22px;background:#fff}
+.pita-uji{position:fixed;left:12px;bottom:12px;z-index:90;padding:6px 12px;border-radius:999px;background:#F2B505;color:#061a38;font-size:12px;font-weight:800;letter-spacing:.04em;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+@media (max-width:640px){
+  .promo{border-radius:16px}
+  .promo.promo--hp{aspect-ratio:3/2}
+  .promo__nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .promo__slide{transition:none} }
+
+#promo{margin-top:24px}
