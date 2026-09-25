@@ -1,0 +1,6 @@
+# SKALA — Sistem Klaim Beasiswa Universitas STEKOM
+# Semua halaman boleh dibaca mesin pencari.
+User-agent: *
+Allow: /
+
+Sitemap: https://skala.stekom.ac.id/sitemap.xml

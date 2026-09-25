@@ -20,11 +20,11 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=2">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=3">
 <style>
 .tst-grid-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px 40px;align-items:center}
 .ilustrasi{position:relative;justify-self:center;width:min(100%,400px);aspect-ratio:1/0.8}
@@ -230,7 +230,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=2"></script>
+<script src="/assets/skala-turunan.js?v=3"></script>
 <script>
 (function(){
   const {API_URL,$,$$,esc,hitungNaik,amatiReveal}=SKALA;

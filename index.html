@@ -9,6 +9,14 @@
 <!-- Pratinjau saat link dibagikan (WhatsApp, Facebook, Telegram, X).
      Domain resmi: skala.stekom.ac.id — ganti di baris canonical, og:url, og:image, twitter:image bila domain berubah. -->
 <link rel="canonical" href="https://skala.stekom.ac.id/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","@id":"https://skala.stekom.ac.id/#web","url":"https://skala.stekom.ac.id/","name":"SKALA — Sistem Klaim Beasiswa Universitas STEKOM","inLanguage":"id-ID",
+  "publisher":{"@id":"https://skala.stekom.ac.id/#org"}},
+ {"@type":"CollegeOrUniversity","@id":"https://skala.stekom.ac.id/#org","name":"Universitas STEKOM","url":"https://stekom.ac.id/",
+  "logo":"https://skala.stekom.ac.id/assets/logo-stekom-bulat.png?v=1","address":{"@type":"PostalAddress","addressLocality":"Semarang","addressRegion":"Jawa Tengah","addressCountry":"ID"}}]}
+</script>
 <meta property="og:type" content="website">
 <meta property="og:locale" content="id_ID">
 <meta property="og:site_name" content="SKALA — Universitas STEKOM">
@@ -30,13 +38,11 @@
 <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png?v=1">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="preconnect" href="https://challenges.cloudflare.com">
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
 <style>
 :root{
   --navy-900:#061a38; --navy-800:#0A2C5E; --navy-700:#123F7E; --navy-500:#2A63AE; --navy-100:#E8F0FB;
@@ -89,6 +95,8 @@ body.gerbang-buka{overflow:hidden}
 .gerbang__widget > div,.gerbang__widget iframe{max-width:100%}
 .gerbang__muat{display:flex;align-items:center;justify-content:center;gap:10px;height:65px;width:100%;border-radius:10px;background:var(--bg-soft);color:var(--text-3);font-size:13.5px}
 .gerbang__muat::before{content:"";width:18px;height:18px;border-radius:50%;border:2.5px solid var(--border-2);border-top-color:var(--navy-500);animation:spin .8s linear infinite}
+.gerbang__batal{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:12px;border:0;background:var(--bg-soft);color:var(--text-2);font-size:22px;line-height:1;cursor:pointer}
+.gerbang__kartu{position:relative}
 .gerbang__aman{display:block;text-align:center;line-height:1.5;margin-top:14px;font-size:12px;color:var(--text-3)}
 .gerbang__aman .ico{margin-right:4px;vertical-align:-2px}
 @media (max-width:420px){
@@ -707,10 +715,11 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 <!-- ============================ VERIFIKASI KEAMANAN ============================ -->
 <div class="gerbang is-selesai" id="gerbang" role="dialog" aria-modal="true" aria-labelledby="gerbangJudul">
   <div class="gerbang__kartu">
+    <button class="gerbang__batal" id="gerbangBatal" type="button" aria-label="Batal">×</button>
     <div class="gerbang__logo"><img src="assets/logo-stekom-bulat.png?v=1" alt="Logo Universitas STEKOM" width="52" height="52"><b>SKALA</b></div>
     <div class="gerbang__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
     <h2 id="gerbangJudul">Verifikasi keamanan</h2>
-    <p>Sebentar, kami memastikan kamu bukan robot untuk melindungi data sertifikat peserta.</p>
+    <p>Satu langkah sebelum mencari: kami memastikan kamu bukan robot untuk melindungi data sertifikat peserta.</p>
     <div class="gerbang__widget" id="tsWidget"><div class="gerbang__muat">Menyiapkan verifikasi…</div></div>
     <div class="gerbang__status" id="gerbangStatus" aria-live="polite">Memuat verifikasi…</div>
     <button class="btn btn-outline gerbang__ulang" id="gerbangUlang" type="button" hidden>Coba lagi</button>
@@ -1108,6 +1117,10 @@ document.addEventListener("pointerdown",e=>{
 /* ============================================================ VERIFIKASI KEAMANAN (Cloudflare Turnstile)
    Lolos verifikasi → server memberi tiket sesi (60 menit) yang wajib dibawa saat mencari & mengajukan. */
 const Gerbang = (()=>{
+  /* skrip Cloudflare baru dimuat saat verifikasi benar-benar dibutuhkan */
+  let skripDimuat=false;
+  const muatSkrip=()=>{ if(skripDimuat||window.turnstile) return; skripDimuat=true;
+    const sc=document.createElement("script"); sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; sc.async=true; document.head.appendChild(sc); };
   const KUNCI="skala_sesi_v1", el=()=>$("#gerbang");
   let siteKey="", widgetId=null, aktif=null, menunggu=null;
   const status=(t,err)=>{ const s=$("#gerbangStatus"); s.textContent=t||""; s.classList.toggle("err",!!err); $("#gerbangUlang").hidden=!err; };
@@ -1147,15 +1160,18 @@ const Gerbang = (()=>{
   $("#gerbangUlang").addEventListener("click",()=>{ status("Memuat verifikasi…"); if(widgetId===null) pasangWidget(); else { try{ window.turnstile.reset(widgetId); }catch(e){} status(""); } });
   return {
     tiket,
-    mulai(){ if(API_URL && !tiket()) buka(); },
+    /* halaman TIDAK lagi digerbang saat dibuka — konten langsung terbaca pengunjung & mesin pencari */
+    mulai(){ const b=$("#gerbangBatal"); if(b) b.addEventListener("click",()=>{ menunggu=null; tutup(); toast("Verifikasi dibatalkan","Pencarian butuh verifikasi keamanan sekali saja.","warn"); }); },
+    /* perlu verifikasi sebelum aksi yang dilindungi (cari / kirim)? */
+    perlu(){ return !!(API_URL && aktif && siteKey && !tiket()); },
     /* dipanggil setiap konfigurasi dari server/cache diterapkan */
     konfigurasi(c){
       if(!c) return; aktif=!!c.aktif; siteKey=c.site_key||"";
       if(!aktif){ tutup(); return; }
-      if(!tiket() && API_URL){ buka(); pasangWidget(); }
+      if(!el().classList.contains("is-selesai")) pasangWidget();   // layar sudah terbuka menunggu kunci
     },
     /* server menolak karena tiket habis → minta verifikasi ulang, lalu jalankan ulang aksinya */
-    ulangi(aksi){ try{ sessionStorage.removeItem(KUNCI); }catch(e){} menunggu=aksi||null; buka(); pasangWidget(); },
+    ulangi(aksi){ try{ sessionStorage.removeItem(KUNCI); }catch(e){} menunggu=aksi||null; muatSkrip(); buka(); pasangWidget(); },
     gagalMuat(){ if(!siteKey && API_URL && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.",true); },
     /* mode pemeliharaan: tidak ada yang bisa dicari, verifikasi tidak diperlukan */
     lewati(){ menunggu=null; tutup(); }
@@ -1266,6 +1282,7 @@ async function cari(keyword, opts={}){
   const kw=String(keyword||"").trim();
   if(Maint.aktif){ Maint.gembok(); return false; }
   if(kw.replace(/[^0-9a-z]/gi,"").length<3){ toast("Kata kunci terlalu pendek","Ketik nama lengkap atau nomor sertifikat.","warn"); return false; }
+  if(Gerbang.perlu()){ Gerbang.ulangi(()=>cari(kw,opts)); return false; }
   if(!opts.silent) skeleton();
   let data;
   try{
@@ -1426,6 +1443,7 @@ $("#ckSubmit").addEventListener("click",async ()=>{
     invalid("#ckEmail"); bad=true; }
   if(!$("#ckAgree").checked){ $("#ckAgreeField").classList.add("is-invalid"); bad=true; }
   if(bad){ toast("Periksa isian","Ada data yang belum benar.","warn"); return; }
+  if(Gerbang.perlu()){ Gerbang.ulangi(()=>$("#ckSubmit").click()); return; }
 
   const items=pickedItems();
   const payload={aksi:"submitPengajuan",sertifikat:items.map(c=>c.no_sertifikat),noWA:wa,email:email,nim:$("#ckNim").value.trim(),pernyataan:true,sesi:Gerbang.tiket()};
