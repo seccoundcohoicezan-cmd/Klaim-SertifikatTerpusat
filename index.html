@@ -59,7 +59,7 @@
   --off-fg:#5C6B82; --off-bg:#EEF1F6; --err:#C81E24;
   --r-sm:10px; --r-md:14px; --r-lg:20px; --pill:999px;
   --sh-1:0 1px 2px rgba(10,44,94,.06); --sh-2:0 6px 20px rgba(10,44,94,.08); --sh-3:0 24px 60px rgba(6,26,56,.22);
-  --wrap:1180px; --hh:100px;   /* 28px pita periode + 72px navbar */
+  --wrap:1180px; --hh:72px;
   --font:"Plus Jakarta Sans","PJS Cadangan",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box;margin:0}
@@ -630,7 +630,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .btn-pmb{width:100%;white-space:normal;text-align:center;padding:15px 18px;font-size:16px}
 }
 @media (max-width:640px){
-  :root{--hh:90px}   /* 26px pita periode + 64px navbar */
+  :root{--hh:64px}
   body{font-size:15.5px}
   .header__bar{gap:10px}
   .brand{min-width:0;gap:9px}
@@ -713,25 +713,17 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .reveal{opacity:1;transform:none}
 }
-/* ---- pita periode: satu baris tipis di atas navbar (komponen bersama semua halaman) ---- */
-:root{--pita:28px}
-.pita-periode{height:var(--pita);background:var(--bg-soft);border-bottom:1px solid var(--border);color:var(--text-2);font-size:12.5px;line-height:1}
-.pita-periode__isi{height:100%;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;overflow:hidden}
-.pita-periode__ikon{flex:none;color:var(--navy-500)}
-.pita-periode__teks{overflow:hidden;text-overflow:ellipsis;min-width:0}
-.pita-periode__teks b{font-weight:700;color:var(--navy-900)}
-.pita-periode__sisa{flex:none;font-weight:700;color:var(--navy-500);font-variant-numeric:tabular-nums;min-width:10ch}
-.pita-periode__sisa:not(:empty)::before{content:"· ";font-weight:400;color:var(--text-3)}
-.pita-periode__sisa:empty{display:none}
-.pita-periode.is-mepet .pita-periode__ikon,.pita-periode.is-mepet .pita-periode__sisa{color:var(--red-700)}
-.pita-periode .pendek{display:none}
-.header__bar{height:calc(var(--hh) - var(--pita))}
+
+/* periode pengajuan: satu baris kecil di bawah tombol hero */
+.hero__periode{display:flex;align-items:center;gap:7px;min-height:20px;margin-top:14px;font-size:13px;line-height:1.4;color:rgba(255,255,255,.72)}
+.hero__periode svg{flex:none;opacity:.85}
+.hero__periode b{font-weight:600;color:rgba(255,255,255,.92)}
+.hero__periode .sisa{color:#FFD966;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hero__periode .pendek{display:none}
 @media (max-width:640px){
-  :root{--pita:26px}
-  .pita-periode{font-size:12px}
-  .pita-periode .panjang{display:none}
-  .pita-periode .pendek{display:inline}
-  .pita-periode__sisa{min-width:7ch}
+  .hero__periode{justify-content:center;font-size:12.5px;margin-top:12px}
+  .hero__periode .panjang{display:none}
+  .hero__periode .pendek{display:inline}
 }
 </style>
 </head>
@@ -771,13 +763,6 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
 
 <!-- ============================ HEADER ============================ -->
 <header class="header" id="header">
-  <div class="pita-periode" id="pitaPeriode">
-    <div class="wrap pita-periode__isi">
-      <svg class="pita-periode__ikon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-      <span class="pita-periode__teks" id="pitaTeks">Pengajuan periode bulan ini ditutup tanggal 25, 23.59 WIB</span>
-      <span class="pita-periode__sisa" id="pitaSisa"></span>
-    </div>
-  </div>
   <div class="wrap header__bar">
     <a href="#beranda" class="brand" aria-label="SKALA Universitas STEKOM — Beranda">
       <img src="assets/logo-stekom-bulat.png?v=1" alt="Logo Universitas STEKOM" width="44" height="44">
@@ -831,6 +816,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <a class="btn btn-primary btn-lg" href="#cari"><svg class="ico"><use href="#i-cari"/></svg>Cari Sertifikatku</a>
         <a class="btn btn-ghost btn-lg" href="#cara">Cara pengajuan</a>
       </div>
+      <p class="hero__periode" id="heroPeriode"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="heroPeriodeTeks">Pengajuan ditutup tanggal 25 setiap bulan, 23.59 WIB</span></p>
       <div class="stats" id="heroStats"></div>
     </div>
 
@@ -1173,45 +1159,34 @@ const Analitik=(()=>{
 })();
 window.skalaCatat=Analitik.catat;
 
-/* ---- pita periode: hitung mundur batas pengajuan (WIB), diperbarui tiap menit ----
-   Pengajuan tgl 1–batas masuk periode bulan itu; setelahnya masuk periode bulan berikutnya. */
-const PitaPeriode=(()=>{
+/* periode pengajuan — tgl 1–batas masuk periode bulan itu, setelahnya periode bulan berikutnya (WIB).
+   Sisa waktu hanya ditampilkan di 3 hari terakhir. */
+const HeroPeriode=(()=>{
   const BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-  let batas=25, jam=null;
-  function info(){
-    const kini=Date.now(), wib=new Date(kini+7*3600e3), y=wib.getUTCFullYear(), m=wib.getUTCMonth(), d=wib.getUTCDate();
-    const tutup=(th,bl)=>Date.UTC(th,bl,batas,23,59,59)-7*3600e3;
-    if(d<=batas) return {buka:true,bl:m,sisa:tutup(y,m)-kini};
-    const m2=(m+1)%12; return {buka:false,blLalu:m,bl:m2,sisa:tutup(m===11?y+1:y,m2)-kini};
-  }
-  function sisa(ms,pendek){
-    const h=Math.floor(ms/864e5), j=Math.floor(ms%864e5/36e5), mn=Math.max(0,Math.floor(ms%36e5/6e4));
-    if(pendek) return h>=1 ? h+"h "+j+"j lagi" : (j>=1 ? j+"j "+mn+"m lagi" : Math.max(1,mn)+"m lagi");
-    return h>=1 ? h+" hari "+j+" jam lagi" : (j>=1 ? j+" jam "+mn+" menit lagi" : Math.max(1,mn)+" menit lagi");
-  }
+  let batas=25;
   function gambar(){
-    const el=document.getElementById("pitaPeriode"); if(!el) return;
-    const p=info(), nama=BULAN[p.bl], sing=nama.slice(0,3);
-    const teks=document.getElementById("pitaTeks"), sis=document.getElementById("pitaSisa");
-    if(p.buka){
-      teks.innerHTML='<span class="panjang">Pengajuan periode <b>'+nama+'</b> ditutup '+batas+' '+sing+', 23.59 WIB</span>'
-                    +'<span class="pendek">Ditutup '+batas+' '+sing+' 23.59</span>';
-      sis.innerHTML='<span class="panjang">'+sisa(p.sisa,false)+'</span><span class="pendek">'+sisa(p.sisa,true)+'</span>';
-    } else {
-      teks.innerHTML='<span class="panjang">Periode '+BULAN[p.blLalu]+' ditutup · pengajuan kini masuk periode <b>'+nama+'</b> (ditutup '+batas+' '+sing+')</span>'
-                    +'<span class="pendek">Kini periode <b>'+nama+'</b> · ditutup '+batas+' '+sing+'</span>';
-      sis.innerHTML="";
+    const el=document.getElementById("heroPeriodeTeks"); if(!el) return;
+    const kini=Date.now(), w=new Date(kini+7*3600e3), y=w.getUTCFullYear(), m=w.getUTCMonth(), d=w.getUTCDate();
+    if(d>batas){
+      const m2=(m+1)%12, n=BULAN[m2];
+      el.innerHTML='<span class="panjang">Pengajuan kini masuk periode <b>'+n+'</b> · ditutup '+batas+' '+n.slice(0,3)+', 23.59 WIB</span>'
+                  +'<span class="pendek">Kini periode <b>'+n+'</b> · ditutup '+batas+' '+n.slice(0,3)+'</span>';
+      return;
     }
-    el.classList.toggle("is-mepet",p.buka&&p.sisa<3*864e5);
-    el.setAttribute("aria-label",teks.textContent.replace(/\s+/g," ")+" "+(sis.querySelector(".panjang")||{textContent:""}).textContent);
+    const n=BULAN[m], sisa=Date.UTC(y,m,batas,23,59,59)-7*3600e3-kini;
+    let tambahan="";
+    if(sisa<3*864e5){
+      const h=Math.floor(sisa/864e5), j=Math.floor(sisa%864e5/36e5), mn=Math.max(1,Math.floor(sisa%36e5/6e4));
+      const pj=h>=1?h+" hari "+j+" jam lagi":(j>=1?j+" jam "+mn+" menit lagi":mn+" menit lagi");
+      const pd=h>=1?h+"h "+j+"j lagi":(j>=1?j+"j "+mn+"m lagi":mn+"m lagi");
+      tambahan=' · <span class="sisa"><span class="panjang">'+pj+'</span><span class="pendek">'+pd+'</span></span>';
+    }
+    el.innerHTML='<span class="panjang">Periode <b>'+n+'</b> ditutup '+batas+' '+n.slice(0,3)+', 23.59 WIB</span>'
+                +'<span class="pendek">'+(tambahan?'Ditutup '+batas+' '+n.slice(0,3)+', 23.59':'Periode <b>'+n.slice(0,3)+'</b> ditutup '+batas+' '+n.slice(0,3)+', 23.59')+'</span>'+tambahan;
   }
-  return {
-    mulai(){ gambar(); if(!jam) jam=setInterval(gambar,60000); },
-    aturBatas(b){ b=Number(b); if(b>0&&b<=28&&b!==batas){ batas=b; gambar(); } }
-  };
+  gambar(); setInterval(gambar,60000);
+  return { aturBatas(b){ b=Number(b); if(b>0&&b<=28&&b!==batas){ batas=b; gambar(); } } };
 })();
-PitaPeriode.mulai();
-
 
 
 let WHATSAPP_NUMBER = "628888999920";   // +62 888-8999-920 (bisa ditimpa dari Apps Script)
@@ -1814,7 +1789,7 @@ function terapkanKonfigurasi(cfg){
   if(cfg.plafon_s2!=null) S.plafonS2=Number(cfg.plafon_s2)||S.plafonS2;
   if(cfg.wa_admin) WHATSAPP_NUMBER=normWa(cfg.wa_admin);
   if(typeof cfg.email_wajib_com==="boolean") S.emailWajibCom=cfg.email_wajib_com;
-  if(Number(cfg.batas_tanggal_periode)>0){ S.batasPeriode=Number(cfg.batas_tanggal_periode); PitaPeriode.aturBatas(S.batasPeriode); }
+  if(Number(cfg.batas_tanggal_periode)>0){ S.batasPeriode=Number(cfg.batas_tanggal_periode); HeroPeriode.aturBatas(S.batasPeriode); }
   if(cfg.captcha) Gerbang.konfigurasi(cfg.captcha);
   infoAman();
   if(cfg.sistem) Maint.terapkan(cfg.sistem);
