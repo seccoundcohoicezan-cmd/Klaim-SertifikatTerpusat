@@ -20,11 +20,8 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=3">
+<link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=4">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -73,7 +70,7 @@
 .status-kartu.st-ditolak{--w:#C81E24;--bg:#FDECEC;--bd:#F3B4B6}
 .status-kartu.st-dibuka{--w:#5C6B82;--bg:#EEF1F6;--bd:#D3DAE5}
 .status-ikon{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--w);color:#fff;font-size:30px;box-shadow:0 10px 24px rgba(0,0,0,.12);animation:denyutStatus 2.4s ease-in-out infinite}
-@keyframes denyutStatus{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--w) 40%,transparent)}60%{box-shadow:0 0 0 12px color-mix(in srgb,var(--w) 0%,transparent)}}
+@keyframes denyutStatus{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 .status-kartu small{display:block;font-size:13px;font-weight:700;color:var(--w)}
 .status-kartu b{display:block;font-size:30px;line-height:1.1;font-weight:800;color:var(--w)}
 .status-kartu p{font-size:14.5px;color:var(--text-2);padding-left:18px;border-left:2px solid var(--bd)}
@@ -83,8 +80,8 @@
 .tahap li{position:relative;padding-top:52px;padding-right:10px}
 .tahap li::before{content:"";position:absolute;left:44px;right:-4px;top:19px;height:3px;border-radius:3px;background:#DCE3EE}
 .tahap li:last-child::before{display:none}
-.tahap li::after{content:"";position:absolute;left:44px;top:19px;height:3px;border-radius:3px;background:var(--navy-500);width:0;transition:width .7s ease var(--tunda,0s)}
-.tahap li.selesai::after{width:calc(100% - 40px)}
+.tahap li::after{content:"";position:absolute;left:44px;top:19px;height:3px;border-radius:3px;background:var(--navy-500);width:calc(100% - 40px);transform:scaleX(0);transform-origin:left center;transition:transform .7s ease var(--tunda,0s)}
+.tahap li.selesai::after{transform:scaleX(1)}
 .tahap li:last-child::after{display:none}
 .tahap .bulat{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:#fff;border:3px solid #DCE3EE;color:#A8B4C6;
   transform:scale(.6);opacity:0;transition:transform .45s cubic-bezier(.3,1.6,.5,1) var(--tunda,0s),opacity .3s var(--tunda,0s)}
@@ -119,8 +116,9 @@
 .tindakan .btn{flex:none}
 
 .rangka{border-radius:24px;border:1px solid var(--border);background:#fff;padding:26px}
-.kilat{background:linear-gradient(90deg,#EEF2F8 25%,#F7F9FC 50%,#EEF2F8 75%);background-size:200% 100%;animation:kilat 1.2s linear infinite;border-radius:12px}
-@keyframes kilat{to{background-position:-200% 0}}
+.kilat{position:relative;overflow:hidden;background:#EEF2F8;border-radius:12px}
+.kilat::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:kilat 1.2s linear infinite}
+@keyframes kilat{to{transform:translateX(100%)}}
 
 .konfeti{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}
 .konfeti i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:jatuh 1.8s ease-in forwards}
@@ -142,8 +140,8 @@
   .tahap{grid-template-columns:1fr;gap:0}
   .tahap li{padding:2px 0 26px 58px;min-height:62px}
   .tahap li::before,.tahap li::after{left:19px;right:auto;top:44px;width:3px;height:calc(100% - 44px)}
-  .tahap li::after{height:0;width:3px;transition:height .7s ease var(--tunda,0s)}
-  .tahap li.selesai::after{width:3px;height:calc(100% - 44px)}
+  .tahap li::after{width:3px;height:calc(100% - 44px);transform:scaleY(0);transform-origin:center top;transition:transform .7s ease var(--tunda,0s)}
+  .tahap li.selesai::after{transform:scaleY(1)}
   .detail{gap:12px;padding:16px}
   .detail__ikon{width:38px;height:38px;font-size:19px}
   .tindakan{flex-wrap:wrap}
@@ -217,7 +215,7 @@
         <button class="btn btn-primary" id="tombolLacak" type="submit"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Lacak Status</button>
       </form>
       <div id="galat" hidden></div>
-      <p class="catatan catatan--aman" id="infoAman" hidden><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"></span></p>
+      <p class="catatan catatan--aman" id="infoAman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"><b>Pelacakan dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat menekan <b>Lacak Status</b>, lalu berlaku 60 menit.</span></p>
       <p class="catatan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
         <span>Nomor Pengajuan (diawali <b>PGJ-</b>) ada di bukti pengajuan, email otomatis, dan pesan WhatsApp saat kamu mengajukan. Boleh diketik angkanya saja.</span></p>
     </div>
@@ -242,7 +240,7 @@
   </div>
 </section>
 
-<div class="wrap"><div class="promo" id="promo" hidden></div></div>
+<div class="wrap"><div class="promo promo--tunggu" id="promo" aria-hidden="true"></div></div>
 
 <!-- ============================ HASIL ============================ -->
 <section class="hasil" id="hasil" hidden>
@@ -260,7 +258,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=3"></script>
+<script src="/assets/skala-turunan.js?v=4"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
@@ -367,7 +365,7 @@
   if(kode.value) wa4.focus();
 
   function infoAman(){
-    const el=$("#infoAman"); if(!el||!Gerbang.captchaAktif()){ if(el) el.hidden=true; return; }
+    const el=$("#infoAman"); if(!el) return; if(!Gerbang.captchaAktif()){ el.style.visibility="hidden"; return; } el.style.visibility="";
     const sudah=!!Gerbang.tiket(); el.classList.toggle("is-ok",sudah);
     $("#infoAmanTeks").innerHTML=sudah?"<b>Kamu sudah terverifikasi.</b> Bisa langsung melacak tanpa verifikasi ulang selama 60 menit."
       :"<b>Pelacakan dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat menekan <b>Lacak Status</b>, lalu berlaku 60 menit.";

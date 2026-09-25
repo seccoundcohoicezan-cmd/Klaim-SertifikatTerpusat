@@ -20,11 +20,8 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"></noscript>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=3">
+<link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=4">
 <style>
 .tst-grid-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px 40px;align-items:center}
 .ilustrasi{position:relative;justify-self:center;width:min(100%,400px);aspect-ratio:1/0.8}
@@ -51,12 +48,12 @@
 .stat b{display:block;font-size:clamp(20px,2.3vw,28px);line-height:1.1;font-weight:800;color:var(--navy-900);font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
 .stat b[data-rp]{font-size:clamp(18px,1.85vw,24px)}
 .stat > div > span{display:block;font-size:14px;color:var(--text-2);margin-top:3px}
-.stat em{display:block;font-style:normal;font-size:12.5px;color:var(--text-3);margin-top:2px}
+.stat em{display:block;font-style:normal;font-size:12.5px;color:var(--text-3);margin-top:2px;min-height:1.5em}
 
 /* testimoni */
 .tst-kepala{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:24px}
 .tst-kepala h2{margin-top:12px}
-.filter{display:flex;flex-wrap:wrap;gap:8px}
+.filter{display:flex;flex-wrap:wrap;gap:8px;min-height:42px}
 .filter button{border:1.5px solid var(--border-2);background:#fff;color:var(--navy-800);border-radius:12px;padding:9px 18px;font-weight:700;font-size:14px;transition:all .2s}
 .filter button:hover{border-color:var(--navy-500)}
 .filter button[aria-pressed="true"]{background:var(--red-600);border-color:var(--red-600);color:#fff;box-shadow:0 6px 14px rgba(216,35,42,.25)}
@@ -82,8 +79,9 @@
 .kosong .ikon{width:64px;height:64px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;background:var(--navy-100);color:var(--navy-800);font-size:30px}
 .kosong h3{font-size:19px;color:var(--navy-900)}
 .kosong p{max-width:520px;margin:8px auto 0;color:var(--text-2)}
-.kerangka{height:230px;border-radius:20px;background:linear-gradient(90deg,#EEF2F8 25%,#F7F9FC 50%,#EEF2F8 75%);background-size:200% 100%;animation:kilat 1.2s linear infinite}
-@keyframes kilat{to{background-position:-200% 0}}
+.kerangka{position:relative;overflow:hidden;height:230px;border-radius:20px;background:#EEF2F8}
+.kerangka::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:kilat 1.2s linear infinite}
+@keyframes kilat{to{transform:translateX(100%)}}
 
 /* ajakan */
 .ajakan{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;padding:26px 30px;border-radius:24px;background:linear-gradient(135deg,#EAF2FD,#F7FAFF);border:1px solid #D6E3F5}
@@ -190,14 +188,14 @@
   </section>
 </div>
 
-<div class="wrap"><div class="promo" id="promo" hidden></div></div>
+<div class="wrap"><div class="promo promo--tunggu" id="promo" aria-hidden="true"></div></div>
 
 <!-- ============================ TESTIMONI ============================ -->
 <section class="section" id="cerita">
   <div class="wrap">
     <div class="tst-kepala reveal">
       <div class="sec-head"><span class="kicker">TESTIMONI PENERIMA BEASISWA</span><h2>Kisah Nyata, Dampak Nyata</h2></div>
-      <div class="filter" id="filter" role="group" aria-label="Saring testimoni"></div>
+      <div class="filter" id="filter" role="group" aria-label="Saring testimoni"><button type="button" aria-pressed="true">Semua</button></div>
     </div>
     <div class="kisi" id="kisi"><div class="kerangka"></div><div class="kerangka"></div><div class="kerangka"></div></div>
     <div class="lebih" id="lebih" hidden><button class="btn btn-outline" type="button" id="tombolLebih">Lihat Lebih Banyak
@@ -230,7 +228,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=3"></script>
+<script src="/assets/skala-turunan.js?v=4"></script>
 <script>
 (function(){
   const {API_URL,$,$$,esc,hitungNaik,amatiReveal}=SKALA;
