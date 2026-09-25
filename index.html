@@ -29,6 +29,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=1">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png?v=1">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://challenges.cloudflare.com">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <link rel="preconnect" href="https://script.google.com">
@@ -232,6 +233,30 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .ico{width:1em;height:1em;flex:none;display:inline-block;vertical-align:-.14em}
 /* ---------------- Kartu cari ---------------- */
 .searchdock{position:relative;z-index:5;margin-top:-34px}
+/* banner promosi bergilir */
+.promo{position:relative;display:block;border-radius:20px;overflow:hidden;aspect-ratio:16/5;background:var(--navy-100);box-shadow:var(--sh-3);animation:masuk .5s ease}
+.promo__rel{position:absolute;inset:0}
+.promo__slide{position:absolute;inset:0;display:block;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility .6s}
+.promo__slide.is-on{opacity:1;visibility:visible}
+.promo__slide img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.promo:hover .promo__slide.is-on img{transform:scale(1.015)}
+.promo__label{position:absolute;left:14px;top:14px;padding:4px 11px;border-radius:999px;background:rgba(6,26,56,.72);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.02em}
+.promo__nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#0A2C5E;font-size:24px;line-height:1;
+  display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.18);opacity:0;transition:opacity .2s;cursor:pointer}
+.promo__nav--kiri{left:12px}.promo__nav--kanan{right:12px}
+.promo:hover .promo__nav,.promo:focus-within .promo__nav{opacity:1}
+.promo__titik{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px}
+.promo__titik button{width:8px;height:8px;padding:0;border-radius:99px;border:0;background:rgba(255,255,255,.6);box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer;transition:width .3s,background .3s}
+.promo__titik button[aria-selected="true"]{width:22px;background:#fff}
+.pita-uji{position:fixed;left:12px;bottom:12px;z-index:90;padding:6px 12px;border-radius:999px;background:#F2B505;color:#061a38;font-size:12px;font-weight:800;letter-spacing:.04em;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+@media (max-width:640px){
+  .promo{border-radius:16px}
+  .promo.promo--hp{aspect-ratio:3/2}
+  .promo__nav{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .promo__slide{transition:none} }
+
+#promo{margin-top:16px}
 .layanan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .layanan__kartu{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;padding:20px 20px 20px 18px;border-radius:var(--r-lg);background:#fff;
   border:1px solid var(--border);box-shadow:var(--sh-3);text-decoration:none;color:var(--text);transition:transform .25s,box-shadow .25s,border-color .25s}
@@ -618,6 +643,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .searchcard__aksi{display:flex}
   .searchcard__aksi .btn{flex:1}
   .layanan{grid-template-columns:1fr;gap:12px}
+  #promo{margin-top:12px}
   .layanan__kartu{padding:16px}
   .layanan__ikon{width:46px;height:46px;font-size:22px}
   .chip{font-size:12px;padding:5px 9px}
@@ -781,6 +807,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
       <span class="layanan__panah"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>
   </div>
+  <div class="promo" id="promo" hidden></div>
 </div>
 
 <!-- ============================ SERTIFIKAT ============================ -->
@@ -1031,7 +1058,11 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
    URL Web App Apps Script (Deploy → Kelola deployment → Salin).
    Kosongkan ("") untuk mode demo tanpa backend.
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxnw083hvsjFYWRQALxDWk8826I_JVqlWwPByUCeHL196w2S1mYSx6arabVaYhndO38/exec";
+/* Server resmi dipakai di skala.stekom.ac.id. Isi API_URL_UJI dengan URL web app SALINAN UJI supaya
+   alamat pratinjau Vercel (branch uji) otomatis memakai server uji. Kosong = semua alamat memakai server resmi. */
+const API_URL_PRODUKSI = "https://script.google.com/macros/s/AKfycbxnw083hvsjFYWRQALxDWk8826I_JVqlWwPByUCeHL196w2S1mYSx6arabVaYhndO38/exec";
+const API_URL_UJI = "";
+const API_URL = (API_URL_UJI && location.hostname !== "skala.stekom.ac.id") ? API_URL_UJI : API_URL_PRODUKSI;
 
 let WHATSAPP_NUMBER = "628888999920";   // +62 888-8999-920 (bisa ditimpa dari Apps Script)
 let PLAFON_DEFAULT  = 7000000;
@@ -1620,6 +1651,8 @@ function terapkanKonfigurasi(cfg){
   if(Number(cfg.batas_tanggal_periode)>0) S.batasPeriode=Number(cfg.batas_tanggal_periode);
   if(cfg.captcha) Gerbang.konfigurasi(cfg.captcha);
   if(cfg.sistem) Maint.terapkan(cfg.sistem);
+  if("banner" in cfg) renderBanner(cfg.banner);
+  if(cfg.mode_uji && !$(".pita-uji")) document.body.insertAdjacentHTML("beforeend",'<div class="pita-uji" role="status">🧪 LINGKUNGAN UJI</div>');
   if(cfg.label_status) Object.assign(LABEL,cfg.label_status);
   const set=(sel,val)=>{ const el=$(sel); if(el&&val) el.textContent=val; };
   set("#heroSub",t.tagline); set("#scHint",t.hint_cari);
@@ -1631,6 +1664,64 @@ function terapkanKonfigurasi(cfg){
   renderFaq(cfg.faq&&cfg.faq.length?cfg.faq:CFG_FALLBACK.faq);
   if(cfg.statistik) renderStatistik(cfg.statistik);
 }
+
+/* ============================================================ BANNER PROMOSI BERGILIR
+   Data dari konfigurasi server: {interval, items:[{id,gambar,gambar_hp,link,alt,label,tab_baru}]}.
+   Bisa digeser (swipe), berhenti saat disentuh/disorot, klik dicatat ke server. */
+function pasangPromo(wadah, data, apiUrl){
+  if(!wadah) return;
+  const items=(data&&data.items)||[];
+  if(!items.length){ wadah.hidden=true; wadah.innerHTML=""; return; }
+  const sidik=JSON.stringify(data); if(wadah.dataset.sidik===sidik) return; wadah.dataset.sidik=sidik;
+  const e=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const semuaHp=items.every(x=>x.gambar_hp);
+  wadah.classList.toggle("promo--hp",semuaHp);
+  wadah.innerHTML='<div class="promo__rel">'+items.map((x,i)=>'<a class="promo__slide'+(i===0?' is-on':'')+'" data-id="'+e(x.id)+'" href="'+e(x.link)+'"'
+      +(x.tab_baru!==false?' target="_blank" rel="noopener"':'')+' aria-label="'+e((x.alt||"Promosi")+(x.tab_baru!==false?" (membuka tab baru)":""))+'"'+(i?' tabindex="-1"':'')+'>'
+      +'<picture>'+(x.gambar_hp?'<source media="(max-width:640px)" srcset="'+e(x.gambar_hp)+'">':'')
+      +'<img src="'+e(x.gambar)+'" alt="'+e(x.alt||"")+'" width="1600" height="500" '+(i?'loading="lazy" ':'')+'decoding="async"></picture>'
+      +(x.label?'<span class="promo__label">'+e(x.label)+'</span>':'')+'</a>').join("")+'</div>'
+    +(items.length>1?'<button class="promo__nav promo__nav--kiri" type="button" aria-label="Banner sebelumnya">‹</button><button class="promo__nav promo__nav--kanan" type="button" aria-label="Banner berikutnya">›</button>'
+      +'<div class="promo__titik" role="tablist">'+items.map((x,i)=>'<button type="button" role="tab" aria-label="Banner '+(i+1)+'"'+(i===0?' aria-selected="true"':'')+'></button>').join("")+'</div>':'');
+  wadah.hidden=false;
+  let slides=[...wadah.querySelectorAll(".promo__slide")], idx=0, jam=null, jeda=false;
+  const kurangi=matchMedia("(prefers-reduced-motion: reduce)").matches, lama=Math.max(3,Number(data.interval)||6)*1000;
+  const titik=()=>[...wadah.querySelectorAll(".promo__titik button")];
+  function ke(n){
+    if(!slides.length) return;
+    idx=(n+slides.length)%slides.length;
+    slides.forEach((s,i)=>{ s.classList.toggle("is-on",i===idx); s.tabIndex=i===idx?0:-1; });
+    titik().forEach((t,i)=>t.setAttribute("aria-selected",String(i===idx)));
+  }
+  function mulai(){ berhenti(); if(!kurangi&&slides.length>1) jam=setInterval(()=>{ if(!jeda&&!document.hidden) ke(idx+1); },lama); }
+  function berhenti(){ if(jam) clearInterval(jam); jam=null; }
+  // gambar rusak → slide dibuang; semua rusak → banner disembunyikan
+  slides.forEach(s=>{ const img=s.querySelector("img"); img.addEventListener("error",()=>{
+    const i=slides.indexOf(s); s.remove(); slides=slides.filter(x=>x!==s);
+    const t=titik()[i]; if(t) t.remove();
+    if(!slides.length){ wadah.hidden=true; berhenti(); return; }
+    if(slides.length<2) wadah.querySelectorAll(".promo__nav,.promo__titik").forEach(x=>x.remove());
+    ke(Math.min(idx,slides.length-1)); }); });
+  wadah.querySelectorAll(".promo__titik button").forEach((t,i)=>t.addEventListener("click",()=>{ ke(i); mulai(); }));
+  const kiri=wadah.querySelector(".promo__nav--kiri"), kanan=wadah.querySelector(".promo__nav--kanan");
+  if(kiri) kiri.addEventListener("click",()=>{ ke(idx-1); mulai(); });
+  if(kanan) kanan.addEventListener("click",()=>{ ke(idx+1); mulai(); });
+  wadah.addEventListener("mouseenter",()=>jeda=true); wadah.addEventListener("mouseleave",()=>jeda=false);
+  wadah.addEventListener("focusin",()=>jeda=true); wadah.addEventListener("focusout",()=>jeda=false);
+  // geser dengan jari
+  let x0=null, geser=false;
+  wadah.addEventListener("touchstart",ev=>{ x0=ev.touches[0].clientX; geser=false; jeda=true; },{passive:true});
+  wadah.addEventListener("touchmove",ev=>{ if(x0!==null&&Math.abs(ev.touches[0].clientX-x0)>12) geser=true; },{passive:true});
+  wadah.addEventListener("touchend",ev=>{ if(x0!==null&&geser){ const dx=ev.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ ke(idx+(dx<0?1:-1)); mulai(); } } x0=null; setTimeout(()=>jeda=false,2500); });
+  slides.forEach(s=>s.addEventListener("click",ev=>{
+    if(geser){ ev.preventDefault(); geser=false; return; }
+    if(apiUrl){ const body=JSON.stringify({aksi:"klikBanner",id:s.dataset.id});
+      try{ navigator.sendBeacon ? navigator.sendBeacon(apiUrl,new Blob([body],{type:"text/plain;charset=utf-8"})) : fetch(apiUrl,{method:"POST",body,keepalive:true}); }catch(x){} }
+  }));
+  mulai();
+}
+
+function renderBanner(b){ pasangPromo($("#promo"),b,API_URL); }
 
 /* angka pencapaian — hanya angka > 0 yang ditampilkan */
 function renderStatistik(list){
@@ -1709,6 +1800,7 @@ window.addEventListener("focus",()=>{ const kw=$("#fSearch").value.trim(); if(kw
 
 window.addEventListener("load",()=>{ $(".hero").classList.add("is-ready"); hitungNaik(); });
 Gerbang.mulai(); firstState(); amatiReveal(); muatKonfigurasi();
+if("serviceWorker" in navigator && location.protocol==="https:") window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 if(!API_URL) toast("Mode demo","Coba cari: ahmad fauzan pratama","info",6000);
 </script>
 </body>

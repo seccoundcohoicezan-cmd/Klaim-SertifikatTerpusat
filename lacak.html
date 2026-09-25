@@ -18,6 +18,7 @@
 <link rel="icon" href="/favicon.ico?v=3" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=1">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://challenges.cloudflare.com">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <link rel="preconnect" href="https://script.google.com">
@@ -25,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=1">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=2">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -157,9 +158,10 @@
     <div class="gerbang__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
     <h2 id="gerbangJudul">Verifikasi keamanan</h2>
     <p>Sebentar, kami memastikan kamu bukan robot untuk melindungi data pengajuan peserta.</p>
-    <div class="gerbang__widget" id="tsWidget"></div>
+    <div class="gerbang__widget" id="tsWidget"><div class="gerbang__muat">Menyiapkan verifikasi…</div></div>
     <div class="gerbang__status" id="gerbangStatus" aria-live="polite">Memuat verifikasi…</div>
     <button class="btn btn-outline gerbang__ulang" id="gerbangUlang" type="button" hidden>Coba lagi</button>
+    <p class="gerbang__aman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Cukup sekali setiap 60 menit · dilindungi Cloudflare</p>
   </div>
 </div>
 
@@ -236,6 +238,8 @@
   </div>
 </section>
 
+<div class="wrap"><div class="promo" id="promo" hidden></div></div>
+
 <!-- ============================ HASIL ============================ -->
 <section class="hasil" id="hasil" hidden>
   <div class="wrap" id="hasilIsi"></div>
@@ -252,7 +256,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=1"></script>
+<script src="/assets/skala-turunan.js?v=2"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
