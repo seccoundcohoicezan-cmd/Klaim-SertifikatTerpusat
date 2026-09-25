@@ -36,6 +36,10 @@
 @keyframes goyang{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 .catatan{display:flex;gap:8px;align-items:flex-start;margin-top:14px;font-size:13.5px;color:var(--text-3)}
 .catatan .ico{color:var(--navy-500);margin-top:3px}
+.catatan--aman{padding:10px 12px;border-radius:12px;background:#F4F7FC;border:1px solid var(--border)}
+.catatan--aman.is-ok{background:#E9F7EF;border-color:#BEE7D0}
+.catatan--aman.is-ok .ico{color:var(--ok-fg)}
+.catatan--aman b{color:var(--navy-900)}
 .galat{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--red-50);border:1px solid #F6C9CB;color:#8A1C1C;font-size:14.5px;font-weight:600;animation:masuk .3s}
 .galat .ico{margin-top:3px;font-size:17px}
 .btn .putar{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .8s linear infinite}
@@ -213,6 +217,7 @@
         <button class="btn btn-primary" id="tombolLacak" type="submit"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Lacak Status</button>
       </form>
       <div id="galat" hidden></div>
+      <p class="catatan catatan--aman" id="infoAman" hidden><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"></span></p>
       <p class="catatan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
         <span>Nomor Pengajuan (diawali <b>PGJ-</b>) ada di bukti pengajuan, email otomatis, dan pesan WhatsApp saat kamu mengajukan. Boleh diketik angkanya saja.</span></p>
     </div>
@@ -361,6 +366,15 @@
   try{ kode.value=(q||sessionStorage.getItem("skala_lacak_kode")||"").toUpperCase().replace(/[^A-Z0-9-]/g,""); }catch(e){}
   if(kode.value) wa4.focus();
 
+  function infoAman(){
+    const el=$("#infoAman"); if(!el||!Gerbang.captchaAktif()){ if(el) el.hidden=true; return; }
+    const sudah=!!Gerbang.tiket(); el.classList.toggle("is-ok",sudah);
+    $("#infoAmanTeks").innerHTML=sudah?"<b>Kamu sudah terverifikasi.</b> Bisa langsung melacak tanpa verifikasi ulang selama 60 menit."
+      :"<b>Pelacakan dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat menekan <b>Lacak Status</b>, lalu berlaku 60 menit.";
+    el.hidden=false;
+  }
+  SKALA.padaKonfigurasi(infoAman);
+  SKALA.padaVerifikasi(infoAman);
   SKALA.mulai({captcha:true});
 })();
 </script>

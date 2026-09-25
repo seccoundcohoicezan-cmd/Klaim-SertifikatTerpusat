@@ -299,8 +299,16 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .cari-tips{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-2);line-height:1.45}
 .cari-tips > .ico{flex:none;color:var(--navy-500)}
 .cari-tips b{color:var(--navy-900)}
-.cari-tips__btn{flex:none;margin-left:auto;border:1px solid var(--border-2);background:#fff;color:var(--navy-500);font-weight:700;font-size:12.5px;padding:5px 11px;border-radius:var(--pill)}
-.cari-tips__btn[aria-expanded="true"]{background:var(--navy-100);border-color:var(--navy-500)}
+.cari-tips__btn{flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1.5px solid #C4D7F3;background:var(--navy-100);color:var(--navy-800);font-weight:700;font-size:13px;padding:7px 12px;border-radius:var(--pill);cursor:pointer;transition:background .2s,border-color .2s}
+.cari-tips__btn:hover{border-color:var(--navy-500)}
+.cari-tips__btn[aria-expanded="true"]{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.cari-tips__panah{transition:transform .25s}
+.cari-tips__btn[aria-expanded="true"] .cari-tips__panah{transform:rotate(180deg)}
+.cari-aman{grid-column:1/-1;display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.5;background:#F4F7FC;border:1px solid var(--border);color:var(--text-2)}
+.cari-aman .ico{flex:none;margin-top:2px;font-size:16px;color:var(--navy-500)}
+.cari-aman b{color:var(--navy-900)}
+.cari-aman.is-ok{background:#E9F7EF;border-color:#BEE7D0}
+.cari-aman.is-ok .ico{color:var(--ok-fg)}
 .cari-contoh{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;animation:masuk .25s ease}
 .cari-contoh span{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:var(--pill)}
 .cari-contoh__catatan{flex-basis:100%;font-size:12px;color:var(--text-3);margin-top:2px}
@@ -639,7 +647,11 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .searchcard .btn{width:100%}
   .searchcard--utama{padding:18px;border-radius:20px;gap:12px}
   .searchcard--utama .hint{display:none}
-  .cari-tips{font-size:13px}
+  .cari-tips{font-size:13px;flex-wrap:wrap;align-items:flex-start}
+  .cari-tips > .ico{margin-top:3px}
+  .cari-tips > span{flex:1 1 calc(100% - 30px);min-width:0}
+  .cari-tips__btn{margin-left:24px}
+  .cari-aman{font-size:12.5px;padding:9px 11px}
   .cari-hasil .state-box{padding:18px 14px}
   .cari-hasil .state-box .state-ico{display:none}
   .cari-hasil .state-box h3{font-size:15.5px}
@@ -842,8 +854,9 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     <div class="cari-tips">
       <svg class="ico"><use href="#i-info"/></svg>
       <span>Tulis <b>nama lengkap</b> atau <b>kode BEA-…</b> sesuai sertifikat.</span>
-      <button type="button" class="cari-tips__btn" id="tipsBtn" aria-expanded="false" aria-controls="cariContoh">Contoh</button>
+      <button type="button" class="cari-tips__btn" id="tipsBtn" aria-expanded="false" aria-controls="cariContoh"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg><span id="tipsLabel">Lihat contoh penulisan</span><svg class="ico cari-tips__panah" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     </div>
+    <p class="cari-aman" id="infoAman" hidden><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"></span></p>
     <div class="cari-contoh" id="cariContoh" hidden>
       <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>rina maharani putri</span>
       <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>BEA-2026-0123</span>
@@ -1125,7 +1138,7 @@ const Gerbang = (()=>{
   let siteKey="", widgetId=null, aktif=null, menunggu=null;
   const status=(t,err)=>{ const s=$("#gerbangStatus"); s.textContent=t||""; s.classList.toggle("err",!!err); $("#gerbangUlang").hidden=!err; };
   const tiket=()=>{ try{ const x=JSON.parse(sessionStorage.getItem(KUNCI)||"null"); if(x&&x.exp>Date.now()+60000) return x.t; }catch(e){} return ""; };
-  const simpan=(t,menit)=>{ try{ sessionStorage.setItem(KUNCI,JSON.stringify({t:t,exp:Date.now()+(menit||60)*60000})); }catch(e){} };
+  const simpan=(t,menit)=>{ try{ sessionStorage.setItem(KUNCI,JSON.stringify({t:t,exp:Date.now()+(menit||60)*60000})); }catch(e){} setTimeout(infoAman,0); };
   const tutup=()=>{ el().classList.add("is-selesai"); document.body.classList.remove("gerbang-buka");
                     if(menunggu){ const f=menunggu; menunggu=null; f(); } };
   const buka=()=>{ el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
@@ -1164,6 +1177,7 @@ const Gerbang = (()=>{
     mulai(){ const b=$("#gerbangBatal"); if(b) b.addEventListener("click",()=>{ menunggu=null; tutup(); toast("Verifikasi dibatalkan","Pencarian butuh verifikasi keamanan sekali saja.","warn"); }); },
     /* perlu verifikasi sebelum aksi yang dilindungi (cari / kirim)? */
     perlu(){ return !!(API_URL && aktif && siteKey && !tiket()); },
+    captchaAktif(){ return !!(API_URL && aktif); },
     /* dipanggil setiap konfigurasi dari server/cache diterapkan */
     konfigurasi(c){
       if(!c) return; aktif=!!c.aktif; siteKey=c.site_key||"";
@@ -1668,6 +1682,7 @@ function terapkanKonfigurasi(cfg){
   if(typeof cfg.email_wajib_com==="boolean") S.emailWajibCom=cfg.email_wajib_com;
   if(Number(cfg.batas_tanggal_periode)>0) S.batasPeriode=Number(cfg.batas_tanggal_periode);
   if(cfg.captcha) Gerbang.konfigurasi(cfg.captcha);
+  infoAman();
   if(cfg.sistem) Maint.terapkan(cfg.sistem);
   if("banner" in cfg) renderBanner(cfg.banner);
   if(cfg.mode_uji && !$(".pita-uji")) document.body.insertAdjacentHTML("beforeend",'<div class="pita-uji" role="status">🧪 LINGKUNGAN UJI</div>');
@@ -1807,7 +1822,18 @@ try{ if(sessionStorage.getItem("fabTutup")) $("#fab").remove(); }catch(e){}
 
 /* ============================================================ BINDING */
 $("#fSearchBtn").addEventListener("click",()=>{ cari($("#fSearch").value.trim()); });
-$("#tipsBtn").addEventListener("click",()=>{ const b=$("#tipsBtn"), c=$("#cariContoh"), buka=c.hidden; c.hidden=!buka; b.setAttribute("aria-expanded",String(buka)); b.textContent=buka?"Tutup":"Contoh"; });
+/* info perlindungan pencarian: sebelum & sesudah verifikasi */
+function infoAman(){
+  const el=$("#infoAman"); if(!el) return;
+  if(!Gerbang.captchaAktif()){ el.hidden=true; return; }
+  const sudah=!!Gerbang.tiket();
+  el.classList.toggle("is-ok",sudah);
+  $("#infoAmanTeks").innerHTML=sudah
+    ? "<b>Kamu sudah terverifikasi.</b> Bisa langsung mencari tanpa verifikasi ulang selama 60 menit."
+    : "<b>Pencarian dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat pertama menekan <b>Cari</b>, lalu berlaku 60 menit.";
+  el.hidden=false;
+}
+$("#tipsBtn").addEventListener("click",()=>{ const b=$("#tipsBtn"), c=$("#cariContoh"), buka=c.hidden; c.hidden=!buka; b.setAttribute("aria-expanded",String(buka)); $("#tipsLabel").textContent=buka?"Tutup contoh":"Lihat contoh penulisan"; });
 $("#fSearch").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#fSearchBtn").click(); $("#fSearch").blur(); } });
 $("#fRefresh").addEventListener("click",async ()=>{
   const kw=$("#fSearch").value.trim();
