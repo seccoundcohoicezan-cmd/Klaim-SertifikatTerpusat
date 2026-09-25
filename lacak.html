@@ -24,7 +24,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=5">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=6">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -117,6 +117,17 @@
 .tindakan b{font-size:16.5px;color:var(--navy-900)}
 .tindakan p{margin-top:3px;font-size:15px;color:var(--text-2)}
 .tindakan .btn{flex:none}
+.kartu-nim{margin-top:14px;padding:18px 20px;border-radius:16px;border:1.5px dashed #C4D7F3;background:#fff}
+.kartu-nim h3{font-size:16.5px;color:var(--navy-900)}
+.kartu-nim p{margin-top:4px;font-size:14.5px;color:var(--text-2)}
+.kartu-nim__baris{display:flex;gap:10px;margin-top:12px}
+.kartu-nim__baris .input{flex:1;min-width:0;height:52px;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.kartu-nim__baris .btn{flex:none}
+.kartu-nim__alt{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:10px;font-size:13.5px;color:var(--text-3)}
+.kartu-nim__alt a,.kartu-nim__alt button{color:var(--navy-500);background:none;border:0;padding:0;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+.kartu-nim__galat{margin-top:8px;font-size:13.5px;color:var(--red-700);font-weight:600}
+.kartu-nim--tunggu{border-style:solid;border-color:#F4DEAD;background:#FFF8E1}
+.kartu-nim .catatan-tolak{margin-top:8px;padding:8px 12px;border-radius:10px;background:#FDECEC;color:#9B1C1C;font-size:13.5px}
 
 .rangka{border-radius:24px;border:1px solid var(--border);background:#fff;padding:26px}
 .kilat{position:relative;overflow:hidden;background:#EEF2F8;border-radius:12px}
@@ -149,6 +160,8 @@
   .detail__ikon{width:38px;height:38px;font-size:19px}
   .tindakan{flex-wrap:wrap}
   .tindakan .btn{width:100%}
+  .kartu-nim__baris{flex-direction:column}
+  .kartu-nim__baris .btn{width:100%}
 }
 </style>
 </head>
@@ -261,7 +274,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=5"></script>
+<script src="/assets/skala-turunan.js?v=6"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
@@ -294,9 +307,11 @@
   function rangka(){ hasil.hidden=false; isi.innerHTML='<div class="rangka"><div class="kilat" style="height:18px;width:140px"></div><div class="kilat" style="height:28px;width:60%;margin-top:14px"></div>'
       +'<div class="kilat" style="height:80px;margin-top:18px"></div><div class="kilat" style="height:96px;margin-top:18px"></div><div class="kilat" style="height:70px;margin-top:18px"></div></div>'; }
 
+  let terakhir={k:"",w:""};
   async function lacak(){
     galat.hidden=true;
     const k=kode.value.trim(), w=wa4.value.trim(); let salah=false;
+    terakhir={k,w};
     const kunci=k.replace(/[^A-Z0-9]/g,""), nomorOk=/^(PGJ)?\d{6,}$/.test(kunci);
     if(!nomorOk){ $("#fKode").classList.add("salah"); salah=true; }
     if(!/^\d{4}$/.test(w)){ $("#fWa").classList.add("salah"); salah=true; }
@@ -346,6 +361,7 @@
         +(d.terakhir_diperbarui?'<div class="diperbarui">'+IK.jam+'<span>Terakhir diperbarui <b>'+esc(d.terakhir_diperbarui)+'</b></span></div>':'')
       +'</div></div>'
       +'<div class="tindakan'+(st==="ditolak"||ti.pmb?" merah":"")+'"><span class="tindakan__ikon">'+IK.info+'</span><div><b>Yang Perlu Kamu Lakukan</b><p>'+esc(ti.teks||"")+'</p></div>'+aksi+'</div>'
+      +kartuNim(d)
       +'</div>';
     requestAnimationFrame(()=>requestAnimationFrame(()=>$("#tahap").classList.add("tampil")));
     // garis tahapan terisi bertahap
@@ -353,6 +369,52 @@
     $("#kembali").addEventListener("click",()=>{ hasil.hidden=true; wa4.value=""; kode.focus(); window.scrollTo({top:0,behavior:kurangiGerak?"auto":"smooth"}); });
     document.querySelectorAll("[data-salin]").forEach(b=>b.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(b.dataset.salin); toast("Disalin",b.dataset.salin,"ok",2000); }catch(e){} }));
     if(st==="aktif") konfeti();
+    pasangKartuNim(d);
+  }
+
+  /* ---------- peserta melengkapi NIM sendiri (diverifikasi admin di sheet VERIFIKASI_NIM) ---------- */
+  function pesanWaNim(d){ return "Halo Admin Beasiswa SKALA, saya ingin melengkapi NIM untuk pengajuan "+d.id_pengajuan+" atas nama "+d.nama+". NIM saya: "; }
+  function formNim(d,tersembunyi){
+    return '<form class="kartu-nim__form" id="formNim"'+(tersembunyi?' hidden':'')+' novalidate>'
+      +'<div class="kartu-nim__baris"><input class="input" id="nimBaru" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Contoh: 2026010123" aria-label="NIM">'
+      +'<button class="btn btn-primary" type="submit" id="kirimNim">Kirim NIM</button></div>'
+      +'<div class="kartu-nim__galat" id="galatNim" hidden></div>'
+      +'<div class="kartu-nim__alt"><span>Angka saja, 8–12 digit · sisa '+Number(d.nim_sisa||0)+' kali kirim</span>'
+      +'<a href="'+esc(waLink(pesanWaNim(d)))+'" target="_blank" rel="noopener">atau kirim lewat WhatsApp</a></div></form>';
+  }
+  function kartuNim(d){
+    if(d.nim_menunggu){
+      return '<div class="kartu-nim kartu-nim--tunggu"><h3>⏳ NIM sedang diverifikasi admin</h3>'
+        +'<p>NIM <b>'+esc(d.nim_menunggu.nim)+'</b> terkirim'+(d.nim_menunggu.waktu?' pada '+esc(d.nim_menunggu.waktu):'')+'. Setelah disetujui admin, tanda PMB di halaman ini hilang dan pengajuanmu bisa diterima — cek lagi halaman ini nanti.</p>'
+        +(d.nim_form?'<div class="kartu-nim__alt"><button type="button" id="ubahNim">Salah ketik? Kirim ulang NIM</button></div>'+formNim(d,true):'')+'</div>';
+    }
+    if(!d.nim_form) return "";
+    return '<div class="kartu-nim"><h3>🎓 Sudah daftar PMB? Lengkapi NIM-mu</h3>'
+      +'<p>Masukkan NIM dari akun PMB-mu. Admin memverifikasinya, lalu pengajuanmu bisa diterima.</p>'
+      +(d.nim_ditolak?'<div class="catatan-tolak">NIM <b>'+esc(d.nim_ditolak.nim)+'</b> sebelumnya ditolak'+(d.nim_ditolak.catatan?': '+esc(d.nim_ditolak.catatan):'')+'. Periksa lagi lalu kirim ulang.</div>':'')
+      +formNim(d,false)+'</div>';
+  }
+  function pasangKartuNim(d){
+    const ubah=$("#ubahNim"); if(ubah) ubah.addEventListener("click",()=>{ $("#formNim").hidden=false; ubah.hidden=true; $("#nimBaru").focus(); });
+    const f=$("#formNim"); if(!f) return;
+    const inp=$("#nimBaru"), gal=$("#galatNim"), tb=$("#kirimNim");
+    inp.addEventListener("input",()=>{ inp.value=inp.value.replace(/\D/g,"").slice(0,12); gal.hidden=true; });
+    async function kirim(){
+      const nim=inp.value.trim();
+      if(!/^\d{8,12}$/.test(nim)){ gal.textContent="NIM harus berupa angka 8–12 digit."; gal.hidden=false; inp.focus(); return; }
+      if(Gerbang.perlu()){ Gerbang.ulangi(kirim); return; }
+      tb.disabled=true; tb.textContent="Mengirim…";
+      let r;
+      try{ const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({aksi:"kirimNim",id:d.id_pengajuan,wa4:terakhir.w,nim,sesi:Gerbang.tiket()})}); r=await res.json(); }
+      catch(e){ r={success:false,error:"Tidak dapat menghubungi server. Coba lagi."}; }
+      tb.disabled=false; tb.textContent="Kirim NIM";
+      if(r&&r.perlu_verifikasi){ Gerbang.ulangi(kirim); return; }
+      SKALA.catat("kirim_nim",{hasil:r&&r.success?"berhasil":"gagal"});
+      if(!r||!r.success){ gal.textContent=(r&&r.error)||"Gagal mengirim NIM."; gal.hidden=false; return; }
+      toast("NIM terkirim ✓",r.pesan||"Admin akan memverifikasinya.","ok",4500);
+      lacak();
+    }
+    f.addEventListener("submit",e=>{ e.preventDefault(); kirim(); });
   }
 
   function konfeti(){
