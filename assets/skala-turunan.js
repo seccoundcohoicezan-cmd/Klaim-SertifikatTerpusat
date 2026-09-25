@@ -62,8 +62,11 @@
 
   /* ---------------- verifikasi keamanan (Cloudflare Turnstile) ---------------- */
   const Gerbang = (() => {
+    let skripDimuat = false;
+    const muatSkrip = () => { if (skripDimuat || window.turnstile) return; skripDimuat = true;
+      const sc = document.createElement("script"); sc.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; sc.async = true; document.head.appendChild(sc); };
     const KUNCI = "skala_sesi_v1", el = () => $("#gerbang");
-    let siteKey = "", widgetId = null, menunggu = null;
+    let siteKey = "", widgetId = null, menunggu = null, aktif = false;
     const status = (t, err) => { const s = $("#gerbangStatus"); if (!s) return; s.textContent = t || ""; s.classList.toggle("err", !!err); $("#gerbangUlang").hidden = !err; };
     const tiket = () => { try { const x = JSON.parse(sessionStorage.getItem(KUNCI) || "null"); if (x && x.exp > Date.now() + 60000) return x.t; } catch (e) {} return ""; };
     const simpan = (t, m) => { try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} };
@@ -97,9 +100,12 @@
     }
     return {
       tiket,
-      mulai() { if (!el()) return; if (!tiket()) buka(); $("#gerbangUlang").addEventListener("click", () => { if (!window.turnstile) location.reload(); else { status("Memuat verifikasi…"); pasang(); } }); },
-      konfigurasi(c) { if (!el() || !c) return; siteKey = c.site_key || ""; if (!c.aktif) { tutup(); return; } if (!tiket()) { buka(); pasang(); } },
-      ulangi(aksi) { try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; buka(); pasang(); },
+      /* halaman TIDAK digerbang saat dibuka; verifikasi hanya sebelum aksi yang dilindungi */
+      mulai() { if (!el()) return; $("#gerbangUlang").addEventListener("click", () => { if (!window.turnstile) location.reload(); else { status("Memuat verifikasi…"); pasang(); } });
+        const b = $("#gerbangBatal"); if (b) b.addEventListener("click", () => { menunggu = null; tutup(); }); },
+      konfigurasi(c) { if (!el() || !c) return; siteKey = c.site_key || ""; aktif = !!c.aktif; if (!aktif) { tutup(); return; } if (!el().classList.contains("is-selesai")) pasang(); },
+      perlu() { return !!(el() && aktif && siteKey && !tiket()); },
+      ulangi(aksi) { try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
       gagalMuat() { if (el() && !siteKey && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.", true); }
     };
   })();
