@@ -3,7 +3,7 @@
    • File /assets/: tampil dari simpanan, diperbarui diam-diam di belakang.
    • Permintaan ke domain lain (Apps Script, Cloudflare, Google Fonts) TIDAK disentuh.
    Naikkan VERSI setiap kali mengganti daftar ASET. */
-const VERSI = "skala-v17";
+const VERSI = "skala-v18";
 const ASET = ["/assets/logo-stekom-bulat.png?v=1", "/assets/skala-turunan.css?v=13", "/assets/skala-turunan.js?v=12",
               "/assets/gedung-960.webp?v=2", "/assets/icon-192.png"];
 const OFFLINE = '<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
@@ -23,6 +23,8 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== "GET" || u.origin !== location.origin) return;
+  // unduhan (PDF) & permintaan potongan (Range, dipakai pengelola unduhan Chrome HP) tidak ditangani service worker
+  if (u.pathname.endsWith(".pdf") || r.headers.has("range")) return;
   if (r.mode === "navigate") {
     e.respondWith(fetch(r).then(res => {
       const salin = res.clone(); caches.open(VERSI).then(c => c.put(r, salin)).catch(() => {});
@@ -33,7 +35,7 @@ self.addEventListener("fetch", e => {
   }
   if (u.pathname.startsWith("/assets/")) {
     e.respondWith(caches.open(VERSI).then(c => c.match(r).then(m => {
-      const baru = fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res; }).catch(() => m);
+      const baru = fetch(r).then(res => { if (res.status === 200) c.put(r, res.clone()).catch(() => {}); return res; }).catch(() => m);
       return m || baru;
     })));
   }
