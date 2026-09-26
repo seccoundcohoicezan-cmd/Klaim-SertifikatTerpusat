@@ -24,7 +24,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=8">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=10">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -118,7 +118,13 @@
 .tindakan p{margin-top:3px;font-size:15px;color:var(--text-2)}
 .tindakan .btn{flex:none}
 .kartu-nim{margin-top:14px;padding:18px 20px;border-radius:16px;border:1.5px dashed #C4D7F3;background:#fff}
-.kartu-nim h3{font-size:16.5px;color:var(--navy-900)}
+.kartu-nim__kepala{display:flex;align-items:center;gap:10px}
+.kartu-nim__ikon{flex:none;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--navy-100);color:var(--navy-800);font-size:18px}
+.kartu-nim--tunggu .kartu-nim__ikon{background:#FDEBC2;color:#8A5200}
+.kartu-nim--ok{border-style:solid;border-color:#BEE7D0;background:#EDF8F1}
+.kartu-nim--ok .kartu-nim__ikon{background:#CDEFD9;color:#0B6B3D}
+.kartu-nim h3{font-size:16px;line-height:1.35;color:var(--navy-900)}
+.kartu-nim__alt a{display:inline-flex;align-items:center;gap:6px}
 .kartu-nim p{margin-top:4px;font-size:14.5px;color:var(--text-2)}
 .kartu-nim__baris{display:flex;gap:10px;margin-top:12px}
 .kartu-nim__baris .input{flex:1;min-width:0;height:52px;letter-spacing:.06em;font-variant-numeric:tabular-nums}
@@ -156,11 +162,26 @@
   .tahap li::before,.tahap li::after{left:19px;right:auto;top:44px;width:3px;height:calc(100% - 44px)}
   .tahap li::after{width:3px;height:calc(100% - 44px);transform:scaleY(0);transform-origin:center top;transition:transform .7s ease var(--tunda,0s)}
   .tahap li.selesai::after{transform:scaleY(1)}
-  .detail{gap:12px;padding:16px}
-  .detail__ikon{width:38px;height:38px;font-size:19px}
-  .tindakan{flex-wrap:wrap}
-  .tindakan .btn{width:100%}
-  .kartu-nim__baris{flex-direction:column}
+  .kartu-hasil h2{font-size:20px;margin:6px 0 12px}
+  .info-grid > div{padding:11px 14px}
+  .info-grid small{font-size:12px}
+  .info-grid b{font-size:15px}
+  .status-kartu{padding:16px;gap:12px}
+  .status-kartu p{font-size:13.5px;line-height:1.55}
+  .detail,.tindakan{display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:10px;row-gap:6px;align-items:center;padding:14px}
+  .detail > div,.tindakan > div{display:contents}
+  .detail > div > *,.tindakan > div > *,.tindakan > .btn{grid-column:1/-1}
+  .detail > div > b,.tindakan > div > b{grid-column:2;font-size:15.5px;line-height:1.35}
+  .detail__ikon,.tindakan__ikon{width:34px;height:34px;border-radius:10px;font-size:17px}
+  .detail p,.tindakan p{margin-top:2px;font-size:14px;line-height:1.6}
+  .tindakan .btn{width:100%;margin-top:6px}
+  .kartu-nim{padding:14px}
+  .kartu-nim__ikon{width:34px;height:34px;border-radius:10px;font-size:17px}
+  .kartu-nim h3{font-size:15.5px}
+  .kartu-nim p{font-size:14px;line-height:1.6}
+  .kartu-nim__alt{font-size:13px;flex-direction:column;align-items:flex-start;gap:6px}
+  .kartu-nim__baris{flex-direction:column;gap:8px}
+  .kartu-nim__baris .input{flex:none;width:100%;height:50px}
   .kartu-nim__baris .btn{width:100%}
 }
 </style>
@@ -218,7 +239,7 @@
   <div class="wrap lacak-grid">
     <div>
       <span class="kicker">LACAK PENGAJUAN SERTIFIKAT</span>
-      <h1>Cek sampai mana proses sertifikatmu secara mudah dan cepat.</h1>
+      <h1>Cek sampai mana proses pengajuan beasiswamu dengan mudah dan cepat.</h1>
       <p class="lead">Masukkan Nomor Pengajuan dan 4 digit terakhir nomor WhatsApp yang kamu pakai saat mengajukan.</p>
 
       <form class="formulir" id="formLacak" novalidate>
@@ -274,10 +295,16 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=8"></script>
+<script src="/assets/skala-turunan.js?v=10"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
+  const IKN={
+    topi:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>',
+    jam:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    cek:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.7 2.7L16 9.8"/></svg>',
+    wa:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.3L3 20l1.3-5.3A8.4 8.4 0 1 1 21 11.5z"/></svg>'
+  };
   const IK={
     cek:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
     jam:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
@@ -379,17 +406,24 @@
       +'<div class="kartu-nim__baris"><input class="input" id="nimBaru" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Contoh: 2026010123" aria-label="NIM">'
       +'<button class="btn btn-primary" type="submit" id="kirimNim">Kirim NIM</button></div>'
       +'<div class="kartu-nim__galat" id="galatNim" hidden></div>'
-      +'<div class="kartu-nim__alt"><span>Angka saja, 8–12 digit · sisa '+Number(d.nim_sisa||0)+' kali kirim</span>'
-      +'<a href="'+esc(waLink(pesanWaNim(d)))+'" target="_blank" rel="noopener">atau kirim lewat WhatsApp</a></div></form>';
+      +'<div class="kartu-nim__alt"><span>Angka 8–12 digit · sisa '+Number(d.nim_sisa||0)+' kali kirim</span>'
+      +'<a href="'+esc(waLink(pesanWaNim(d)))+'" target="_blank" rel="noopener">'+IKN.wa+'Kirim lewat WhatsApp</a></div></form>';
   }
   function kartuNim(d){
+    if(d.nim_disetujui){
+      const lanjut=d.status==="diterima"
+        ? "Pengajuanmu sudah diterima dan sedang disiapkan untuk diajukan ke SmartCoin."
+        : "Pengajuanmu tinggal menunggu diterima admin beasiswa.";
+      return '<div class="kartu-nim kartu-nim--ok"><div class="kartu-nim__kepala"><span class="kartu-nim__ikon">'+IKN.cek+'</span><h3>NIM terverifikasi</h3></div>'
+        +'<p>NIM <b>'+esc(d.nim_disetujui.nim)+'</b> sudah diverifikasi admin'+(d.nim_disetujui.waktu?' pada '+esc(d.nim_disetujui.waktu):'')+'. '+lanjut+'</p></div>';
+    }
     if(d.nim_menunggu){
-      return '<div class="kartu-nim kartu-nim--tunggu"><h3>⏳ NIM sedang diverifikasi admin</h3>'
+      return '<div class="kartu-nim kartu-nim--tunggu"><div class="kartu-nim__kepala"><span class="kartu-nim__ikon">'+IKN.jam+'</span><h3>NIM sedang diverifikasi admin</h3></div>'
         +'<p>NIM <b>'+esc(d.nim_menunggu.nim)+'</b> terkirim'+(d.nim_menunggu.waktu?' pada '+esc(d.nim_menunggu.waktu):'')+'. Setelah disetujui admin, tanda PMB di halaman ini hilang dan pengajuanmu bisa diterima — cek lagi halaman ini nanti.</p>'
         +(d.nim_form?'<div class="kartu-nim__alt"><button type="button" id="ubahNim">Salah ketik? Kirim ulang NIM</button></div>'+formNim(d,true):'')+'</div>';
     }
     if(!d.nim_form) return "";
-    return '<div class="kartu-nim"><h3>🎓 Sudah daftar PMB? Lengkapi NIM-mu</h3>'
+    return '<div class="kartu-nim"><div class="kartu-nim__kepala"><span class="kartu-nim__ikon">'+IKN.topi+'</span><h3>Sudah daftar PMB? Lengkapi NIM-mu</h3></div>'
       +'<p>Masukkan NIM dari akun PMB-mu. Admin memverifikasinya, lalu pengajuanmu bisa diterima.</p>'
       +(d.nim_ditolak?'<div class="catatan-tolak">NIM <b>'+esc(d.nim_ditolak.nim)+'</b> sebelumnya ditolak'+(d.nim_ditolak.catatan?': '+esc(d.nim_ditolak.catatan):'')+'. Periksa lagi lalu kirim ulang.</div>':'')
       +formNim(d,false)+'</div>';

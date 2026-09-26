@@ -24,7 +24,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=8">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=10">
 <style>
 .tst-grid-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px 40px;align-items:center}
 .ilustrasi{position:relative;justify-self:center;width:min(100%,400px);aspect-ratio:1/0.8}
@@ -104,7 +104,12 @@
   .stat{padding:16px}
   .stat b{font-size:24px}
   .stat__ikon{width:50px;height:50px;font-size:23px}
-  .kisi{grid-template-columns:1fr}
+  .kisi{grid-template-columns:1fr;gap:14px}
+  .tkartu{padding:18px}
+  .tkartu p{font-size:14.5px;line-height:1.6}
+  .tkartu__kutip{font-size:28px}
+  .tkartu__kaki{gap:12px;margin-top:14px;padding-top:12px}
+  .tkartu__tag{font-size:12px}
   .tst-kepala{align-items:flex-start}
   .filter{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;scrollbar-width:none}
   .filter button{flex:none}
@@ -231,7 +236,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=8"></script>
+<script src="/assets/skala-turunan.js?v=10"></script>
 <script>
 (function(){
   const {API_URL,$,$$,esc,hitungNaik,amatiReveal}=SKALA;

@@ -650,7 +650,11 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .stat b{font-size:clamp(19px,5.6vw,23px)}
   .stat span{margin-top:4px;font-size:11.5px;line-height:1.35}
   .hero__actions .btn{flex:1 1 100%}
-  .hero__sub{font-size:15.5px}
+  .hero__sub{font-size:15px;line-height:1.55}
+  .faq__q{font-size:14.5px;padding:15px 16px}
+  .faq__a p{font-size:14px;padding:0 16px 15px;line-height:1.6}
+  .layanan__isi b{font-size:15px}
+  .layanan__isi span{font-size:13px;line-height:1.5}
   .value{padding:14px 14px 14px 58px}
   .value__ico{left:12px;top:14px}
   .searchcard{grid-template-columns:minmax(0,1fr);padding:18px}
@@ -696,7 +700,18 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .cert{min-height:0}
   .steps{grid-template-columns:1fr}
   .form-grid{grid-template-columns:1fr}
-  .footer__grid{grid-template-columns:1fr}
+  .footer{padding:40px 0 calc(92px + env(safe-area-inset-bottom,0px))}   /* ruang untuk tombol melayang PMB */
+  .footer__grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:26px 18px}
+  .footer__grid > div{grid-column:1/-1}
+  .footer__logo{padding:6px 10px}
+  .footer__logo img{height:36px;width:auto}
+  .footer__about{font-size:13.5px;line-height:1.6;margin-top:12px}
+  .footer h4{font-size:12.5px;letter-spacing:.06em;margin-bottom:10px}
+  .footer__info ul{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 16px}
+  .footer__grid li{font-size:13.5px;line-height:1.5}
+  .footer__grid ul li + li{margin-top:0}
+  .footer__grid .contact li{margin-bottom:8px}
+  .footer__bottom{flex-direction:column;align-items:flex-start;gap:6px;margin-top:26px;padding-top:16px;font-size:12.5px}
   .overlay{padding:0;align-items:end}
   .modal,.modal--slim{max-width:none;border-radius:22px 22px 0 0;max-height:92svh;padding-bottom:env(safe-area-inset-bottom,0px)}
   .modal__foot .btn{flex:1}
@@ -806,7 +821,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     <div class="hero__copy">
       <span class="hero__kicker"><span class="dot"></span><b>SKALA</b> Sistem Klaim Beasiswa</span>
       <h1 class="hero__title">Cairkan Sertifikat Beasiswamu Sekarang.</h1>
-      <p class="hero__sub" id="heroSub">Sertifikat beasiswamu dari berbagai macam kegiatan bisa kamu carikan dengan mudah, cukup 3 menit.</p>
+      <p class="hero__sub" id="heroSub">Sertifikat beasiswamu dari berbagai macam kegiatan bersama Universitas STEKOM bisa kamu cairkan dengan mudah, cukup 3 menit.</p>
       <div class="sticker" role="img" aria-label="Beasiswa S1 Rp7.000.000, langsung cair">
         <span class="sticker__top"><svg class="ico"><use href="#i-toga"/></svg>Beasiswa S1</span>
         <span class="sticker__amt"><small>Rp</small><b id="heroCount" data-target="7000000">7.000.000</b></span>
@@ -842,7 +857,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   <div class="layanan">
     <a class="layanan__kartu reveal" href="/lacak.html">
       <span class="layanan__ikon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5"/><path d="M14 3v5h5"/><circle cx="16.5" cy="16.5" r="3.5"/><path d="m21 21-2-2"/></svg></span>
-      <span class="layanan__isi"><b>Cek Progres Pengajuan</b><span>Sudah mengajukan? Lihat sampai mana prosesnya dengan Nomor Pengajuan &amp; 4 digit akhir WhatsApp.</span></span>
+      <span class="layanan__isi"><b>Cek Progres Pengajuan</b><span>Sudah mengajukan? Lihat sampai mana prosesnya dengan Nomor Pengajuan &amp; 4 digit terakhir WhatsApp.</span></span>
       <span class="layanan__panah"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     </a>
     <a class="layanan__kartu layanan__kartu--emas reveal" href="/testimoni.html">
@@ -951,7 +966,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <span class="footer__logo"><img src="assets/logo-stekom.png?v=2" alt="Logo Universitas STEKOM" width="120" height="44" loading="lazy"></span>
         <p class="footer__about"><b style="color:#fff;letter-spacing:.05em">SKALA</b> — Sistem Klaim Beasiswa Universitas Sains dan Teknologi Komputer.</p>
       </div>
-      <div>
+      <div class="footer__info">
         <h4>Informasi</h4>
         <ul>
           <li><a href="#beasiswa">Sertifikat beasiswa</a></li>
@@ -1746,12 +1761,12 @@ $("#unduhBukti").addEventListener("click",async ()=>{
 /* ============================================================ KONFIGURASI DARI APPS SCRIPT */
 const CFG_FALLBACK = {
   plafon:7000000, plafon_format:"Rp7.000.000", plafon_s2:5000000, plafon_s2_format:"Rp5.000.000", wa_admin:"628888999920",
-  teks:{ tagline:"Sertifikat beasiswamu dari berbagai macam kegiatan bisa kamu carikan dengan mudah, cukup 3 menit.",
+  teks:{ tagline:"Sertifikat beasiswamu dari berbagai macam kegiatan bersama Universitas STEKOM bisa kamu cairkan dengan mudah, cukup 3 menit.",
          hint_cari:"Masukkan nama atau kode sertifikat yang pernah kamu dapatkan dari kegiatan bersama Universitas STEKOM." },
   langkah:[
     ["Cari Sertifikat","Ketik nama lengkap persis seperti di sertifikat. Semua sertifikat atas namamu akan tampil."],
     ["Pilih Sendiri","Ketuk kartu seperti checkout online. Sampai Rp7.000.000 masuk S1, kelebihannya dialihkan ke S2."],
-    ["Lengkapi Data","Isi nomor WhatsApp aktif, email & NIM bila ada, lalu centang pernyataan. Pengajuan langsung tersimpan."],
+    ["Lengkapi Data","Isi nomor WhatsApp aktif, email, dan NIM bila sudah punya, lalu centang pernyataan. Pengajuan langsung tersimpan."],
     ["Lanjut ke WhatsApp","Ringkasan diteruskan ke admin lewat WhatsApp untuk verifikasi."]
   ],
   faq:[
