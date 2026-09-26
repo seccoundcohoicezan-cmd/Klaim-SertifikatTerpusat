@@ -305,7 +305,8 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .input.has-icon{padding-left:44px}
 .input:focus{outline:none;border-color:var(--navy-500);box-shadow:0 0 0 4px rgba(42,99,174,.15)}
 .searchcard .btn{height:52px;padding:0 28px}
-.cari-tips{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-2);line-height:1.45}
+.cari-tips{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:14.5px;color:var(--text-2);line-height:1.5}
+.cari-tips > .ico{font-size:16px}
 .cari-tips > .ico{flex:none;color:var(--navy-500)}
 .cari-tips b{color:var(--navy-900)}
 .cari-tips__btn{flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1.5px solid #C4D7F3;background:var(--navy-100);color:var(--navy-800);font-weight:700;font-size:13px;padding:7px 12px;border-radius:var(--pill);cursor:pointer;transition:background .2s,border-color .2s}
@@ -318,11 +319,16 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .cari-aman b{color:var(--navy-900)}
 .cari-aman.is-ok{background:#E9F7EF;border-color:#BEE7D0}
 .cari-aman.is-ok .ico{color:var(--ok-fg)}
-.cari-contoh{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;animation:masuk .25s ease}
-.cari-contoh span{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:var(--pill)}
-.cari-contoh__catatan{flex-basis:100%;font-size:12px;color:var(--text-3);margin-top:2px}
-.cari-contoh .ok{background:#E4F5EB;color:#0B6B3D}
-.cari-contoh .no{background:#FDECEC;color:#9B1C1C;text-decoration:line-through;text-decoration-color:rgba(155,28,28,.35)}
+.cari-contoh{grid-column:1/-1;margin-top:-4px;padding:12px 14px;border-radius:12px;background:var(--bg-soft);border:1px solid var(--border);animation:masuk .25s ease}
+.cari-contoh__baris{display:flex;align-items:baseline;gap:12px;padding:6px 0}
+.cari-contoh__baris + .cari-contoh__baris{border-top:1px dashed var(--border-2)}
+.cari-contoh__label{flex:none;width:62px;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700}
+.cari-contoh__label.ok{color:#0B6B3D}
+.cari-contoh__label.no{color:#9B1C1C}
+.cari-contoh__isi{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;min-width:0}
+.cari-contoh__isi code{font-family:inherit;font-size:13px;font-weight:600;color:var(--navy-900);background:#fff;border:1px solid var(--border);border-radius:7px;padding:2px 8px}
+.cari-contoh__isi small{font-size:12px;color:var(--text-3);margin-left:-3px}
+.cari-contoh__catatan{margin-top:6px;font-size:12px;color:var(--text-3);line-height:1.5}
 .searchrules{grid-column:1/-1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .searchrules__label{font-size:13px;font-weight:700;color:var(--text-3);margin-right:2px}
 .searchrules__chips{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
@@ -661,11 +667,21 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .searchcard .btn{width:100%}
   .searchcard--utama{padding:18px;border-radius:20px;gap:12px}
   .searchcard--utama .hint{display:none}
-  .cari-tips{font-size:13px;flex-wrap:wrap;align-items:flex-start}
+  .cari-tips{font-size:14px;flex-wrap:wrap;align-items:flex-start}
   .cari-tips > .ico{margin-top:3px}
   .cari-tips > span{flex:1 1 calc(100% - 30px);min-width:0}
   .cari-tips__btn{margin-left:24px}
   .cari-aman{font-size:12.5px;padding:9px 11px}
+  .cari-contoh{padding:10px 12px}
+  .cari-contoh__baris{flex-direction:column;align-items:stretch;gap:6px}
+  .cari-contoh__isi{width:100%;gap:6px}
+  .cari-contoh__isi code{font-size:12px;padding:2px 7px}
+  .cari-contoh__isi small{font-size:11.5px}
+  .cari-contoh__baris{padding:5px 0}
+}
+@media (max-width:380px){
+  .cari-contoh .contoh-lebar{display:none}
+  .cari-contoh__label{width:auto}
   .cari-hasil .state-box{padding:18px 14px}
   .cari-hasil .state-box .state-ico{display:none}
   .cari-hasil .state-box h3{font-size:15.5px}
@@ -894,14 +910,14 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
       <span>Tulis <b>nama lengkap</b> atau <b>kode BEA-…</b> sesuai sertifikat.</span>
       <button type="button" class="cari-tips__btn" id="tipsBtn" aria-expanded="false" aria-controls="cariContoh"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg><span id="tipsLabel">Lihat contoh penulisan</span><svg class="ico cari-tips__panah" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
     </div>
-    <p class="cari-aman" id="infoAman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"><b>Pencarian dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat pertama menekan <b>Cari</b>, lalu berlaku 60 menit.</span></p>
     <div class="cari-contoh" id="cariContoh" hidden>
-      <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>rina maharani putri</span>
-      <span class="ok"><svg class="ico"><use href="#i-cek"/></svg>BEA-2026-0123</span>
-      <span class="no"><svg class="ico"><use href="#i-silang"/></svg>rina (sebagian)</span>
-      <span class="no"><svg class="ico"><use href="#i-silang"/></svg>rina maharani putry</span>
-      <small class="cari-contoh__catatan">Huruf besar/kecil dihitung sama · nama sebagian atau salah eja tidak ditampilkan demi privasi.</small>
+      <div class="cari-contoh__baris"><span class="cari-contoh__label ok"><svg class="ico"><use href="#i-cek"/></svg>Benar</span>
+        <span class="cari-contoh__isi"><code>rina maharani putri</code><code class="contoh-lebar">RINA MAHARANI PUTRI</code><code>BEA-2026-0123</code></span></div>
+      <div class="cari-contoh__baris"><span class="cari-contoh__label no"><svg class="ico"><use href="#i-silang"/></svg>Salah</span>
+        <span class="cari-contoh__isi"><code>rina</code><small>nama sebagian</small><code>rina maharani putry</code><small>salah eja</small></span></div>
+      <p class="cari-contoh__catatan">Huruf besar/kecil tidak berpengaruh. Nama sebagian atau salah eja tidak ditampilkan demi privasi.</p>
     </div>
+    <p class="cari-aman" id="infoAman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"><b>Pencarian dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat pertama menekan <b>Cari</b>, lalu berlaku 60 menit.</span></p>
     <div id="results" class="cari-hasil" data-clarity-mask="True"></div>
     </div>
   </div>

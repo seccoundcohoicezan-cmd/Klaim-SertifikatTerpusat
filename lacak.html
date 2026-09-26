@@ -335,7 +335,25 @@
       +'<div class="kilat" style="height:80px;margin-top:18px"></div><div class="kilat" style="height:96px;margin-top:18px"></div><div class="kilat" style="height:70px;margin-top:18px"></div></div>'; }
 
   let terakhir={k:"",w:""};
-  async function lacak(){
+  /* ---------- pantau perubahan tanpa refresh (selama NIM menunggu verifikasi) ---------- */
+  let jamPantau=null, batasPantau=0;
+  function hentikanPantau(){ if(jamPantau){ clearInterval(jamPantau); jamPantau=null; } }
+  function mulaiPantau(d){
+    hentikanPantau();
+    if(!d.nim_menunggu||!d.sidik) return;
+    batasPantau=Date.now()+15*60000;                        // berhenti sendiri setelah 15 menit
+    jamPantau=setInterval(async()=>{
+      if(document.hidden) return;
+      if(Date.now()>batasPantau){ hentikanPantau(); return; }
+      let r; try{ const res=await fetch(API_URL+"?aksi=pantauLacak&kode="+encodeURIComponent(terakhir.k)+"&wa4="+encodeURIComponent(terakhir.w)+"&sesi="+encodeURIComponent(Gerbang.tiket()||"")); r=await res.json(); }catch(e){ return; }
+      if(!r||!r.success){ if(r&&(r.perlu_verifikasi||r.jeda)) hentikanPantau(); return; }
+      if(r.sidik!==d.sidik){ hentikanPantau(); lacak({diam:true}); }
+    },15000);
+  }
+
+  async function lacak(opsi){
+    const diam=!!(opsi&&opsi.diam);
+    hentikanPantau();
     galat.hidden=true;
     const k=kode.value.trim(), w=wa4.value.trim(); let salah=false;
     terakhir={k,w};
@@ -345,7 +363,7 @@
     if(salah){ tampilGalat(!nomorOk && /^BEA/.test(kunci) ? "Itu No. Beasiswa (nomor sertifikat). Gunakan Nomor Pengajuan yang diawali PGJ- dari bukti pengajuanmu."
                        : "Lengkapi Nomor Pengajuan (contoh PGJ-1790154675623) dan tepat 4 digit terakhir WhatsApp."); return; }
     if(Gerbang.perlu()){ Gerbang.ulangi(lacak); return; }
-    sibuk(true); rangka(); hasil.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"});
+    if(!diam){ sibuk(true); rangka(); hasil.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"}); }
     let d;
     try{ const r=await fetch(API_URL+"?aksi=lacak&kode="+encodeURIComponent(k)+"&wa4="+encodeURIComponent(w)+"&sesi="+encodeURIComponent(Gerbang.tiket())); d=await r.json(); }
     catch(e){ d={success:false,error:"Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi."}; }
@@ -355,8 +373,15 @@
     SKALA.catat("lacak",{hasil:"ditemukan",status:d.status});
     try{ sessionStorage.setItem("skala_lacak_kode",k); }catch(e){}
     render(d);
+    if(diam){
+      if(d.nim_disetujui) toast("NIM disetujui ✓","NIM "+d.nim_disetujui.nim+" sudah diverifikasi admin.","ok",6000);
+      else if(d.nim_ditolak) toast("NIM ditolak","Periksa lagi NIM-mu lalu kirim ulang.","warn",6000);
+      else toast("Status diperbarui","Ada perubahan pada pengajuanmu.","ok",4000);
+    }
+    mulaiPantau(d);
   }
   $("#formLacak").addEventListener("submit",e=>{ e.preventDefault(); lacak(); });
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&jamPantau) batasPantau=Math.max(batasPantau,Date.now()+5*60000); });
 
   function render(d){
     const st=d.status;
@@ -419,7 +444,7 @@
     }
     if(d.nim_menunggu){
       return '<div class="kartu-nim kartu-nim--tunggu"><div class="kartu-nim__kepala"><span class="kartu-nim__ikon">'+IKN.jam+'</span><h3>NIM sedang diverifikasi admin</h3></div>'
-        +'<p>NIM <b>'+esc(d.nim_menunggu.nim)+'</b> terkirim'+(d.nim_menunggu.waktu?' pada '+esc(d.nim_menunggu.waktu):'')+'. Setelah disetujui admin, tanda PMB di halaman ini hilang dan pengajuanmu bisa diterima — cek lagi halaman ini nanti.</p>'
+        +'<p>NIM <b>'+esc(d.nim_menunggu.nim)+'</b> terkirim'+(d.nim_menunggu.waktu?' pada '+esc(d.nim_menunggu.waktu):'')+'. Halaman ini diperbarui otomatis begitu admin menyetujui atau menolaknya.</p>'
         +(d.nim_form?'<div class="kartu-nim__alt"><button type="button" id="ubahNim">Salah ketik? Kirim ulang NIM</button></div>'+formNim(d,true):'')+'</div>';
     }
     if(!d.nim_form) return "";
