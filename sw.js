@@ -3,7 +3,7 @@
    • File /assets/: tampil dari simpanan, diperbarui diam-diam di belakang.
    • Permintaan ke domain lain (Apps Script, Cloudflare, Google Fonts) TIDAK disentuh.
    Naikkan VERSI setiap kali mengganti daftar ASET. */
-const VERSI = "skala-v18";
+const VERSI = "skala-v19";
 const ASET = ["/assets/logo-stekom-bulat.png?v=1", "/assets/skala-turunan.css?v=13", "/assets/skala-turunan.js?v=12",
               "/assets/gedung-960.webp?v=2", "/assets/icon-192.png"];
 const OFFLINE = '<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
