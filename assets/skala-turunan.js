@@ -122,7 +122,9 @@
     const simpan = (t, m) => { Analitik.catat("verifikasi_lolos"); try { sessionStorage.setItem(KUNCI, JSON.stringify({ t: t, exp: Date.now() + (m || 60) * 60000 })); } catch (e) {} setTimeout(() => kabar(), 0); };
     const tutup = () => { if (!el()) return; el().classList.add("is-selesai"); document.body.classList.remove("gerbang-buka"); if (menunggu) { const f = menunggu; menunggu = null; f(); } };
     const buka = () => { if (!el()) return; el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
+    let langsung = false, tokenSekali = "";
     async function kirim(token) {
+      if (langsung) { tokenSekali = token; status("Terverifikasi"); setTimeout(tutup, 150); return; }   // token ikut permintaan lacak
       status("Memeriksa…");
       try {
         const res = await fetch(API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ aksi: "verifikasi", token: token }) });
@@ -154,10 +156,12 @@
       mulai() { if (!el()) return; $("#gerbangUlang").addEventListener("click", () => { if (!window.turnstile) location.reload(); else { status("Memuat verifikasi…"); pasang(); } });
         const b = $("#gerbangBatal"); if (b) b.addEventListener("click", () => { menunggu = null; tutup(); }); },
       konfigurasi(c) { if (!el() || !c) return; siteKey = c.site_key || ""; aktif = !!c.aktif; if (!aktif) { tutup(); return; } if (!el().classList.contains("is-selesai")) pasang(); },
-      perlu() { return !!(el() && aktif && siteKey && !tiket()); },
+      perlu() { return !!(el() && aktif && siteKey && !tiket() && !tokenSekali); },
+      ambilToken() { const t = tokenSekali; tokenSekali = ""; return t; },
+      terimaSesi(t, m) { if (t) simpan(t, m); },
       captchaAktif() { return !!(el() && aktif); },
       padaBerubah(f) { kabar = f; },
-      ulangi(aksi) { Analitik.catat("verifikasi_muncul"); try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
+      ulangi(aksi, opsi) { Analitik.catat("verifikasi_muncul"); langsung = !!(opsi && opsi.langsung); tokenSekali = ""; try { sessionStorage.removeItem(KUNCI); } catch (e) {} menunggu = aksi || null; muatSkrip(); buka(); pasang(); },
       gagalMuat() { if (el() && !siteKey && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.", true); }
     };
   })();
@@ -247,10 +251,24 @@
     mulai();
   }
   
+  /* efek mengetik label atas halaman — sekali saat dibuka; "kurangi animasi" = langsung utuh */
+  function ketik(el) {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const teks = el.textContent, lapis = document.createElement("span");
+    lapis.className = "ketik__lapis"; lapis.setAttribute("aria-hidden", "true");
+    el.classList.add("is-mengetik"); el.appendChild(lapis);
+    let i = 0;
+    setTimeout(function langkah() {
+      lapis.textContent = teks.slice(0, ++i);
+      if (i < teks.length) setTimeout(langkah, teks[i - 1] === " " ? 90 : 48 + Math.random() * 30);
+      else { lapis.classList.add("is-selesai"); setTimeout(() => { el.classList.remove("is-mengetik"); lapis.remove(); }, 2400); }
+    }, 450);
+  }
+
   window.SKALA = { catat: Analitik.catat, API_URL, $, $$, esc, rp, toast, waLink, formatWa, hitungNaik, amatiReveal, Gerbang, kurangiGerak,
     padaKonfigurasi: f => pendengar.push(f),
     padaVerifikasi: f => Gerbang.padaBerubah(f),
-    mulai(opsi = {}) { pasangHeader(); if (opsi.captcha) Gerbang.mulai(); amatiReveal(); muatKonfigurasi();
+    mulai(opsi = {}) { pasangHeader(); if (opsi.captcha) Gerbang.mulai(); amatiReveal(); muatKonfigurasi(); document.querySelectorAll("[data-ketik]").forEach(ketik);
       setTimeout(() => { const p = $("#promo"); if (p && p.classList.contains("promo--tunggu")) { p.classList.remove("promo--tunggu"); p.hidden = true; } }, 10000);
       if ("serviceWorker" in navigator && location.protocol === "https:") window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {})); } };
 })();
