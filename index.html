@@ -763,6 +763,12 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .hero__periode .panjang{display:none}
   .hero__periode .pendek{display:inline}
 }
+
+/* "SKALA" emas mengkilap: gradasi emas + kilau menyapu sesekali (hanya warna huruf, tanpa geser tata letak) */
+.emas{background:linear-gradient(100deg,#C8961E 0%,#F2B505 28%,#FFF1B8 44%,#F2B505 58%,#C8961E 100%);background-size:250% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#F2B505;animation:kilauEmas 4.2s ease-in-out 1s infinite}
+@keyframes kilauEmas{0%{background-position:100% 0}35%,100%{background-position:0% 0}}
+@media (prefers-reduced-motion:reduce){.emas{animation:none;background-position:60% 0}}
 </style>
 </head>
 <body>
@@ -842,7 +848,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   </div>
   <div class="wrap hero__inner">
     <div class="hero__copy">
-      <span class="hero__kicker"><b>SKALA</b><span class="hero__pemisah" aria-hidden="true"></span><span class="hero__ketik" id="heroKetik">Sistem Klaim Beasiswa</span></span>
+      <span class="hero__kicker"><b class="emas">SKALA</b><span class="hero__pemisah" aria-hidden="true"></span><span class="hero__ketik" id="heroKetik">Sistem Klaim Beasiswa</span></span>
       <h1 class="hero__title">Cairkan Sertifikat Beasiswamu Sekarang.</h1>
       <p class="hero__sub" id="heroSub">Sertifikat beasiswamu dari berbagai macam kegiatan bersama Universitas STEKOM bisa kamu cairkan dengan mudah, cukup 3 menit.</p>
       <div class="sticker" role="img" aria-label="Beasiswa S1 Rp7.000.000, langsung cair">
