@@ -189,10 +189,17 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
              linear-gradient(0deg,rgba(6,26,56,.6) 0%,rgba(6,26,56,0) 34%)}
 .hero__inner{position:relative;width:100%;padding-top:calc(var(--hh) + 56px);padding-bottom:64px}
 .hero__copy{max-width:640px}
-.hero__kicker{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:7px 14px;border-radius:var(--pill);font-size:14px;font-weight:600;color:#EAF1FB}
-.hero__kicker b{color:var(--gold-300);letter-spacing:.06em}
-.hero__kicker .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-500);animation:pulse 2s infinite}
+.hero__kicker{display:inline-flex;align-items:center;gap:12px;font-size:14px;font-weight:500;color:rgba(255,255,255,.78);letter-spacing:.01em}
+.hero__kicker b{color:#fff;font-weight:800;letter-spacing:.08em}
+.hero__pemisah{width:1px;height:16px;background:rgba(255,255,255,.4)}
+/* animasi mengetik: teks asli tetap menjaga ruang (tanpa geser tata letak), ketikan tampil di lapisan atas */
+.hero__ketik{position:relative;display:inline-block;white-space:nowrap}
+.hero__ketik.is-mengetik{color:transparent}
+.hero__ketik__lapis{position:absolute;left:0;top:0;color:rgba(255,255,255,.78);white-space:nowrap;pointer-events:none}
+.hero__ketik__lapis::after{content:"";display:inline-block;width:1.5px;height:1.05em;margin-left:2px;vertical-align:-.15em;background:rgba(255,255,255,.85);animation:kursorKedip .9s steps(1) infinite}
+.hero__ketik__lapis.is-selesai::after{animation:kursorKedip .9s steps(1) 2,kursorPudar .4s ease 1.8s forwards}
+@keyframes kursorKedip{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes kursorPudar{to{opacity:0}}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.35);opacity:.65}}
 .hero__title{margin-top:18px;font-size:clamp(36px,5.4vw,64px);font-weight:800;line-height:1.05;letter-spacing:-.025em;text-shadow:0 2px 22px rgba(0,0,0,.35)}
 .hero__sub{max-width:540px;margin-top:16px;font-size:17.5px;color:#E4ECF8;text-shadow:0 1px 10px rgba(0,0,0,.4)}
@@ -835,7 +842,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   </div>
   <div class="wrap hero__inner">
     <div class="hero__copy">
-      <span class="hero__kicker"><span class="dot"></span><b>SKALA</b> Sistem Klaim Beasiswa</span>
+      <span class="hero__kicker"><b>SKALA</b><span class="hero__pemisah" aria-hidden="true"></span><span class="hero__ketik" id="heroKetik">Sistem Klaim Beasiswa</span></span>
       <h1 class="hero__title">Cairkan Sertifikat Beasiswamu Sekarang.</h1>
       <p class="hero__sub" id="heroSub">Sertifikat beasiswamu dari berbagai macam kegiatan bersama Universitas STEKOM bisa kamu cairkan dengan mudah, cukup 3 menit.</p>
       <div class="sticker" role="img" aria-label="Beasiswa S1 Rp7.000.000, langsung cair">
@@ -1190,6 +1197,21 @@ const Analitik=(()=>{
 })();
 window.skalaCatat=Analitik.catat;
 
+/* efek mengetik "Sistem Klaim Beasiswa" di badge hero — sekali saat halaman dibuka */
+(function ketikHero(){
+  const el=document.getElementById("heroKetik"); if(!el) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;      // pengguna "kurangi animasi": teks langsung utuh
+  const teks=el.textContent, lapis=document.createElement("span");
+  lapis.className="hero__ketik__lapis"; lapis.setAttribute("aria-hidden","true");
+  el.classList.add("is-mengetik"); el.appendChild(lapis);
+  let i=0;
+  setTimeout(function langkah(){
+    lapis.textContent=teks.slice(0,++i);
+    if(i<teks.length) setTimeout(langkah, teks[i-1]===" " ? 90 : 48+Math.random()*30);
+    else { lapis.classList.add("is-selesai"); setTimeout(()=>{ el.classList.remove("is-mengetik"); lapis.remove(); },2400); }
+  },450);
+})();
+
 /* periode pengajuan — tgl 1–batas masuk periode bulan itu, setelahnya periode bulan berikutnya (WIB).
    Sisa waktu hanya ditampilkan di 3 hari terakhir. */
 const HeroPeriode=(()=>{
@@ -1269,7 +1291,7 @@ const Gerbang = (()=>{
   const muatSkrip=()=>{ if(skripDimuat||window.turnstile) return; skripDimuat=true;
     const sc=document.createElement("script"); sc.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; sc.async=true; document.head.appendChild(sc); };
   const KUNCI="skala_sesi_v1", el=()=>$("#gerbang");
-  let siteKey="", widgetId=null, aktif=null, menunggu=null, dikonfigurasi=false;
+  let siteKey="", widgetId=null, aktif=null, menunggu=null, dikonfigurasi=false, langsung=false, tokenSekali="";
   const status=(t,err)=>{ const s=$("#gerbangStatus"); s.textContent=t||""; s.classList.toggle("err",!!err); $("#gerbangUlang").hidden=!err; };
   const tiket=()=>{ try{ const x=JSON.parse(sessionStorage.getItem(KUNCI)||"null"); if(x&&x.exp>Date.now()+60000) return x.t; }catch(e){} return ""; };
   const simpan=(t,menit)=>{ Analitik.catat("verifikasi_lolos"); try{ sessionStorage.setItem(KUNCI,JSON.stringify({t:t,exp:Date.now()+(menit||60)*60000})); }catch(e){} setTimeout(infoAman,0); };
@@ -1277,6 +1299,7 @@ const Gerbang = (()=>{
                     if(menunggu){ const f=menunggu; menunggu=null; f(); } };
   const buka=()=>{ el().classList.remove("is-selesai"); document.body.classList.add("gerbang-buka"); };
   async function kirimToken(token){
+    if(langsung){ tokenSekali=token; status("Terverifikasi"); setTimeout(tutup,150); return; }   // token ikut permintaan cari
     status("Memeriksa…");
     try{
       const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({aksi:"verifikasi",token:token})});
@@ -1310,7 +1333,9 @@ const Gerbang = (()=>{
     /* halaman TIDAK lagi digerbang saat dibuka — konten langsung terbaca pengunjung & mesin pencari */
     mulai(){ const b=$("#gerbangBatal"); if(b) b.addEventListener("click",()=>{ menunggu=null; tutup(); toast("Verifikasi dibatalkan","Pencarian butuh verifikasi keamanan sekali saja.","warn"); }); },
     /* perlu verifikasi sebelum aksi yang dilindungi (cari / kirim)? */
-    perlu(){ return !!(API_URL && aktif && siteKey && !tiket()); },
+    perlu(){ return !!(API_URL && aktif && siteKey && !tiket() && !tokenSekali); },
+    ambilToken(){ const t=tokenSekali; tokenSekali=""; return t; },
+    terimaSesi(t,menit){ if(t) simpan(t,menit); },
     captchaAktif(){ return !!(API_URL && aktif); },
     sudahDikonfigurasi(){ return dikonfigurasi; },
     /* dipanggil setiap konfigurasi dari server/cache diterapkan */
@@ -1320,7 +1345,7 @@ const Gerbang = (()=>{
       if(!el().classList.contains("is-selesai")) pasangWidget();   // layar sudah terbuka menunggu kunci
     },
     /* server menolak karena tiket habis → minta verifikasi ulang, lalu jalankan ulang aksinya */
-    ulangi(aksi){ Analitik.catat("verifikasi_muncul"); try{ sessionStorage.removeItem(KUNCI); }catch(e){} menunggu=aksi||null; muatSkrip(); buka(); pasangWidget(); },
+    ulangi(aksi,opsi){ Analitik.catat("verifikasi_muncul"); langsung=!!(opsi&&opsi.langsung); tokenSekali=""; try{ sessionStorage.removeItem(KUNCI); }catch(e){} menunggu=aksi||null; muatSkrip(); buka(); pasangWidget(); },
     gagalMuat(){ if(!siteKey && API_URL && !tiket()) status("Tidak dapat memuat halaman. Periksa koneksi lalu muat ulang.",true); },
     /* mode pemeliharaan: tidak ada yang bisa dicari, verifikasi tidak diperlukan */
     lewati(){ menunggu=null; tutup(); }
@@ -1431,13 +1456,14 @@ async function cari(keyword, opts={}){
   const kw=String(keyword||"").trim();
   if(Maint.aktif){ Maint.gembok(); return false; }
   if(kw.replace(/[^0-9a-z]/gi,"").length<3){ toast("Kata kunci terlalu pendek","Ketik nama lengkap atau nomor sertifikat.","warn"); return false; }
-  if(Gerbang.perlu()){ Gerbang.ulangi(()=>cari(kw,opts)); return false; }
+  if(Gerbang.perlu()){ Gerbang.ulangi(()=>cari(kw,opts),{langsung:true}); return false; }
   if(!opts.silent) skeleton();
   let data;
   try{
     if(API_URL){
       const kontrol=new AbortController(); const jam=setTimeout(()=>kontrol.abort(),40000);
-      try{ const res=await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw)+"&sesi="+encodeURIComponent(Gerbang.tiket()),{signal:kontrol.signal}); data=await res.json(); }
+      const tk=Gerbang.ambilToken();
+      try{ const res=await fetch(API_URL+"?aksi=cari&keyword="+encodeURIComponent(kw)+"&sesi="+encodeURIComponent(Gerbang.tiket())+(tk?"&token="+encodeURIComponent(tk):""),{signal:kontrol.signal}); data=await res.json(); }
       finally{ clearTimeout(jam); }
     }else{
       await new Promise(r=>setTimeout(r,450));
@@ -1452,7 +1478,8 @@ async function cari(keyword, opts={}){
     return false;
   }
   if(data&&data.maintenance){ Maint.terapkan({tutup:true,pesan:data.pesan,buka_lagi:data.buka_lagi}); return false; }
-  if(data&&data.perlu_verifikasi){ firstState(); Gerbang.ulangi(()=>cari(kw,opts)); return false; }
+  if(data&&data.sesi_baru) Gerbang.terimaSesi(data.sesi_baru,data.berlaku_menit);
+  if(data&&data.perlu_verifikasi){ firstState(); Gerbang.ulangi(()=>cari(kw,opts),{langsung:true}); return false; }
   if(!data||data.success===false){ results.innerHTML='<div class="state-box"><h3>Pencarian gagal</h3><p>'+esc((data&&data.error)||"Terjadi kesalahan.")+'</p></div>'; return false; }
   S.plafon=Number(data.plafon)||PLAFON_DEFAULT;
   if(data.plafon_s2!=null) S.plafonS2=Number(data.plafon_s2)||S.plafonS2;

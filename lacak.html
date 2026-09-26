@@ -24,7 +24,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preload" href="/assets/font/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/skala-turunan.css?v=10">
+<link rel="stylesheet" href="/assets/skala-turunan.css?v=12">
 <style>
 /* ---------------- Hero & formulir ---------------- */
 .lacak-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:center}
@@ -238,7 +238,7 @@
 <section class="halaman-hero">
   <div class="wrap lacak-grid">
     <div>
-      <span class="kicker">LACAK PENGAJUAN SERTIFIKAT</span>
+      <span class="kicker"><b>SKALA</b><span class="kicker__pemisah" aria-hidden="true"></span><span class="ketik" data-ketik>Lacak Pengajuan Sertifikat</span></span>
       <h1>Cek sampai mana proses pengajuan beasiswamu dengan mudah dan cepat.</h1>
       <p class="lead">Masukkan Nomor Pengajuan dan 4 digit terakhir nomor WhatsApp yang kamu pakai saat mengajukan.</p>
 
@@ -252,9 +252,9 @@
         <button class="btn btn-primary" id="tombolLacak" type="submit"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Lacak Status</button>
       </form>
       <div id="galat" hidden></div>
-      <p class="catatan catatan--aman" id="infoAman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"><b>Pelacakan dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat menekan <b>Lacak Status</b>, lalu berlaku 60 menit.</span></p>
       <p class="catatan"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/></svg>
         <span>Nomor Pengajuan (diawali <b>PGJ-</b>) ada di bukti pengajuan, email otomatis, dan pesan WhatsApp saat kamu mengajukan. Boleh diketik angkanya saja.</span></p>
+      <p class="catatan catatan--aman" id="infoAman"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span id="infoAmanTeks"><b>Pelacakan dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat menekan <b>Lacak Status</b>, lalu berlaku 60 menit.</span></p>
     </div>
 
     <div class="ilustrasi" aria-hidden="true">
@@ -295,7 +295,7 @@
   </div>
 </footer>
 
-<script src="/assets/skala-turunan.js?v=10"></script>
+<script src="/assets/skala-turunan.js?v=12"></script>
 <script>
 (function(){
   const {API_URL,$,esc,toast,waLink,Gerbang,kurangiGerak}=SKALA;
@@ -362,13 +362,15 @@
     if(!/^\d{4}$/.test(w)){ $("#fWa").classList.add("salah"); salah=true; }
     if(salah){ tampilGalat(!nomorOk && /^BEA/.test(kunci) ? "Itu No. Beasiswa (nomor sertifikat). Gunakan Nomor Pengajuan yang diawali PGJ- dari bukti pengajuanmu."
                        : "Lengkapi Nomor Pengajuan (contoh PGJ-1790154675623) dan tepat 4 digit terakhir WhatsApp."); return; }
-    if(Gerbang.perlu()){ Gerbang.ulangi(lacak); return; }
+    if(Gerbang.perlu()){ Gerbang.ulangi(()=>lacak(opsi),{langsung:true}); return; }
     if(!diam){ sibuk(true); rangka(); hasil.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"}); }
     let d;
-    try{ const r=await fetch(API_URL+"?aksi=lacak&kode="+encodeURIComponent(k)+"&wa4="+encodeURIComponent(w)+"&sesi="+encodeURIComponent(Gerbang.tiket())); d=await r.json(); }
+    const tk=Gerbang.ambilToken();
+    try{ const r=await fetch(API_URL+"?aksi=lacak&kode="+encodeURIComponent(k)+"&wa4="+encodeURIComponent(w)+"&sesi="+encodeURIComponent(Gerbang.tiket())+(tk?"&token="+encodeURIComponent(tk):"")); d=await r.json(); }
     catch(e){ d={success:false,error:"Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi."}; }
     sibuk(false);
-    if(d&&d.perlu_verifikasi){ hasil.hidden=true; Gerbang.ulangi(lacak); return; }
+    if(d&&d.sesi_baru) Gerbang.terimaSesi(d.sesi_baru,d.berlaku_menit);
+    if(d&&d.perlu_verifikasi){ hasil.hidden=true; Gerbang.ulangi(()=>lacak(opsi),{langsung:true}); return; }
     if(!d||!d.success){ SKALA.catat("lacak",{hasil:"gagal"}); hasil.hidden=true; tampilGalat((d&&d.error)||"Terjadi kesalahan."); return; }
     SKALA.catat("lacak",{hasil:"ditemukan",status:d.status});
     try{ sessionStorage.setItem("skala_lacak_kode",k); }catch(e){}
