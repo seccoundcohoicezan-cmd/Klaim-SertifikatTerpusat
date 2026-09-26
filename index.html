@@ -472,6 +472,13 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 
 /* ---------------- FAQ ---------------- */
 .faq-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px;align-items:start}
+.faq-samping{display:grid;gap:16px;position:sticky;top:calc(var(--hh) + 20px)}
+.unduh-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh-1)}
+.unduh-card__kepala{display:flex;align-items:center;gap:12px}
+.unduh-card__ikon{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#FDECEC;color:var(--red-600)}
+.unduh-card h3{font-size:16px;line-height:1.3;color:var(--navy-900)}
+.unduh-card__meta{display:block;margin-top:2px;font-size:12.5px;color:var(--text-3)}
+.unduh-card p{margin:12px 0 14px;font-size:14px;line-height:1.6;color:var(--text-2)}
 .faq__item{background:#fff;border:1px solid var(--border);border-radius:16px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
 .faq__item.is-open{border-color:var(--navy-500);box-shadow:var(--sh-2)}
 .faq__q{width:100%;text-align:left;background:none;border:0;padding:17px 18px;font-weight:700;font-size:15.5px;color:var(--navy-900);display:flex;justify-content:space-between;gap:12px;align-items:center}
@@ -481,8 +488,8 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 .faq__item.is-open .faq__a{grid-template-rows:1fr}
 .faq__a>div{overflow:hidden}
 .faq__a p{padding:0 18px 17px;color:var(--text-2);font-size:15px}
-.help-card{position:sticky;top:calc(var(--hh) + 20px);background:linear-gradient(160deg,#EAF8EF,#fff);border:1px solid #BEE7D0;border-radius:var(--r-lg);padding:24px}
-.help-card .ico{width:52px;height:52px;border-radius:16px;background:var(--wa);color:#fff;display:grid;place-items:center;margin-bottom:14px;animation:ayun 3.2s ease-in-out infinite}
+.help-card{background:linear-gradient(160deg,#EAF8EF,#fff);border:1px solid #BEE7D0;border-radius:var(--r-lg);padding:24px}
+.help-card > .ico{width:52px;height:52px;border-radius:16px;background:var(--wa);color:#fff;display:grid;place-items:center;margin-bottom:14px;animation:ayun 3.2s ease-in-out infinite}
 .help-card h3{font-size:19px;color:var(--navy-900)}
 .help-card p{color:var(--text-2);margin:8px 0 16px;font-size:15px}
 .help-card .nomor{display:block;font-size:22px;font-weight:800;color:var(--wa-700);margin-bottom:14px;letter-spacing:.01em}
@@ -637,6 +644,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .steps{grid-template-columns:1fr 1fr}
   .faq-layout{grid-template-columns:minmax(0,1fr)}
   .help-card{position:static}
+  .faq-samping{position:static}
   .footer__grid{grid-template-columns:1fr 1fr}
   .pmb{grid-template-columns:1fr;padding:30px}
   .pmb__cta{justify-self:stretch;width:100%}
@@ -652,7 +660,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   .brand__name b{font-size:18px}
   .hero{min-height:auto;display:block}
   .hero::before{display:none}
-  .hero__photo{position:relative;height:clamp(220px,58vw,300px)}
+  .hero__photo{position:relative;height:clamp(220px,58vw,300px);overflow:hidden;margin-bottom:-1px}   /* potong foto saat animasi perbesar → tanpa garis */
   .hero__photo img{object-position:40% 45%}
   .hero__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,26,56,0) 55%,var(--navy-900) 100%)}
     .hero__inner{padding-top:8px;padding-bottom:58px}
@@ -976,6 +984,15 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
     </div>
     <div class="faq-layout">
       <div class="faq" id="faqList"></div>
+      <div class="faq-samping">
+      <aside class="unduh-card reveal">
+        <div class="unduh-card__kepala">
+          <span class="unduh-card__ikon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M12 12v6M9.5 15.5 12 18l2.5-2.5"/></svg></span>
+          <div><h3>Panduan Lengkap Peserta</h3><span class="unduh-card__meta">PDF · 8 halaman bergambar · ±0,6 MB</span></div>
+        </div>
+        <p>Cara mencari sertifikat, mengajukan, konfirmasi WhatsApp, sampai memantau progres — langkah demi langkah.</p>
+        <a class="btn btn-primary btn-block" id="unduhPanduan" href="/assets/panduan-peserta-skala.pdf?v=1" download="Panduan-Peserta-SKALA.pdf"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></svg>Unduh Panduan (PDF)</a>
+      </aside>
       <aside class="help-card reveal">
         <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2.02c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.16-1.35a9.93 9.93 0 0 0 4.88 1.27c5.5 0 9.96-4.46 9.96-9.96A9.94 9.94 0 0 0 12.04 2.02zm4.55 12c-.25-.13-1.47-.73-1.7-.81-.23-.08-.4-.13-.56.12-.17.25-.65.81-.79.98-.15.16-.29.18-.54.06-.25-.13-1.05-.39-2-1.24a7.5 7.5 0 0 1-1.39-1.72c-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48a.92.92 0 0 0-.67.31c-.23.25-.87.85-.87 2.08s.9 2.41 1.02 2.58c.13.16 1.76 2.69 4.27 3.77 1.93.83 2.33.66 2.75.62.48-.07 1.47-.6 1.68-1.19.21-.58.21-1.08.15-1.18-.06-.11-.23-.17-.48-.29z"/></svg></div>
         <h3>Masih ada pertanyaan?</h3>
@@ -983,6 +1000,7 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
         <span class="nomor" data-wa-text>+62 888-8999-920</span>
         <a class="btn btn-wa btn-block" href="#" data-wa><svg class="ico"><use href="#i-wa"/></svg>Chat Admin di WhatsApp</a>
       </aside>
+      </div>
     </div>
   </div>
 </section>
@@ -2012,6 +2030,7 @@ function infoAman(){
     : "<b>Pencarian dilindungi verifikasi keamanan.</b> Kotak verifikasi Cloudflare muncul sekali saat pertama menekan <b>Cari</b>, lalu berlaku 60 menit.";
   el.hidden=false;
 }
+$("#unduhPanduan").addEventListener("click",()=>{ Analitik.catat("unduh_panduan"); toast("Mengunduh panduan","Panduan-Peserta-SKALA.pdf","ok",2600); });
 $("#tipsBtn").addEventListener("click",()=>{ const b=$("#tipsBtn"), c=$("#cariContoh"), buka=c.hidden; c.hidden=!buka; b.setAttribute("aria-expanded",String(buka)); $("#tipsLabel").textContent=buka?"Tutup contoh":"Lihat contoh penulisan"; });
 $("#fSearch").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#fSearchBtn").click(); $("#fSearch").blur(); } });
 $("#fRefresh").addEventListener("click",async ()=>{
