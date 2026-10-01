@@ -136,7 +136,7 @@ button.wa:hover{filter:brightness(.94)}
   <div class="progress" role="progressbar" aria-label="Progres pengisian" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
     <div class="ptop"><span>Progres pengisian</span><b id="pct">0%</b></div>
     <div class="track"><div class="bar" id="bar"></div></div>
-    <div class="pstat" id="pstat">0 dari 6 bagian wajib terisi</div>
+    <div class="pstat" id="pstat">0 dari 5 bagian wajib terisi</div>
   </div>
 
   <form id="f" novalidate>
@@ -373,9 +373,12 @@ function updateProgress(){
 
   var okProdi = $("semua").checked || prodiEl.querySelectorAll(".pc:checked").length > 0;
 
-  var checks = [okPengaju, okWa, okNama, okAlasan, okNom, okProdi];
+  // Program studi sudah valid secara bawaan (seluruh prodi tercentang), jadi tidak dihitung
+  // sebagai langkah isian. Ia hanya menahan progres di bawah 100% bila dikosongkan.
+  var checks = [okPengaju, okWa, okNama, okAlasan, okNom];
   var done = checks.filter(Boolean).length;
   var pct = Math.round(done / checks.length * 100);
+  if(pct === 100 && !okProdi) pct = 95;
 
   $("pct").textContent = pct + "%";
   $("bar").style.width = pct + "%";
@@ -385,7 +388,9 @@ function updateProgress(){
   st.className = "pstat" + (pct === 100 ? " done" : "");
   st.textContent = pct === 100
     ? "Semua bagian wajib sudah terisi. Siap dikirim."
-    : done + " dari " + checks.length + " bagian wajib terisi";
+    : (done === checks.length && !okProdi)
+      ? "Tinggal pilih program studi, atau centang \"seluruh program studi\"."
+      : done + " dari " + checks.length + " bagian wajib terisi";
 }
 form.addEventListener("input", updateProgress);
 form.addEventListener("change", updateProgress);
