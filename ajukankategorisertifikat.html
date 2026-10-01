@@ -11,69 +11,133 @@
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-  --bg:#f4f6fb; --card:#ffffff; --ink:#1b2438; --muted:#6b7794; --line:#d9dfec;
-  --navy:#1f3a6e; --red:#d62432; --tint:#eef3fc; --ok:#1f9d55;
+  --bg:#eaf0ff; --bg2:#f6f9ff; --card:#ffffff; --ink:#18223a; --muted:#66728f; --line:#d5ddf0;
+  --navy:#1f3a6e; --red:#d62432; --tint:#eef3fc; --ok:#17a65a;
+  --h1:#1f3a6e; --h2:#3b5bdb; --h3:#12b5a6;
+  --a1:#3b5bdb; --a2:#12b5a6; --a3:#f59f00; --a4:#e64980; --a5:#7048e8;
+  --shadow:0 6px 22px rgba(31,58,110,.10);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1524; --card:#182036; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
-    --navy:#9db8f0; --tint:#1d2845;
+    --bg:#0c1222; --bg2:#101830; --card:#172039; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
+    --navy:#9db8f0; --tint:#1d2845; --shadow:0 6px 22px rgba(0,0,0,.35);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f1524; --card:#182036; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
-  --navy:#9db8f0; --tint:#1d2845;
+  --bg:#0c1222; --bg2:#101830; --card:#172039; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
+  --navy:#9db8f0; --tint:#1d2845; --shadow:0 6px 22px rgba(0,0,0,.35);
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 90px)}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
-.wrap{max-width:760px;margin:0 auto;padding:20px 16px 40px}
-header h1{font-size:22px;margin:8px 0 4px}
-header p{margin:0 0 18px;color:var(--muted)}
-form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
-fieldset{border:0;padding:0;margin:0 0 26px;min-width:0}
-legend{font-weight:700;color:var(--navy);font-size:14px;padding:0;margin-bottom:12px}
+body{
+  margin:0;color:var(--ink);
+  font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5;
+  background:
+    radial-gradient(520px 320px at 8% -4%, rgba(59,91,219,.22), transparent 70%),
+    radial-gradient(480px 300px at 100% 6%, rgba(18,181,166,.20), transparent 70%),
+    radial-gradient(420px 360px at 92% 78%, rgba(230,73,128,.10), transparent 70%),
+    linear-gradient(180deg,var(--bg),var(--bg2));
+  background-attachment:fixed;
+  min-height:100vh;
+}
+.wrap{max-width:780px;margin:0 auto;padding:16px 16px 44px}
+
+/* Hero */
+.hero{
+  position:relative;overflow:hidden;color:#fff;border-radius:20px;padding:26px 24px 24px;margin-bottom:14px;
+  background:linear-gradient(135deg,var(--h1),var(--h2) 58%,var(--h3));
+  box-shadow:0 12px 30px rgba(31,58,110,.28);
+}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10)}
+.hero::before{width:220px;height:220px;right:-60px;top:-90px}
+.hero::after{width:140px;height:140px;right:70px;bottom:-80px;background:rgba(255,255,255,.08)}
+.hero .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 12px;font-size:12.5px;font-weight:600;margin-bottom:10px}
+.hero h1{font-size:23px;line-height:1.25;margin:0 0 6px;position:relative}
+.hero p{margin:0;opacity:.92;max-width:520px;position:relative}
+
+/* Progress */
+.progress{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-bottom:16px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px 12px;box-shadow:var(--shadow);
+}
+.ptop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.ptop span{font-weight:600;font-size:13.5px}
+.ptop b{font-size:20px;font-variant-numeric:tabular-nums;color:var(--navy)}
+.track{height:12px;background:var(--tint);border-radius:999px;overflow:hidden;margin:8px 0 6px;border:1px solid var(--line)}
+.bar{height:100%;width:0;border-radius:999px;transition:width .35s ease,background .35s ease;
+  background:linear-gradient(90deg,#f76707,#f59f00)}
+.bar.mid{background:linear-gradient(90deg,#3b5bdb,#12b5a6)}
+.bar.full{background:linear-gradient(90deg,#12b5a6,#17a65a)}
+.pstat{font-size:12.5px;color:var(--muted)}
+.pstat.done{color:var(--ok);font-weight:600}
+
+/* Cards */
+form{background:none;border:0;padding:0}
+fieldset{
+  --acc:var(--a1);
+  background:var(--card);border:1px solid var(--line);border-left:6px solid var(--acc);
+  border-radius:16px;padding:18px 20px 20px;margin:0 0 16px;min-width:0;box-shadow:var(--shadow);
+}
+fieldset:nth-of-type(1){--acc:var(--a1)}
+fieldset:nth-of-type(2){--acc:var(--a2)}
+fieldset:nth-of-type(3){--acc:var(--a3)}
+fieldset:nth-of-type(4){--acc:var(--a4)}
+fieldset:nth-of-type(5){--acc:var(--a5)}
+legend{float:left;width:100%;font-weight:700;color:var(--ink);font-size:16px;padding:0;margin:0 0 6px}
+legend::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--acc);margin-right:9px;box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 22%,transparent)}
+fieldset > legend + *{clear:both}
 label.f{display:block;font-weight:600;margin:14px 0 4px}
 label.f small{font-weight:400;color:var(--muted)}
 .req{color:var(--red)}
 input[type=text],input[type=tel],input[type=url],input[type=number],textarea{
-  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;
+  transition:border-color .15s,box-shadow .15s}
 textarea{min-height:70px;resize:vertical}
-input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+input:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 25%,transparent)}
+button:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
 input:disabled,textarea:disabled{background:var(--tint);opacity:.6;cursor:not-allowed}
-.hint{background:var(--tint);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13.5px}
+.hint{background:color-mix(in srgb,var(--acc) 12%,var(--card));border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13.5px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.row{grid-template-columns:1fr}}
 
-.nom{display:grid;grid-template-columns:150px 1fr;gap:10px 14px;align-items:start;margin-bottom:12px}
+.nom{display:grid;grid-template-columns:150px 1fr;gap:10px 14px;align-items:start;margin-bottom:12px;padding:10px;border-radius:12px;border:1px dashed transparent;transition:background .15s,border-color .15s}
+.nom:has(.nc:checked){background:color-mix(in srgb,var(--acc) 10%,var(--card));border-color:color-mix(in srgb,var(--acc) 45%,transparent)}
 @media(max-width:560px){.nom{grid-template-columns:1fr}}
 .nom .chk{display:flex;align-items:center;gap:10px;font-weight:700;padding-top:9px;cursor:pointer}
-.nom .chk input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.nom .chk input{accent-color:var(--acc);width:18px;height:18px;margin:0}
 .nom .body{display:flex;flex-direction:column;gap:8px}
 .f-group.invalid > input,.f-group.invalid > textarea,.invalid .body textarea,.invalid .body input{border-color:var(--red)}
 .err{color:var(--red);font-size:13px;margin-top:4px;display:none}
 .invalid > .err,.invalid .body > .err{display:block}
 
 .check{display:flex;align-items:center;gap:10px;cursor:pointer}
-.check input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.check input{accent-color:var(--acc);width:18px;height:18px;margin:0}
 .prodi{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-top:12px}
 @media(max-width:560px){.prodi{grid-template-columns:1fr}}
 .prodi .check{color:var(--ink)}
 .prodi.off .check{color:var(--muted)}
 .aktif small{color:var(--muted)}
-.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
-button{font:inherit;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-button.wa{background:var(--ok);border-color:var(--ok);color:#fff}
-button.wa:hover{filter:brightness(.93)}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
+button{font:inherit;font-weight:700;border-radius:12px;padding:12px 20px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+button.wa{background:linear-gradient(135deg,#17a65a,#12b5a6);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(23,166,90,.32)}
+button.wa:hover{filter:brightness(.94)}
 .note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:right}
+@media (prefers-reduced-motion:reduce){.bar{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <header class="hero">
+    <span class="tag">Beasiswa Kegiatan</span>
     <h1>Pengajuan Kategori Sertifikat Beasiswa Kegiatan</h1>
     <p>Isi data kategori di bawah, lalu kirim lewat WhatsApp ke admin. Satu kategori bisa punya beberapa nominal.</p>
   </header>
+
+  <div class="progress" role="progressbar" aria-label="Progres pengisian" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+    <div class="ptop"><span>Progres pengisian</span><b id="pct">0%</b></div>
+    <div class="track"><div class="bar" id="bar"></div></div>
+    <div class="pstat" id="pstat">0 dari 6 bagian wajib terisi</div>
+  </div>
 
   <form id="f" novalidate>
     <fieldset>
@@ -289,6 +353,44 @@ $("reset").addEventListener("click", function(){
   prodiEl.querySelectorAll(".pc").forEach(function(cb){ cb.disabled = true; });
   form.querySelectorAll(".invalid").forEach(function(g){ g.classList.remove("invalid"); });
 });
+
+// ===== Progres pengisian 0-100% =====
+function updateProgress(){
+  var okPengaju = $("pengaju").value.trim() !== "";
+  var okWa = /^(\+?62|0)8[0-9]{7,12}$/.test($("wa").value.trim().replace(/[\s-]/g,""));
+  var okNama = $("nama").value.trim() !== "";
+  var okAlasan = $("alasan").value.trim() !== "";
+
+  var rows = nomsEl.querySelectorAll(".nom"), any = false, allOk = true;
+  rows.forEach(function(row){
+    if(!row.querySelector(".nc").checked) return;
+    any = true;
+    var ok = row.querySelector(".nr").value.trim() !== "";
+    if(row.dataset.custom) ok = ok && Number(row.querySelector(".cv").value) > 0;
+    if(!ok) allOk = false;
+  });
+  var okNom = any && allOk;
+
+  var okProdi = $("semua").checked || prodiEl.querySelectorAll(".pc:checked").length > 0;
+
+  var checks = [okPengaju, okWa, okNama, okAlasan, okNom, okProdi];
+  var done = checks.filter(Boolean).length;
+  var pct = Math.round(done / checks.length * 100);
+
+  $("pct").textContent = pct + "%";
+  $("bar").style.width = pct + "%";
+  $("bar").className = "bar" + (pct === 100 ? " full" : pct >= 50 ? " mid" : "");
+  $("progress").setAttribute("aria-valuenow", pct);
+  var st = $("pstat");
+  st.className = "pstat" + (pct === 100 ? " done" : "");
+  st.textContent = pct === 100
+    ? "Semua bagian wajib sudah terisi. Siap dikirim."
+    : done + " dari " + checks.length + " bagian wajib terisi";
+}
+form.addEventListener("input", updateProgress);
+form.addEventListener("change", updateProgress);
+form.addEventListener("reset", function(){ setTimeout(updateProgress, 0); });
+updateProgress();
 </script>
 </body>
 </html>
