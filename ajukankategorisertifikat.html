@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pengajuan Kategori Sertifikat Beasiswa Kegiatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f6fb; --card:#ffffff; --ink:#1b2438; --muted:#6b7794; --line:#d9dfec;
+  --navy:#1f3a6e; --red:#d62432; --tint:#eef3fc; --ok:#1f9d55;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1524; --card:#182036; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
+    --navy:#9db8f0; --tint:#1d2845;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1524; --card:#182036; --ink:#e8ecf6; --muted:#9aa6c2; --line:#2b3654;
+  --navy:#9db8f0; --tint:#1d2845;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+header h1{font-size:22px;margin:8px 0 4px}
+header p{margin:0 0 18px;color:var(--muted)}
+form{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px}
+fieldset{border:0;padding:0;margin:0 0 26px;min-width:0}
+legend{font-weight:700;color:var(--navy);font-size:14px;padding:0;margin-bottom:12px}
+label.f{display:block;font-weight:600;margin:14px 0 4px}
+label.f small{font-weight:400;color:var(--muted)}
+.req{color:var(--red)}
+input[type=text],input[type=tel],input[type=url],input[type=number],textarea{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+textarea{min-height:70px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+input:disabled,textarea:disabled{background:var(--tint);opacity:.6;cursor:not-allowed}
+.hint{background:var(--tint);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:13.5px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+
+.nom{display:grid;grid-template-columns:150px 1fr;gap:10px 14px;align-items:start;margin-bottom:12px}
+@media(max-width:560px){.nom{grid-template-columns:1fr}}
+.nom .chk{display:flex;align-items:center;gap:10px;font-weight:700;padding-top:9px;cursor:pointer}
+.nom .chk input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.nom .body{display:flex;flex-direction:column;gap:8px}
+.f-group.invalid > input,.f-group.invalid > textarea,.invalid .body textarea,.invalid .body input{border-color:var(--red)}
+.err{color:var(--red);font-size:13px;margin-top:4px;display:none}
+.invalid > .err,.invalid .body > .err{display:block}
+
+.check{display:flex;align-items:center;gap:10px;cursor:pointer}
+.check input{accent-color:var(--navy);width:18px;height:18px;margin:0}
+.prodi{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;margin-top:12px}
+@media(max-width:560px){.prodi{grid-template-columns:1fr}}
+.prodi .check{color:var(--ink)}
+.prodi.off .check{color:var(--muted)}
+.aktif small{color:var(--muted)}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px}
+button{font:inherit;font-weight:700;border-radius:10px;padding:11px 18px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+button.wa{background:var(--ok);border-color:var(--ok);color:#fff}
+button.wa:hover{filter:brightness(.93)}
+.note{font-size:12.5px;color:var(--muted);margin-top:10px;text-align:right}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Pengajuan Kategori Sertifikat Beasiswa Kegiatan</h1>
+    <p>Isi data kategori di bawah, lalu kirim lewat WhatsApp ke admin. Satu kategori bisa punya beberapa nominal.</p>
+  </header>
+
+  <form id="f" novalidate>
+    <fieldset>
+      <legend>Data pengaju</legend>
+      <div class="row">
+        <div class="f-group" data-f="pengaju">
+          <label class="f" for="pengaju">Nama pengaju <span class="req">*</span></label>
+          <input type="text" id="pengaju" autocomplete="name" placeholder="Nama lengkap">
+          <div class="err">Nama pengaju wajib diisi.</div>
+        </div>
+        <div class="f-group" data-f="wa">
+          <label class="f" for="wa">Nomor WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="wa" autocomplete="tel" placeholder="08xxxxxxxxxx">
+          <div class="err">Masukkan nomor WhatsApp yang valid.</div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>1. Identitas beasiswa</legend>
+      <div class="f-group" data-f="nama">
+        <label class="f" for="nama">Nama sertifikat <span class="req">*</span></label>
+        <input type="text" id="nama" placeholder="Contoh: Seminar Nasional Cyber Security">
+        <div class="err">Nama sertifikat wajib diisi.</div>
+      </div>
+      <div class="f-group" data-f="kunci">
+        <label class="f" for="kunci">Kata kunci kegiatan <small>— teks yang muncul di kolom Kegiatan. Pisahkan dengan titik koma. Kosong = pakai nama.</small></label>
+        <input type="text" id="kunci" placeholder="Contoh: Seminar Nasional Cyber Security; SNCS">
+      </div>
+      <div class="f-group" data-f="alasan">
+        <label class="f" for="alasan">Alasan sertifikat diberikan <span class="req">*</span> <small>— atas dasar / sebab apa</small></label>
+        <textarea id="alasan" placeholder="Contoh: Diberikan kepada peserta yang menyelesaikan seminar dan mengumpulkan tugas akhir."></textarea>
+        <div class="err">Alasan sertifikat diberikan wajib diisi.</div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. Variasi nominal &amp; alasannya <span class="req">*</span></legend>
+      <div class="hint" style="margin:0 0 14px">Centang nominal yang berlaku. Setiap nominal yang dicentang wajib diberi alasan.</div>
+      <div id="noms"></div>
+      <div class="f-group" data-f="nomAny"><div class="err">Centang minimal satu nominal.</div></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>3. Program studi</legend>
+      <label class="check"><input type="checkbox" id="semua" checked> <b>Berlaku untuk seluruh program studi</b></label>
+      <div class="prodi off" id="prodi"></div>
+      <div class="f-group" data-f="prodi"><div class="err">Pilih minimal satu program studi, atau centang "seluruh program studi".</div></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>4. Blanko &amp; status</legend>
+      <div class="f-group" data-f="blanko">
+        <label class="f" for="blanko">Link template blanko sertifikat (Drive)</label>
+        <input type="url" id="blanko" placeholder="https://drive.google.com/...">
+        <div class="err">Link harus diawali https://</div>
+      </div>
+      <label class="check aktif" style="margin-top:14px"><input type="checkbox" id="aktif" checked> <span><b>Aktif</b> <small>— sertifikat kategori ini langsung bisa diajukan. Hapus centang untuk menahan.</small></span></label>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" id="reset">Batal</button>
+      <button type="submit" class="wa">Kirim lewat WhatsApp</button>
+    </div>
+    <div class="note">Nomor admin tujuan: <span id="adminShow"></span></div>
+  </form>
+</div>
+
+<script>
+// Ganti dengan nomor WhatsApp admin (format internasional, tanpa + dan tanpa 0 di depan)
+var ADMIN_WA = "6281234567890";
+
+var NOMINALS = ["Rp7.000.000","Rp5.000.000","Rp3.000.000","Rp1.000.000"];
+var PRODI = [
+  "D3 Teknik Informatika","D4 Akuntansi Perpajakan (Sarjana Terapan)",
+  "S1 Teknik Informatika (S.Kom.)","S1 Sistem Informasi (S.Kom.)",
+  "S1 Sistem Komputer (S.Kom.)","S1 Desain Komunikasi Visual (S.Ds.)",
+  "S1 Teknik Sipil (S.T.)","S1 Manajemen (S.M.)",
+  "S1 Akuntansi (S.Ak.)","S1 Bisnis (S.Bns.)",
+  "S1 Hukum (S.H.)","S2 Manajemen dan Kewirausahaan (M.Bns.)"
+];
+
+var $ = function(id){return document.getElementById(id)};
+var form = $("f");
+$("adminShow").textContent = "+" + ADMIN_WA;
+
+// Bangun baris nominal
+var nomsEl = $("noms");
+NOMINALS.forEach(function(n,i){
+  var d = document.createElement("div");
+  d.className = "nom"; d.dataset.idx = i;
+  d.innerHTML =
+    '<label class="chk"><input type="checkbox" class="nc"> ' + n + '</label>' +
+    '<div class="body"><textarea class="nr" disabled placeholder="Kenapa diberi nominal ' + n + '?"></textarea>' +
+    '<div class="err">Alasan untuk ' + n + ' wajib diisi.</div></div>';
+  nomsEl.appendChild(d);
+});
+var c = document.createElement("div");
+c.className = "nom"; c.dataset.custom = "1";
+c.innerHTML =
+  '<label class="chk"><input type="checkbox" class="nc"> Custom</label>' +
+  '<div class="body"><input type="number" class="cv" min="1" inputmode="numeric" disabled placeholder="Nominal custom (Rp), contoh: 2500000">' +
+  '<textarea class="nr" disabled placeholder="Kenapa diberi nominal custom ini?"></textarea>' +
+  '<div class="err">Isi nominal custom dan alasannya.</div></div>';
+nomsEl.appendChild(c);
+
+nomsEl.addEventListener("change", function(e){
+  if(!e.target.classList.contains("nc")) return;
+  var row = e.target.closest(".nom");
+  var on = e.target.checked;
+  row.querySelectorAll(".nr,.cv").forEach(function(el){ el.disabled = !on; });
+  if(!on){ row.classList.remove("invalid"); }
+  else { var first = row.querySelector(".cv") || row.querySelector(".nr"); first.focus(); }
+  $("noms").parentNode.querySelector('[data-f="nomAny"]').classList.remove("invalid");
+});
+
+// Bangun daftar prodi
+var prodiEl = $("prodi");
+PRODI.forEach(function(p){
+  var l = document.createElement("label");
+  l.className = "check";
+  l.innerHTML = '<input type="checkbox" class="pc" disabled> ' + p;
+  prodiEl.appendChild(l);
+});
+$("semua").addEventListener("change", function(){
+  var all = this.checked;
+  prodiEl.classList.toggle("off", all);
+  prodiEl.querySelectorAll(".pc").forEach(function(cb){ cb.disabled = all; if(all) cb.checked = false; });
+  form.querySelector('[data-f="prodi"]').classList.remove("invalid");
+});
+
+function setErr(key, bad){
+  var g = form.querySelector('[data-f="'+key+'"]');
+  if(g) g.classList.toggle("invalid", bad);
+  return bad;
+}
+function rupiah(n){ return "Rp" + Number(n).toLocaleString("id-ID"); }
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  var bad = false;
+  var v = {
+    pengaju:$("pengaju").value.trim(), wa:$("wa").value.trim(),
+    nama:$("nama").value.trim(), kunci:$("kunci").value.trim(),
+    alasan:$("alasan").value.trim(), blanko:$("blanko").value.trim()
+  };
+  bad = setErr("pengaju", !v.pengaju) || bad;
+  bad = setErr("wa", !/^(\+?62|0)8[0-9]{7,12}$/.test(v.wa.replace(/[\s-]/g,""))) || bad;
+  bad = setErr("nama", !v.nama) || bad;
+  bad = setErr("alasan", !v.alasan) || bad;
+  bad = setErr("blanko", v.blanko !== "" && !/^https?:\/\/\S+\.\S+/.test(v.blanko)) || bad;
+
+  // Nominal: tiap yang dicentang wajib beralasan
+  var chosen = [];
+  var anyChecked = false;
+  nomsEl.querySelectorAll(".nom").forEach(function(row){
+    var cb = row.querySelector(".nc");
+    row.classList.remove("invalid");
+    if(!cb.checked) return;
+    anyChecked = true;
+    var reason = row.querySelector(".nr").value.trim();
+    var label, ok = !!reason;
+    if(row.dataset.custom){
+      var amt = row.querySelector(".cv").value.trim();
+      ok = ok && Number(amt) > 0;
+      label = amt ? rupiah(amt) + " (custom)" : "Custom";
+    } else {
+      label = NOMINALS[row.dataset.idx];
+    }
+    if(!ok){ row.classList.add("invalid"); bad = true; }
+    else chosen.push({label:label, reason:reason});
+  });
+  bad = setErr("nomAny", !anyChecked) || bad;
+
+  // Program studi
+  var prodiList = [];
+  var semua = $("semua").checked;
+  if(!semua){
+    prodiEl.querySelectorAll(".pc").forEach(function(cb){
+      if(cb.checked) prodiList.push(cb.parentNode.textContent.trim());
+    });
+  }
+  bad = setErr("prodi", !semua && prodiList.length === 0) || bad;
+
+  if(bad){
+    var first = form.querySelector(".invalid");
+    if(first) first.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+
+  var msg =
+    "*PENGAJUAN KATEGORI SERTIFIKAT BEASISWA KEGIATAN*\n\n" +
+    "*Pengaju*\nNama: " + v.pengaju + "\nNo. WA: " + v.wa + "\n\n" +
+    "*1. Identitas beasiswa*\n" +
+    "Nama sertifikat: " + v.nama + "\n" +
+    "Kata kunci kegiatan: " + (v.kunci || v.nama + " (pakai nama)") + "\n" +
+    "Alasan sertifikat diberikan: " + v.alasan + "\n\n" +
+    "*2. Variasi nominal & alasannya*\n" +
+    chosen.map(function(n,i){ return (i+1) + ") " + n.label + "\nAlasan: " + n.reason; }).join("\n") + "\n\n" +
+    "*3. Program studi*\n" +
+    (semua ? "Berlaku untuk seluruh program studi" : prodiList.map(function(p){return "- " + p;}).join("\n")) + "\n\n" +
+    "*4. Blanko & status*\n" +
+    "Link blanko: " + (v.blanko || "-") + "\n" +
+    "Status: " + ($("aktif").checked ? "Aktif (langsung bisa diajukan)" : "Ditahan");
+
+  window.open("https://wa.me/" + ADMIN_WA + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+});
+
+$("reset").addEventListener("click", function(){
+  form.reset();
+  nomsEl.querySelectorAll(".nr,.cv").forEach(function(el){ el.disabled = true; });
+  prodiEl.classList.add("off");
+  prodiEl.querySelectorAll(".pc").forEach(function(cb){ cb.disabled = true; });
+  form.querySelectorAll(".invalid").forEach(function(g){ g.classList.remove("invalid"); });
+});
+</script>
+</body>
+</html>
