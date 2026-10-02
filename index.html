@@ -281,7 +281,7 @@ body.mode-maint{scroll-padding-top:calc(var(--hh) + var(--maint-h,44px) + 12px)}
 @media (prefers-reduced-motion:reduce){ .promo__slide{transition:none} }
 
 #promo{margin-top:16px}
-.layanan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.layanan{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
 .layanan__kartu{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;padding:20px 20px 20px 18px;border-radius:var(--r-lg);background:#fff;
   border:1px solid var(--border);box-shadow:var(--sh-3);text-decoration:none;color:var(--text);transition:transform .25s,box-shadow .25s,border-color .25s}
 .layanan__kartu::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(42,99,174,.07) 60%,transparent 80%);transform:translateX(-100%);transition:transform .6s ease}
@@ -778,6 +778,23 @@ body.cart-open .fab{opacity:0;transform:translateY(20px);pointer-events:none}
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#F2B505;animation:kilauEmas 4.2s ease-in-out 1s infinite}
 @keyframes kilauEmas{0%{background-position:100% 0}35%,100%{background-position:0% 0}}
 @media (prefers-reduced-motion:reduce){.emas{animation:none;background-position:60% 0}}
+
+/* ===== Perbaikan responsif kartu layanan (semua ukuran HP) ===== */
+.layanan__kartu{min-width:0}
+.layanan__isi b,.layanan__isi span{overflow-wrap:anywhere;word-break:normal;hyphens:auto}
+@media (max-width:640px){
+  .layanan{grid-template-columns:1fr;gap:12px}
+  .layanan__kartu{padding:16px;gap:14px}
+  .layanan__ikon{width:46px;height:46px}
+  .layanan__panah{width:34px;height:34px}
+}
+@media (max-width:360px){
+  .layanan__kartu{padding:14px 12px;gap:10px}
+  .layanan__ikon{width:40px;height:40px}
+  .layanan__panah{width:30px;height:30px}
+  .layanan__isi b{font-size:14.5px}
+  .layanan__isi span{font-size:12.5px}
+}
 </style>
 </head>
 <body>
