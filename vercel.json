@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/:kode([A-Za-z0-9]{2,6}-[A-Za-z0-9-]{3,30})", "destination": "/index.html" }
+    { "source": "/:kode([A-Za-z0-9]+-[A-Za-z0-9-]+)", "destination": "/index.html" }
   ],
   "cleanUrls": true,
   "trailingSlash": false,
@@ -8,58 +8,40 @@
     {
       "source": "/assets/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
-      "source": "/(|lacak|testimoni|[A-Za-z0-9]{2,6}-[A-Za-z0-9-]{3,30})",
+      "source": "/(|lacak|testimoni)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/:kode([A-Za-z0-9]+-[A-Za-z0-9-]+)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {
       "source": "/sw.js",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        },
-        {
-          "key": "Service-Worker-Allowed",
-          "value": "/"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
       ]
     },
     {
       "source": "/manifest.webmanifest",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/manifest+json"
-        }
+        { "key": "Content-Type", "value": "application/manifest+json" }
       ]
     },
     {
       "source": "/panduan-peserta-skala.pdf",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "application/pdf"
-        },
-        {
-          "key": "Content-Disposition",
-          "value": "attachment; filename=\"Panduan-Peserta-SKALA.pdf\""
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
+        { "key": "Content-Type", "value": "application/pdf" },
+        { "key": "Content-Disposition", "value": "attachment; filename=\"Panduan-Peserta-SKALA.pdf\"" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     }
   ]
