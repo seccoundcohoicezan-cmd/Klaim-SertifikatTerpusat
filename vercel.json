@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/:kode([A-Za-z0-9]+-[A-Za-z0-9-]+)", "destination": "/index.html" }
+    { "source": "/:kode", "destination": "/index.html" }
   ],
   "cleanUrls": true,
   "trailingSlash": false,
@@ -13,12 +13,6 @@
     },
     {
       "source": "/(|lacak|testimoni)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
-      ]
-    },
-    {
-      "source": "/:kode([A-Za-z0-9]+-[A-Za-z0-9-]+)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
