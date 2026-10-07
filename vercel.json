@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/:kode([A-Za-z0-9]{2,6}-[A-Za-z0-9-]{3,30})", "destination": "/index.html" }
+  ],
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
@@ -12,7 +15,7 @@
       ]
     },
     {
-      "source": "/(|lacak|testimoni)",
+      "source": "/(|lacak|testimoni|[A-Za-z0-9]{2,6}-[A-Za-z0-9-]{3,30})",
       "headers": [
         {
           "key": "Cache-Control",
