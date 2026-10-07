@@ -3,7 +3,7 @@
    • File /assets/: tampil dari simpanan, diperbarui diam-diam di belakang.
    • Permintaan ke domain lain (Apps Script, Cloudflare, Google Fonts) TIDAK disentuh.
    Naikkan VERSI setiap kali mengganti daftar ASET. */
-const VERSI = "skala-v19";
+const VERSI = "skala-v20";
 const ASET = ["/assets/logo-stekom-bulat.png?v=1", "/assets/skala-turunan.css?v=13", "/assets/skala-turunan.js?v=12",
               "/assets/gedung-960.webp?v=2", "/assets/icon-192.png"];
 const OFFLINE = '<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
@@ -25,9 +25,11 @@ self.addEventListener("fetch", e => {
   if (r.method !== "GET" || u.origin !== location.origin) return;
   // unduhan (PDF) & permintaan potongan (Range, dipakai pengelola unduhan Chrome HP) tidak ditangani service worker
   if (u.pathname.endsWith(".pdf") || r.headers.has("range")) return;
-  if (r.mode === "navigate") {
+    if (r.mode === "navigate") {
+    // halaman deep link /KODE-SERTIFIKAT disimpan satu kali sebagai "/"
+    const kunciSimpan = /^\/[A-Za-z0-9]+-[A-Za-z0-9-]+$/.test(u.pathname) ? new Request("/") : r;
     e.respondWith(fetch(r).then(res => {
-      const salin = res.clone(); caches.open(VERSI).then(c => c.put(r, salin)).catch(() => {});
+      const salin = res.clone(); caches.open(VERSI).then(c => c.put(kunciSimpan, salin)).catch(() => {});
       return res;
     }).catch(() => caches.match(r).then(m => m || caches.match("/")).then(m => m ||
       new Response(OFFLINE, { headers: { "Content-Type": "text/html; charset=utf-8" } }))));
