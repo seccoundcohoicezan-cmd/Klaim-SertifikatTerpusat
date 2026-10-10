@@ -1532,7 +1532,7 @@ async function cari(keyword, opts={}){
   if(!S.orang.length){ S.person=null; S.picked.clear(); syncCart(); emptyState(kw); return true; }
   if(!opts.keepPick){ S.picked.clear(); S.person=null; }
   render();
-  if(!opts.silent) $("#results").scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"});
+  if(!opts.silent && !opts.tetap) $("#results").scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"});
   return true;
 }
 
@@ -2063,7 +2063,9 @@ window.addEventListener("load",()=>{ $(".hero").classList.add("is-ready"); hitun
 Gerbang.mulai(); firstState(); amatiReveal(); muatKonfigurasi();
 if("serviceWorker" in navigator && location.protocol==="https:") window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 if(!API_URL) toast("Mode demo","Coba cari: ahmad fauzan pratama","info",6000);
-/* ====================== DEEP LINK: skala.stekom.ac.id/NOMOR-SERTIFIKAT ====================== */
+/* ====================== DEEP LINK: skala.stekom.ac.id/NOMOR-SERTIFIKAT (atau /?kode=…) ======================
+   Pengunjung dari tautan langsung tidak perlu melihat hero: halaman langsung melompat ke kotak
+   pencarian dan pencarian dimulai saat itu juga (tidak menunggu gambar & skrip lain selesai dimuat). */
 (function(){
   const POLA=/^[A-Za-z0-9]{2,6}-[A-Za-z0-9-]{3,30}$/;
   let kode="";
@@ -2076,26 +2078,40 @@ if(!API_URL) toast("Mode demo","Coba cari: ahmad fauzan pratama","info",6000);
 
   const norm=s=>String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
   const target=norm(kode);
+  const kotak=$("#cari"), input=$("#fSearch");
+  if(!kotak || !input) return;
+
+  /* lompat tanpa animasi (html memakai scroll-behavior:smooth) dan cegah browser mengembalikan posisi lama */
+  try{ history.scrollRestoration="manual"; }catch(e){}
+  const lompat=()=>{
+    const pad=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0;
+    window.scrollTo({top:Math.max(0,kotak.getBoundingClientRect().top+window.scrollY-pad),behavior:"instant"});
+  };
+  $$(".reveal",$("#beasiswa")).forEach(el=>el.classList.add("is-in"));
+  input.value=kode;
+  lompat();
+  /* tinggi hero bisa berubah setelah font/gambar termuat — kunci posisi sekali lagi bila pengunjung belum menggulir */
+  let digulir=false;
+  const tandai=()=>{ digulir=true; };
+  ["wheel","touchstart","keydown"].forEach(ev=>window.addEventListener(ev,tandai,{once:true,passive:true}));
+  window.addEventListener("load",()=>{ if(!digulir) lompat(); },{once:true});
 
   function sorot(){
+    /* kartu menampilkan No. Beasiswa bila ada, jadi cocokkan juga dengan No. Sertifikat (data-sid) */
     const kartu=$$(".cert",results).find(el=>{
-      const c=$(".cert__code",el); return c && norm(c.textContent)===target;
+      const c=$(".cert__code",el), i=$("input[data-sid]",el);
+      return (c && norm(c.textContent)===target) || (i && norm(i.dataset.sid)===target);
     });
     if(!kartu) return;
     kartu.classList.add("cert--dituju");
     kartu.style.outline="3px solid #F2B505"; kartu.style.outlineOffset="3px";
-    kartu.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"center"});
+    /* kotak pencarian tetap terlihat bila kartu sudah tampil utuh; kalau belum (HP), kartu dibawa ke tengah */
+    const r=kartu.getBoundingClientRect();
+    if(!digulir && (r.top<0 || r.bottom>innerHeight)) kartu.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"center"});
   }
 
-  window.addEventListener("load",()=>{
-    setTimeout(async ()=>{
-      const input=$("#fSearch"); if(!input) return;
-      input.value=kode;
-      Analitik.catat("cari_tautan");
-      const ok=await cari(kode);
-      if(ok) sorot();
-    },400);
-  });
+  Analitik.catat("cari_tautan");
+  cari(kode,{tetap:true}).then(ok=>{ if(ok) sorot(); });
 })();
 </script>
 </body>
