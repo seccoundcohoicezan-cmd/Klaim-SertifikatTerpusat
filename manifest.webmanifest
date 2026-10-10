@@ -1,0 +1,20 @@
+{
+  "name": "SKALA — Sistem Klaim Beasiswa Universitas STEKOM",
+  "short_name": "SKALA",
+  "description": "Cairkan sertifikat kegiatanmu jadi beasiswa kuliah Universitas STEKOM. Cari namamu, ajukan online, dan pantau progresnya.",
+  "lang": "id",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#0A2C5E",
+  "background_color": "#061a38",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Cek Progres Pengajuan", "short_name": "Lacak", "url": "/lacak", "icons": [{ "src": "/assets/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Testimoni Penerima", "short_name": "Testimoni", "url": "/testimoni", "icons": [{ "src": "/assets/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
