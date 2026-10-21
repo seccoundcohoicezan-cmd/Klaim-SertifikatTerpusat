@@ -102,6 +102,15 @@
 .detail b{font-size:16.5px;color:var(--navy-900)}
 .detail p{margin-top:4px;color:var(--text-2);font-size:15px}
 .lencana{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:3px 9px;border-radius:var(--pill);background:var(--gold-50);border:1px solid #F4DEAD;color:#8A5200;font-size:12px;font-weight:700;vertical-align:2px}
+.kartu-tautan{margin-top:14px;padding:16px 18px;border-radius:16px;background:#F3F8FF;border:1px solid #D6E4F7;display:grid;gap:10px}
+.kartu-tautan b{color:var(--navy-900);font-size:15px}
+.kartu-tautan p{margin:0;font-size:13.5px;color:var(--text-2)}
+.kartu-tautan__aksi{display:flex;flex-wrap:wrap;gap:8px}
+.kartu-tautan__aksi .btn{padding:9px 14px;font-size:14px;min-height:0}
+.langsung{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#15803D;background:#ECFDF3;border-radius:999px;padding:3px 10px;margin-left:8px;vertical-align:middle}
+.langsung i{width:7px;height:7px;border-radius:50%;background:#16A34A;animation:denyut 1.6s ease-in-out infinite}
+@keyframes denyut{0%,100%{opacity:1}50%{opacity:.25}}
+.field.is-tautan{opacity:.6}
 .diperbarui{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--border-2);font-size:13.5px;color:var(--text-3)}
 .diperbarui b{font-size:inherit;color:var(--navy-900)}
 
@@ -334,45 +343,62 @@
   function rangka(){ hasil.hidden=false; isi.innerHTML='<div class="rangka"><div class="kilat" style="height:18px;width:140px"></div><div class="kilat" style="height:28px;width:60%;margin-top:14px"></div>'
       +'<div class="kilat" style="height:80px;margin-top:18px"></div><div class="kilat" style="height:96px;margin-top:18px"></div><div class="kilat" style="height:70px;margin-top:18px"></div></div>'; }
 
-  let terakhir={k:"",w:""};
-  /* ---------- pantau perubahan tanpa refresh (selama NIM menunggu verifikasi) ---------- */
+  let terakhir={k:"",w:"",t:""};
+
+  /* ---------- link pantauan langsung: /lacak?id=PGJ-…&t=TOKEN (tanpa 4 digit WA) ---------- */
+  const KUNCI_T="skala_lacak_t";
+  const normKode=v=>String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"").replace(/^(\d)/,"PGJ$1");
+  let tautan=null;                                         // {k: kode ternormalisasi, t: token}
+  try{ tautan=JSON.parse(sessionStorage.getItem(KUNCI_T)||"null"); }catch(e){}
+  function simpanTautan(k,t){ tautan=t?{k:normKode(k),t}:null; try{ t?sessionStorage.setItem(KUNCI_T,JSON.stringify(tautan)):sessionStorage.removeItem(KUNCI_T); }catch(e){} tandaiWa(); }
+  function tokenUntuk(k){ return tautan&&tautan.k===normKode(k)?tautan.t:""; }
+  function tandaiWa(){
+    const pakai=!!tokenUntuk(kode.value);
+    $("#fWa").classList.toggle("is-tautan",pakai); wa4.disabled=pakai;
+    wa4.placeholder=pakai?"Tidak perlu (dari link pantauan)":"Contoh: 1234";
+  }
+  kode.addEventListener("input",tandaiWa);
+
+  /* ---------- pantau perubahan tanpa refresh (status yang masih berjalan) ---------- */
   let jamPantau=null, batasPantau=0;
   function hentikanPantau(){ if(jamPantau){ clearInterval(jamPantau); jamPantau=null; } }
   function mulaiPantau(d){
     hentikanPantau();
-    if(!d.nim_menunggu||!d.sidik) return;
-    batasPantau=Date.now()+15*60000;                        // berhenti sendiri setelah 15 menit
+    if(!d.sidik||(!d.nim_menunggu&&/^(aktif|ditolak|dibuka)$/.test(d.status))) return;
+    batasPantau=Date.now()+15*60000;                        // berhenti sendiri setelah 15 menit (diperpanjang saat tab dibuka lagi)
     jamPantau=setInterval(async()=>{
       if(document.hidden) return;
       if(Date.now()>batasPantau){ hentikanPantau(); return; }
-      let r; try{ const res=await fetch(API_URL+"?aksi=pantauLacak&kode="+encodeURIComponent(terakhir.k)+"&wa4="+encodeURIComponent(terakhir.w)+"&sesi="+encodeURIComponent(Gerbang.tiket()||"")); r=await res.json(); }catch(e){ return; }
+      let r; try{ const res=await fetch(API_URL+"?aksi=pantauLacak&kode="+encodeURIComponent(terakhir.k)+"&wa4="+encodeURIComponent(terakhir.w)+"&t="+encodeURIComponent(terakhir.t)+"&sesi="+encodeURIComponent(Gerbang.tiket()||"")); r=await res.json(); }catch(e){ return; }
       if(!r||!r.success){ if(r&&(r.perlu_verifikasi||r.jeda)) hentikanPantau(); return; }
       if(r.sidik!==d.sidik){ hentikanPantau(); lacak({diam:true}); }
-    },15000);
+    },d.nim_menunggu?15000:30000);
   }
 
   async function lacak(opsi){
     const diam=!!(opsi&&opsi.diam);
     hentikanPantau();
     galat.hidden=true;
-    const k=kode.value.trim(), w=wa4.value.trim(); let salah=false;
-    terakhir={k,w};
+    const k=kode.value.trim(), t=tokenUntuk(k), w=t?"":wa4.value.trim(); let salah=false;
+    terakhir={k,w,t};
     const kunci=k.replace(/[^A-Z0-9]/g,""), nomorOk=/^(PGJ)?\d{6,}$/.test(kunci);
     if(!nomorOk){ $("#fKode").classList.add("salah"); salah=true; }
-    if(!/^\d{4}$/.test(w)){ $("#fWa").classList.add("salah"); salah=true; }
+    if(!t&&!/^\d{4}$/.test(w)){ $("#fWa").classList.add("salah"); salah=true; }
     if(salah){ tampilGalat(!nomorOk && /^BEA/.test(kunci) ? "Itu No. Beasiswa (nomor sertifikat). Gunakan Nomor Pengajuan yang diawali PGJ- dari bukti pengajuanmu."
                        : "Lengkapi Nomor Pengajuan (contoh PGJ-1790154675623) dan tepat 4 digit terakhir WhatsApp."); return; }
     if(Gerbang.perlu()){ Gerbang.ulangi(()=>lacak(opsi),{langsung:true}); return; }
     if(!diam){ sibuk(true); rangka(); hasil.scrollIntoView({behavior:kurangiGerak?"auto":"smooth",block:"start"}); }
     let d;
     const tk=Gerbang.ambilToken();
-    try{ const r=await fetch(API_URL+"?aksi=lacak&kode="+encodeURIComponent(k)+"&wa4="+encodeURIComponent(w)+"&sesi="+encodeURIComponent(Gerbang.tiket())+(tk?"&token="+encodeURIComponent(tk):"")); d=await r.json(); }
+    try{ const r=await fetch(API_URL+"?aksi=lacak&kode="+encodeURIComponent(k)+"&wa4="+encodeURIComponent(w)+(t?"&t="+encodeURIComponent(t):"")+"&sesi="+encodeURIComponent(Gerbang.tiket())+(tk?"&token="+encodeURIComponent(tk):"")); d=await r.json(); }
     catch(e){ d={success:false,error:"Tidak dapat menghubungi server. Periksa koneksi lalu coba lagi."}; }
     sibuk(false);
     if(d&&d.sesi_baru) Gerbang.terimaSesi(d.sesi_baru,d.berlaku_menit);
     if(d&&d.perlu_verifikasi){ hasil.hidden=true; Gerbang.ulangi(()=>lacak(opsi),{langsung:true}); return; }
+    if(d&&d.tautan_tidak_sah){ simpanTautan("",""); SKALA.catat("lacak",{hasil:"tautan_tidak_sah"}); hasil.hidden=true; tampilGalat(d.error); wa4.focus(); return; }
     if(!d||!d.success){ SKALA.catat("lacak",{hasil:"gagal"}); hasil.hidden=true; tampilGalat((d&&d.error)||"Terjadi kesalahan."); return; }
-    SKALA.catat("lacak",{hasil:"ditemukan",status:d.status});
+    SKALA.catat("lacak",{hasil:"ditemukan",status:d.status,cara:d.lewat_tautan?"link":"wa4"});
+    if(d.t){ simpanTautan(d.id_pengajuan,d.t); terakhir.t=d.t; }
     try{ sessionStorage.setItem("skala_lacak_kode",k); }catch(e){}
     render(d);
     if(diam){
@@ -397,7 +423,7 @@
     const sertifikat=(d.kode||[]).map(x=>'<span class="pil">'+IK.dok+esc(x)+'</span>').join("");
     isi.innerHTML='<div class="kartu-hasil">'
       +'<button class="kembali" id="kembali" type="button"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Lacak pengajuan lain</button>'
-      +'<h2>Status Pengajuan Sertifikat</h2>'
+      +'<h2>Status Pengajuan Sertifikat'+(jamPantauAkan(d)?'<span class="langsung" title="Halaman ini memeriksa perubahan status secara otomatis"><i></i>Live</span>':'')+'</h2>'
       +'<div class="info-grid">'
         +'<div><small>Nomor Pengajuan</small><b>'+esc(d.id_pengajuan)+'<button class="salin" type="button" data-salin="'+esc(d.id_pengajuan)+'" aria-label="Salin nomor pengajuan">'+IK.salin+'</button></b></div>'
         +'<div><small>Nama Peserta</small><b>'+esc(d.nama)+'</b></div>'
@@ -416,14 +442,25 @@
       +'</div></div>'
       +'<div class="tindakan'+(st==="ditolak"||ti.pmb?" merah":"")+'"><span class="tindakan__ikon">'+IK.info+'</span><div><b>Yang Perlu Kamu Lakukan</b><p>'+esc(ti.teks||"")+'</p></div>'+aksi+'</div>'
       +kartuNim(d)
+      +kartuTautan(d)
       +'</div>';
     requestAnimationFrame(()=>requestAnimationFrame(()=>$("#tahap").classList.add("tampil")));
     // garis tahapan terisi bertahap
     const li=[...document.querySelectorAll("#tahap li")]; li.forEach(x=>{ if(x.classList.contains("selesai")){ x.classList.remove("selesai"); setTimeout(()=>x.classList.add("selesai"),60); } });
-    $("#kembali").addEventListener("click",()=>{ hasil.hidden=true; wa4.value=""; kode.focus(); window.scrollTo({top:0,behavior:kurangiGerak?"auto":"smooth"}); });
-    document.querySelectorAll("[data-salin]").forEach(b=>b.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(b.dataset.salin); toast("Disalin",b.dataset.salin,"ok",2000); }catch(e){} }));
+    $("#kembali").addEventListener("click",()=>{ hentikanPantau(); simpanTautan("",""); hasil.hidden=true; wa4.value=""; kode.value=""; kode.focus(); window.scrollTo({top:0,behavior:kurangiGerak?"auto":"smooth"}); });
+    document.querySelectorAll("[data-salin]").forEach(b=>b.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(b.dataset.salin); toast(b.dataset.salinJudul||"Disalin",b.dataset.salinJudul?"Tempel di catatan atau chat pribadimu.":b.dataset.salin,"ok",2500); }catch(e){} }));
     if(st==="aktif") konfeti();
     pasangKartuNim(d);
+  }
+
+  function jamPantauAkan(d){ return !!d.sidik&&(!!d.nim_menunggu||!/^(aktif|ditolak|dibuka)$/.test(d.status)); }
+  function kartuTautan(d){
+    if(!d.tautan_pantau) return "";
+    const pesan="Link pantauan pengajuan beasiswa SKALA "+d.id_pengajuan+": "+d.tautan_pantau;
+    return '<div class="kartu-tautan"><div><b>Link pantauan pengajuanmu</b>'
+      +'<p>Simpan link ini. Dibuka kapan saja, status terbaru langsung tampil tanpa mengisi Nomor Pengajuan atau nomor WhatsApp. Jangan dibagikan ke orang lain.</p></div>'
+      +'<div class="kartu-tautan__aksi"><button class="btn btn-primary" type="button" data-salin="'+esc(d.tautan_pantau)+'" data-salin-judul="Link pantauan disalin">'+IK.salin+'Salin link</button>'
+      +'<a class="btn btn-wa" href="https://wa.me/?text='+encodeURIComponent(pesan)+'" target="_blank" rel="noopener noreferrer">'+IK.wa+'Simpan ke WhatsApp</a></div></div>';
   }
 
   /* ---------- peserta melengkapi NIM sendiri (diverifikasi admin di sheet VERIFIKASI_NIM) ---------- */
@@ -466,7 +503,7 @@
       if(Gerbang.perlu()){ Gerbang.ulangi(kirim); return; }
       tb.disabled=true; tb.textContent="Mengirim…";
       let r;
-      try{ const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({aksi:"kirimNim",id:d.id_pengajuan,wa4:terakhir.w,nim,sesi:Gerbang.tiket()})}); r=await res.json(); }
+      try{ const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({aksi:"kirimNim",id:d.id_pengajuan,wa4:terakhir.w,t:terakhir.t,nim,sesi:Gerbang.tiket()})}); r=await res.json(); }
       catch(e){ r={success:false,error:"Tidak dapat menghubungi server. Coba lagi."}; }
       tb.disabled=false; tb.textContent="Kirim NIM";
       if(r&&r.perlu_verifikasi){ Gerbang.ulangi(kirim); return; }
@@ -486,10 +523,17 @@
     document.body.appendChild(w); setTimeout(()=>w.remove(),3200);
   }
 
-  // isian otomatis: ?kode=BEA-… dari email/WA, atau pencarian terakhir di tab ini
-  const prm=new URLSearchParams(location.search), q=prm.get("id")||prm.get("kode");
+  // isian otomatis: ?id=PGJ-…[&t=TOKEN] dari email/WA/bukti, atau pencarian terakhir di tab ini
+  const prm=new URLSearchParams(location.search), q=prm.get("id")||prm.get("kode"), tUrl=prm.get("t")||"";
   try{ kode.value=(q||sessionStorage.getItem("skala_lacak_kode")||"").toUpperCase().replace(/[^A-Z0-9-]/g,""); }catch(e){}
-  if(kode.value) wa4.focus();
+  if(q&&/^[A-Za-z0-9_-]{22}$/.test(tUrl)) simpanTautan(q,tUrl);
+  // token dibuang dari address bar sebelum analitik dimuat (tidak ikut tercatat / bocor lewat Referer)
+  if(tUrl){ prm.delete("t"); try{ history.replaceState(null,"",location.pathname+(prm.toString()?"?"+prm:"")+location.hash); }catch(e){} }
+  tandaiWa();
+  let otomatis=!!(kode.value&&tokenUntuk(kode.value));
+  if(otomatis){ const jalan=()=>{ if(!otomatis) return; otomatis=false; lacak(); };
+    SKALA.padaKonfigurasi(jalan); setTimeout(jalan,6000); }       // tunggu konfigurasi captcha; cadangan 6 detik
+  else if(kode.value) wa4.focus();
 
   function infoAman(){
     const el=$("#infoAman"); if(!el) return; if(!Gerbang.captchaAktif()){ el.style.visibility="hidden"; return; } el.style.visibility="";

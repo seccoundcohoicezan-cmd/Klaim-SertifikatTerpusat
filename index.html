@@ -1702,7 +1702,7 @@ $("#ckSubmit").addEventListener("click",async ()=>{
   $("#startWa").href=data.link_wa||waLink();
   $("#startWa").dataset.id=data.id_pengajuan||"";
   $("#successId").textContent=data.id_pengajuan||"-";
-  $("#successLacak").href="/lacak.html?id="+encodeURIComponent(data.id_pengajuan||"");
+  $("#successLacak").href=data.tautan_lacak||("/lacak.html?id="+encodeURIComponent(data.id_pengajuan||""));
   $("#startWa").classList.add("btn-konfirmasi"); $("#startWa").innerHTML='<svg class="ico"><use href="#i-wa"/></svg>Konfirmasi Pengajuan';
   openModal("mSuccess");
   S.picked.clear(); S.person=null;
